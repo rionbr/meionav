@@ -1,3 +1,21 @@
+# User Exceptions
+data/
+results/
+backup/
+.pybiomart.sqlite
+.DS_Store
+
+## String-DB
+StringDB/7227/
+StringDB/9606/
+StringDB/10090/
+StringDB/selected/
+
+## EggNog
+eggnog/*.tsv
+eggnog/*.tsv.gz
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
