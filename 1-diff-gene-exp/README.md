@@ -5,7 +5,7 @@ Code in this folder is used to define which genes are Differentially Expressed.
 
 Instructions:
 1. Run `calc_diff_gene_exp.R` to compute gene expression levels (logFC, FDR and p-value) for all genes in HS and MM.
-2. Run `select_dge_HS_MM.py` and `select_dge_DS.py` to select only those genes that are DGE and that we are interested in.
+2. Run `select_dge_genes.py` to select only those genes that are DGE and that we are interested in. Note two different FDR levels are used (FDR<=0.05 and 0.01).
 
 
 Other files:

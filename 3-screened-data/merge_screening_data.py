@@ -13,11 +13,11 @@ pd.set_option('display.width', 1000)
 if __name__ == '__main__':
 
     # This is the 'dfU' object from [3]
-    df = pd.read_csv('../2-core_genes/results/core_DM_meiotic_genes.csv').set_index('id_gene_DM')
+    df = pd.read_csv('../2-core_genes/results/DM/core_DM_meiotic_genes.csv').set_index('id_gene_DM')
     
     # Screened Data (From Experimental Analysis)
     dfS = pd.read_csv('data/core_DM_screened.csv').set_index('id_gene_DM')
-    
+
     cols1 = [
         'StockNumber', 'FlyBase Genotype'
     ]

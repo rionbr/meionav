@@ -1,3 +1,4 @@
+import os
 import gzip
 from io import StringIO
 import pandas as pd
@@ -16,3 +17,9 @@ def open_undefined_last_column_files(filepath, skiprows=0, n_fixed_cols=None, *a
             ios += u'\t'.join(sline[:n_fixed_cols]) + u'\t' + sline[-1]
 
         return pd.read_csv(StringIO(ios), sep='\t', encoding='utf-8', *args, **kwargs)
+
+
+def ensurePathExists(path):
+    dirname = os.path.dirname(path)
+    if not os.path.exists(dirname):
+        os.makedirs(dirname)

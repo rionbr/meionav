@@ -84,7 +84,7 @@ de = calc_diff_gene_exp(
   contrasts="Cyte-Gonia",
   min.cpm=1,
   min.rowsum=11,
-  file="results/HS-DGE_Cyte_vs_Gonia.csv")
+  file="results/HS/HS-DGE_Cyte_vs_Gonia.csv")
 
 #
 # Cyte vs Tid
@@ -99,7 +99,7 @@ de = calc_diff_gene_exp(
   contrasts="Tid-Cyte",
   min.cpm=1,
   min.rowsum=9,
-  file="results/HS-DGE_Cyte_vs_Tid.csv")
+  file="results/HS/HS-DGE_Cyte_vs_Tid.csv")
 
 ####################
 # [M]us [M]usculus #
@@ -120,7 +120,7 @@ de = calc_diff_gene_exp(
   contrasts="Cyte-Gonia",
   min.cpm=1,
   min.rowsum=4,
-  file="results/MM-DGE_Cyte_vs_Gonia.csv")
+  file="results/MM/MM-DGE_Cyte_vs_Gonia.csv")
 
 #
 # Cyte vs Tid
@@ -135,5 +135,5 @@ de = calc_diff_gene_exp(
   contrasts="Tid-Cyte",
   min.cpm=1,
   min.rowsum=4,
-  file="results/MM-DGE_Cyte_vs_Tid.csv")
+  file="results/MM/MM-DGE_Cyte_vs_Tid.csv")
 

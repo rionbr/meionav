@@ -34,8 +34,8 @@ def plot_MA(df, file, title="plotMA", c_p='black', c_a='black'):
     n_a, n_p = len(dfA), len(dfP)
     # Plot
     # ax.scatter(np.random.rand(n_genes), np.log(df['Ave signal']), c=c_up, s=s, zorder=2)
-    ax.scatter(dfA.index, dfA['Ave signal'], c=c_a, s=s, zorder=2)
-    ax.scatter(dfP.index, dfP['Ave signal'], c=c_p, s=s, zorder=2)
+    ax.scatter(dfA.index, dfA['Ave signal'], c=c_a, s=s, alpha=0.5, zorder=2)
+    ax.scatter(dfP.index, dfP['Ave signal'], c=c_p, s=s, alpha=0.5, zorder=2)
     # Draw a line at y=(-1,0,1)
     # ax.axhline(y=-1, color='b', linestyle='--')
     # ax.axhline(y=0, color='yellow', linestyle='--')
@@ -72,7 +72,7 @@ if __name__ == '__main__':
     df = pd.read_csv('data/DM_ApicalTestis_Exp_Pcall.csv', index_col=0, na_values='---', nrows=None)
     df = df.dropna(subset=['Ensembl'])
     df = df.drop_duplicates(subset=['Ensembl'])
-    plot_MA(df=df, file='images/DM-apical.pdf', title="DM apical testis", c_p='red', c_a='blue')
+    plot_MA(df=df, file='images/DM-apical.pdf', title="DM apical testis", c_p='#d62728', c_a='#1f77b4')
 
     #
     # Mid Testis
@@ -80,4 +80,4 @@ if __name__ == '__main__':
     df = pd.read_csv('data/DM_MidTestis_Exp_Pcall.csv', index_col=0, na_values='---', nrows=None)
     df = df.dropna(subset=['Ensembl'])
     df = df.drop_duplicates(subset=['Ensembl'])
-    plot_MA(df=df, file='images/DM-mid.pdf', title="DM mid testis", c_p='red', c_a='blue')
+    plot_MA(df=df, file='images/DM-mid.pdf', title="DM mid testis", c_p='#d62728', c_a='#1f77b4')
