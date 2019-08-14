@@ -1,19 +1,19 @@
 # User Exceptions
-data/
-results/
 backup/
+.Rhistory
 .pybiomart.sqlite
 .DS_Store
+*.xlsx
 
 ## String-DB
-StringDB/7227/
-StringDB/9606/
-StringDB/10090/
-StringDB/selected/
+2-core_genes/StringDB/7227/
+2-core_genes/StringDB/9606/
+2-core_genes/StringDB/10090/
+2-core_genes/StringDB/selected/
 
 ## EggNog
-eggnog/*.tsv
-eggnog/*.tsv.gz
+2-core_genes/eggnog/*.tsv
+2-core_genes/eggnog/*.tsv.gz
 
 
 # Byte-compiled / optimized / DLL files
