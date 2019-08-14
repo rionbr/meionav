@@ -41,16 +41,19 @@ loaded via a namespace (and not attached):
 [26] locfit_1.5-9.1   pkgconfig_2.0.2 
 ```
 
+---
+
 ## Original RNAseq data
 
 
 Mus Musculus:
 - [GSE43717](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE43717)
 
-Ref: Soumillon et al. Cell Rep. 2013 Jun 27;3(6):2179-90. doi: [10.1016/j.celrep.2013.05.031](https://www.sciencedirect.com/science/article/pii/S2211124713002489)
+> Soumillon et al. *Cell Rep*. 2013 Jun 27;3(6):2179-90. doi: [10.1016/j.celrep.2013.05.031](https://www.sciencedirect.com/science/article/pii/S2211124713002489)
+
 
 
 Homo Sapiens:
 - [SRP069329](https://www.ncbi.nlm.nih.gov/sra/?term=SRP069329)
 
-Ref: Jan, et al. Development 2017 144: 3659-3673; doi: [10.1242/dev.152413](https://dev.biologists.org/content/144/20/3659)
+> Jan, et al. *Development* 2017 144: 3659-3673; doi: [10.1242/dev.152413](https://dev.biologists.org/content/144/20/3659)
