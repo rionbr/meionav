@@ -68,8 +68,8 @@ calc_diff_gene_exp <- function(counts, group, contrasts, min.cpm, min.rowsum, fi
 ####################
 # [H]omo [S]apiens #
 ####################
-cHS = read.table("data/HS_RawCounts_AllSperm.csv", header=TRUE, sep=",", row.names=1)
-dHS = read.table("data/HS_Design_AllSperm.csv", header=TRUE, sep=",", row.names=1)
+cHS = read.table("data/HS/HS_RawCounts_AllSperm.csv", header=TRUE, sep=",", row.names=1)
+dHS = read.table("data/HS/HS_Design_AllSperm.csv", header=TRUE, sep=",", row.names=1)
 
 #
 # Cyte vs Gonia
@@ -104,8 +104,8 @@ de = calc_diff_gene_exp(
 ####################
 # [M]us [M]usculus #
 ####################
-cMM = read.table("data/MM_RawCounts_AllSperm.csv", header=TRUE, sep=",", row.names=1)
-dMM = read.table("data/MM_Design_AllSperm.csv", header=TRUE, sep=",", row.names=1)
+cMM = read.table("data/MM/MM_RawCounts_AllSperm.csv", header=TRUE, sep=",", row.names=1)
+dMM = read.table("data/MM/MM_Design_AllSperm.csv", header=TRUE, sep=",", row.names=1)
 
 #
 # Cyte vs Gonia

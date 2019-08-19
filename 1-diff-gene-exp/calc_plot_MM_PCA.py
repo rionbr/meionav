@@ -50,19 +50,17 @@ def annotatePoint(label, ax, x, y, xpad, ypad):
 
 if __name__ == '__main__':
 
-    dfC = pd.read_csv('data/MM_RawCounts_AllSperm.csv', index_col=0, nrows=None).T
-    dfD = pd.read_csv('data/MM_Design_AllSperm.csv', index_col=0, nrows=None)
+    dfC = pd.read_csv('data/MM/MM_RawCounts_AllSperm.csv', index_col=0, nrows=None).T
+    dfD = pd.read_csv('data/MM/MM_Design_AllSperm.csv', index_col=0, nrows=None)
 
-    #dfC = pd.read_csv('data/MM_RawCounts_AllSperm.csv', index_col=0, nrows=None).T
-    #dfD = pd.read_csv('data/MM_Design_AllSperm.csv', index_col=0, nrows=None)
+    print(dfC.head())
+    print(dfD)
+    print(dfD.index)
 
     # Loc
-    dfD = dfD.loc[ (dfD['condition'].isin(['Spermatogonia','Spermatocytes'])), : ]
-    dfC = dfC.loc[ (dfD.index), : ]
+    dfD = dfD.loc[ (dfD['condition'].isin(['Gonia','Cyte'])), :]
+    dfC = dfC.loc[ (dfD.index), :]
 
-    #remove = ['Spermatocytes_Early_6','Spermatogonia_Ap_5','Spermatogonia_Ad_6','Spermatocytes_Late_6','Spermatocytes_Early_3','Spermatocytes_Early_2','Spermatocytes_Late_5','Spermatogonia_Ap_4','Spermatogonia_Ap_3']
-    #dfD = dfD.loc[ ~(dfD.index.isin(remove)), : ]
-    #dfC = dfC.loc[ ~(dfC.index.isin(remove)), : ]
 
     # PseudoCount
     pc = np.log2(dfC.values + 1)
@@ -100,7 +98,7 @@ if __name__ == '__main__':
     print('> Normalizing')
     X = dfC.values
     X = StandardScaler().fit_transform(X)
-
+    print(X)
 
     print('> PCA')
     pca = PCA(n_components=None)
@@ -111,8 +109,8 @@ if __name__ == '__main__':
     dfPCA['label'] = dfC.index
     dfPCA['condition'] = dfD['condition']
     dfPCA['color'] = dfPCA['condition'].map({
-        'Spermatocytes':'#d62728',
-        'Spermatogonia':'#1f77b4'
+        'Cyte':'#d62728',
+        'Gonia':'#1f77b4'
         })
 
     s = pd.Series(pca.explained_variance_ratio_, index=range(1, res.shape[1] + 1))

@@ -21,11 +21,11 @@ import matplotlib.gridspec as gridspec
 if __name__ == '__main__':
 
     dfC = pd.read_csv('data/core_DM_control.csv')
-    dfS = pd.read_csv('data/core_DM_screened.csv')
-    dfDM = pd.read_csv('../2-core_genes/results/genes_DM.csv', index_col=0)
+    dfS = pd.read_csv('data/core_DM_screened_2019-08.csv')
+    #dfDM = pd.read_csv('../2-core_genes/results/genes_DM.csv', index_col=0)
     
     # Add Gene Name
-    dfS['gene'] = dfS['id_gene_DM'].map(dfDM['gene'].to_dict())
+    #dfS['gene'] = dfS['id_gene_DM'].map(dfDM['gene'].to_dict())
 
     # Calculations
     dfS['total-eggs'] = 0
@@ -57,16 +57,17 @@ if __name__ == '__main__':
     # Plot
     fig = plt.figure(figsize=(11, 3.5))
     
+    ms = 3
     #
     # Two Axis
     #
-    gs = gridspec.GridSpec(1, 17)
+    gs = gridspec.GridSpec(1, 20)
     axc = plt.subplot(gs[0, :1]) # Control
     axd = plt.subplot(gs[0, 1:]) # First part on top
     plt.setp(axd.get_yticklabels(), visible=False) # Remove yticks
 
-    axc.errorbar(dfc.index, dfc['mean'], yerr=dfc['std'], color='#2ca02c', lw=0, elinewidth=.5, capsize=2, marker='o', markersize=4, zorder=8)
-    axd.errorbar(dfd.index, dfd['mean fert-rate'], yerr=dfd['std fert-rate'], lw=0, elinewidth=.5, capsize=2, marker='o', markersize=4, zorder=8)
+    axc.errorbar(dfc.index, dfc['mean'], yerr=dfc['std'], color='#2ca02c', lw=0, elinewidth=.5, capsize=2, marker='o', ms=ms, zorder=8)
+    axd.errorbar(dfd.index, dfd['mean fert-rate'], yerr=dfd['std fert-rate'], lw=0, elinewidth=.5, capsize=2, marker='o', ms=ms, zorder=8)
 
     axc.axhline(0.75, color='#d62728', lw=1, zorder=6)
     axd.axhline(0.75, color='#d62728', lw=1, zorder=6)
@@ -87,10 +88,7 @@ if __name__ == '__main__':
  
     axc.set_ylim(-0.02,1.02)
     axd.set_ylim(-0.02,1.02)
-    #
-    #ax.set_yscale('log')
-    # ax.set_xscale('log')
-    # ax.set_xlim(0.1,10e5)
+
     axc.grid()
     axd.grid()
 

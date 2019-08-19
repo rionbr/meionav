@@ -17,7 +17,7 @@ if __name__ == '__main__':
     
     # Screened Data (From Experimental Analysis)
     dfS = pd.read_csv('data/core_DM_screened_2019-08.csv').set_index('id_gene_DM')
-    print(dfS.head())
+
     cols1 = [
         'StockNumber', 'FlyBase Genotype'
     ]
