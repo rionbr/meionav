@@ -2,7 +2,7 @@
 # Author: Rion B Correia
 # Date: Jul 17, 2019
 #
-# Description: Merges Selected Gens with Screening Data
+# Description: Merges DM Selected Gens with DM Screening Data
 #
 #
 import pandas as pd
