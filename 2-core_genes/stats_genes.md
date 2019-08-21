@@ -1,13 +1,13 @@
 # Number of genes
 
-- HS Cyte vs Gonia: 16,165
-- HS Cyte vs Tid: 13,561
-
-- MM Cyte vs Gonia: 11,806
-- MM Cyte vs Tid: 13,995
-
-- DM Apical: 13,700
-- DM MidTestis: 13,700
+|  Species   | Cell          |   # Genes |
+| :----------|:--------------|----------:|
+|  HS        | Cyte vs Gonia |     16165 |
+|  HS        | Cyte vs Tid   |     13561 |
+|  MM        | Cyte vs Gonia |     11806 |
+|  MM        | Cyte vs Tid   |     13995 |
+|  DM        | ApicalTestis  |     13700 |
+|  DM        | MidTestis     |     13700 |
 
 # Number of genes differently expressed
 

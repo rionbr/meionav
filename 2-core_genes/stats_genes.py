@@ -13,8 +13,10 @@ pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
 from tabulate import tabulate
 
-def dataframe2markdown(df, y_index=False):
+def df2md(df, y_index=False):
     blob = tabulate(df, headers='keys', tablefmt='pipe')
+    if not y_index:
+        return '\n'.join(['| {}'.format(row.split('|', 2)[-1]) for row in blob.split('\n')])
     return blob
 
 if __name__ == '__main__':
@@ -41,7 +43,7 @@ if __name__ == '__main__':
 
     print('- MM Cyte vs Gonia: {:,d}'.format(np.unique(df_MM_DGE_CyteGonia.index).shape[0]))
     print('- MM Cyte vs Tid: {:,d}\n'.format(np.unique(df_MM_DGE_CyteTid.index).shape[0]))
-    
+
     # DM
     df_DM_DGE_Apical = pd.read_csv('../1-diff-gene-exp/results/DM/DM_DGE_ApicalTestis.csv', index_col=0)
     df_DM_DGE_MidTestis = pd.read_csv('../1-diff-gene-exp/results/DM/DM_DGE_MidTestis.csv', index_col=0)
@@ -49,6 +51,20 @@ if __name__ == '__main__':
     print('- DM Apical: {:,d}'.format(np.unique(df_DM_DGE_Apical.index).shape[0]))
     print('- DM MidTestis: {:,d}\n'.format(np.unique(df_DM_DGE_MidTestis.index).shape[0]))
 
+    print(df2md(
+        pd.DataFrame({
+            'Species':['HS']*2 + ['MM']*2 + ['DM']*2,
+            'Cell':['Cyte vs Gonia', 'Cyte vs Tid', 'Cyte vs Gonia', 'Cyte vs Tid', 'ApicalTestis', 'MidTestis'],
+            '# Genes':[
+                np.unique(df_HS_DGE_CyteGonia.index).shape[0],
+                np.unique(df_HS_DGE_CyteTid.index).shape[0],
+                np.unique(df_MM_DGE_CyteGonia.index).shape[0],
+                np.unique(df_MM_DGE_CyteTid.index).shape[0],
+                np.unique(df_DM_DGE_Apical.index).shape[0],
+                np.unique(df_DM_DGE_MidTestis.index).shape[0]
+            ]})
+        ))
+    asd
     del df_HS_DGE_CyteGonia, df_HS_DGE_CyteTid,
     del df_MM_DGE_CyteGonia, df_MM_DGE_CyteTid,
     del df_DM_DGE_Apical, df_DM_DGE_MidTestis
@@ -107,25 +123,25 @@ if __name__ == '__main__':
     df_HS_genes01 = pd.read_csv('results/HS/genes_HS-FDR_0p01.csv', index_col=0)
     df_HS_genes05 = pd.read_csv('results/HS/genes_HS-FDR_0p05.csv', index_col=0)
 
-    print('## HS with FDR=0.01:\n')
-    print(dataframe2markdown(df_HS_genes01['biotype'].value_counts().to_frame()))
-    print('\n## HS with: FDR=0.05:\n')
-    print(dataframe2markdown(df_HS_genes05['biotype'].value_counts().to_frame()))
+    print('## HS with FDR=0.01\n')
+    print(df2md(df_HS_genes01['biotype'].value_counts().to_frame()))
+    print('\n## HS with: FDR=0.05\n')
+    print(df2md(df_HS_genes05['biotype'].value_counts().to_frame()))
 
     # MM
     df_MM_genes01 = pd.read_csv('results/MM/genes_MM-FDR_0p01.csv', index_col=0)
     df_MM_genes05 = pd.read_csv('results/MM/genes_MM-FDR_0p05.csv', index_col=0)
 
-    print('\n## MM with FDR=0.01:\n')
-    print(dataframe2markdown(df_MM_genes01['biotype'].value_counts().to_frame()))
-    print('\n## MM with FDR=0.05:\n')
-    print(dataframe2markdown(df_MM_genes05['biotype'].value_counts().to_frame()))
+    print('\n## MM with FDR=0.01\n')
+    print(df2md(df_MM_genes01['biotype'].value_counts().to_frame()))
+    print('\n## MM with FDR=0.05\n')
+    print(df2md(df_MM_genes05['biotype'].value_counts().to_frame()))
 
     # DS
     df_DS_genes = pd.read_csv('results/DM/genes_DM.csv', index_col=0)
 
-    print('\n## DS:\n')
-    print(dataframe2markdown(df_DS_genes['biotype'].value_counts().to_frame()))
+    print('\n## DS\n')
+    print(df2md(df_DS_genes['biotype'].value_counts().to_frame()))
 
     #
     # - number of genes found conserved in other species (only for the gene populations that were compared across species)
