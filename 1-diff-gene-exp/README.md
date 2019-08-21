@@ -68,7 +68,7 @@ Drosophila Melanogaster
 ---
 
 
-## From FastQ raw to count data
+## From FASTQ to count data
 
 Homo Sapiens:
 

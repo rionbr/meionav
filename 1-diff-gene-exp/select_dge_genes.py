@@ -27,29 +27,43 @@ if __name__ == '__main__':
     dfDM.index.name = 'Probe Set ID'
 
     print("> [D]rosophila [M]elanogaster")
+    #
     # Apical Testis (Up-Regulated)
+    #
     df = pd.read_csv('data/DM/DM_ApicalTestis_Exp_Pcall.csv', index_col=0)
-    df = df.loc[(df['Combined detection signal'] == 'P'), ['Ave signal', 'Combined detection signal']]
-    df.columns = ['avg-signal', 'A/P']
     df = pd.merge(df, dfDM, left_index=True, right_index=True, how='left').reset_index()
     df = df.dropna(subset=['Gene stable ID']).set_index('Gene stable ID')
-    n = df.shape[0]
-    print("Apical Testis: n={:,d} Up-Related Genes".format(n))
-    wCSVFile = 'results/DM/DE/DM_DE_UpApicalTestis.csv'
+    df = df.loc[:, ['Probe Set ID', 'Ave signal', 'Combined detection signal']]
+    df.columns = ['Probe Set ID', 'avg-signal', 'A/P']
+    wCSVFile = 'results/DM/DM_DGE_ApicalTestis.csv'
     ensurePathExists(wCSVFile)
     df.to_csv(wCSVFile)
 
+    dfU = df.loc[(df['A/P'] == 'P'), :]
+    n = dfU.shape[0]
+    print("Apical Testis: n={:,d} Up-Related Genes".format(n))
+    wCSVFile = 'results/DM/DE/DM_DE_UpApicalTestis.csv'
+    ensurePathExists(wCSVFile)
+    dfU.to_csv(wCSVFile)
+
+    #
     # MidTestis (Down-Regulated)
+    #
     df = pd.read_csv('data/DM/DM_MidTestis_Exp_Pcall.csv', index_col=0)
-    df = df.loc[(df['Combined detection signal'] == 'P'), ['Ave signal', 'Combined detection signal']]
-    df.columns = ['avg-signal', 'A/P']
     df = pd.merge(df, dfDM, left_index=True, right_index=True, how='left').reset_index()
     df = df.dropna(subset=['Gene stable ID']).set_index('Gene stable ID')
-    n = df.shape[0]
+    df = df.loc[:, ['Probe Set ID', 'Ave signal', 'Combined detection signal']]
+    df.columns = ['Probe Set ID', 'avg-signal', 'A/P']
+    wCSVFile = 'results/DM/DM_DGE_MidTestis.csv'
+    ensurePathExists(wCSVFile)
+    df.to_csv(wCSVFile)
+
+    dfU = df.loc[(df['A/P'] == 'P'), :]
+    n = dfU.shape[0]
     print("Mid Testis: n={:,d} Down-Related Genes\n".format(n))
     wCSVFile = 'results/DM/DE/DM_DE_DownMidTestis.csv'
     ensurePathExists(wCSVFile)
-    df.to_csv(wCSVFile)
+    dfU.to_csv(wCSVFile)
 
     # Compute results for both FDR <= 0.05 and FDR <= 0.01
     for maxFDR in [0.01, 0.05]:
