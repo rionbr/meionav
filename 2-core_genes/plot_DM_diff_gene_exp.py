@@ -40,11 +40,12 @@ def rainbow_text(x, y, strings, colors, orientation='horizontal',
 def plot_MA(df, core=[], file='image.pdf', title="plotMA",
             x_p=0, y_p=0, x_a=0, y_a=0,
             c_p_core='black', c_p='black', c_a='black'):
-    s = 8
+    s = 5
     lw = 0
     alpha = 0.8
     fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(5, 4))
     df = df.sort_values('avg-signal', ascending=False).reset_index()
+    #df = df.sample(frac=1).reset_index()  # If we want to plot them randomly on x-axis
     # Mask Data
     mask_p = (df['A/P'] == 'P')
     mask_core = (df['Gene stable ID'].isin(core))
@@ -57,8 +58,8 @@ def plot_MA(df, core=[], file='image.pdf', title="plotMA",
     n_p, n_p_core, n_a = len(df_p), len(df_p_core), len(df_a)
     # Plot
     ax.scatter(df_p_core.index, df_p_core['avg-signal'], c=c_p_core, s=s, lw=lw, alpha=alpha, zorder=3)
-    ax.scatter(df_p.index, df_p['avg-signal'], c=c_p, s=s*2, lw=lw, alpha=alpha, zorder=2)
-    ax.scatter(df_a.index, df_a['avg-signal'], c=c_a, s=s*4, lw=lw, alpha=alpha, zorder=1)
+    ax.scatter(df_p.index, df_p['avg-signal'], c=c_p, s=s*4, lw=lw, alpha=alpha, zorder=2)
+    ax.scatter(df_a.index, df_a['avg-signal'], c=c_a, s=s*6, lw=lw, alpha=alpha, zorder=1)
 
     # Number of Selected Genes
     strings = ['P=', '{:,d}'.format(n_p_core), '+', '{:,d}'.format(n_p), '=', '{:,d}'.format(n_p + n_p_core)]
