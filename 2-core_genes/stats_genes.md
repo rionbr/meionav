@@ -20,49 +20,58 @@
 - DM (Up)Apical Testis: 9,683
 - DM (Down)MidTestis: 9,379
 
-# Number of Protein-Coding genes
+# Number of protein-coding genes differently expressed
 
 ## HS with FDR=0.01:
 
-protein_coding          1823
-lncRNA                     2
-processed_pseudogene       1
+|                      |   biotype |
+|:---------------------|----------:|
+| protein_coding       |      1823 |
+| lncRNA               |         2 |
+| processed_pseudogene |         1 |
 
 ## HS with: FDR=0.05:
 
-protein_coding                        2733
-lncRNA                                   4
-processed_pseudogene                     1
-transcribed_unprocessed_pseudogene       1
-transcribed_unitary_pseudogene           1
+|                                    |   biotype |
+|:-----------------------------------|----------:|
+| protein_coding                     |      2733 |
+| lncRNA                             |         4 |
+| transcribed_unitary_pseudogene     |         1 |
+| processed_pseudogene               |         1 |
+| transcribed_unprocessed_pseudogene |         1 |
 
-MM with FDR=0.01:
+## MM with FDR=0.01:
 
-protein_coding                        5102
-lncRNA                                  20
-processed_pseudogene                     7
-transcribed_unitary_pseudogene           2
-transcribed_processed_pseudogene         2
-unprocessed_pseudogene                   2
-polymorphic_pseudogene                   2
-TEC                                      1
-transcribed_unprocessed_pseudogene       1
+|                                    |   biotype |
+|:-----------------------------------|----------:|
+| protein_coding                     |      5102 |
+| lncRNA                             |        20 |
+| processed_pseudogene               |         7 |
+| transcribed_processed_pseudogene   |         2 |
+| polymorphic_pseudogene             |         2 |
+| transcribed_unitary_pseudogene     |         2 |
+| unprocessed_pseudogene             |         2 |
+| TEC                                |         1 |
+| transcribed_unprocessed_pseudogene |         1 |
 
-MM with FDR=0.05:
+## MM with FDR=0.05:
 
-protein_coding                        5104
-lncRNA                                  20
-processed_pseudogene                     7
-transcribed_unitary_pseudogene           2
-transcribed_processed_pseudogene         2
-unprocessed_pseudogene                   2
-polymorphic_pseudogene                   2
-TEC                                      1
-transcribed_unprocessed_pseudogene       1
+|                                    |   biotype |
+|:-----------------------------------|----------:|
+| protein_coding                     |      5104 |
+| lncRNA                             |        20 |
+| processed_pseudogene               |         7 |
+| transcribed_processed_pseudogene   |         2 |
+| polymorphic_pseudogene             |         2 |
+| transcribed_unitary_pseudogene     |         2 |
+| unprocessed_pseudogene             |         2 |
+| TEC                                |         1 |
+| transcribed_unprocessed_pseudogene |         1 |
 
-DS:
+## DS:
 
-protein_coding    10446
-pseudogene           14
-ncRNA                 8
-[Finished in 2.0s]
+|                |   biotype |
+|:---------------|----------:|
+| protein_coding |     10446 |
+| pseudogene     |        14 |
+| ncRNA          |         8 |

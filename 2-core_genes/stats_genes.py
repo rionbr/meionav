@@ -11,7 +11,11 @@ import pandas as pd
 pd.set_option('display.max_rows', 100)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
+from tabulate import tabulate
 
+def dataframe2markdown(df, y_index=False):
+    blob = tabulate(df, headers='keys', tablefmt='pipe')
+    return blob
 
 if __name__ == '__main__':
 
@@ -97,31 +101,31 @@ if __name__ == '__main__':
     #
     # - number of protein-coding genes differently expressed
     #
-    print('# Number of Protein-Coding genes\n')
+    print('# Number of protein-coding genes differently expressed\n')
 
     # HS
     df_HS_genes01 = pd.read_csv('results/HS/genes_HS-FDR_0p01.csv', index_col=0)
     df_HS_genes05 = pd.read_csv('results/HS/genes_HS-FDR_0p05.csv', index_col=0)
 
     print('## HS with FDR=0.01:\n')
-    print(df_HS_genes01['biotype'].value_counts().to_string())
+    print(dataframe2markdown(df_HS_genes01['biotype'].value_counts().to_frame()))
     print('\n## HS with: FDR=0.05:\n')
-    print(df_HS_genes05['biotype'].value_counts().to_string())
+    print(dataframe2markdown(df_HS_genes05['biotype'].value_counts().to_frame()))
 
     # MM
     df_MM_genes01 = pd.read_csv('results/MM/genes_MM-FDR_0p01.csv', index_col=0)
     df_MM_genes05 = pd.read_csv('results/MM/genes_MM-FDR_0p05.csv', index_col=0)
 
-    print('\nMM with FDR=0.01:\n')
-    print(df_MM_genes01['biotype'].value_counts().to_string())
-    print('\nMM with FDR=0.05:\n')
-    print(df_MM_genes05['biotype'].value_counts().to_string())
+    print('\n## MM with FDR=0.01:\n')
+    print(dataframe2markdown(df_MM_genes01['biotype'].value_counts().to_frame()))
+    print('\n## MM with FDR=0.05:\n')
+    print(dataframe2markdown(df_MM_genes05['biotype'].value_counts().to_frame()))
 
     # DS
     df_DS_genes = pd.read_csv('results/DM/genes_DM.csv', index_col=0)
 
-    print('\nDS:\n')
-    print(df_DS_genes['biotype'].value_counts().to_string())
+    print('\n## DS:\n')
+    print(dataframe2markdown(df_DS_genes['biotype'].value_counts().to_frame()))
 
     #
     # - number of genes found conserved in other species (only for the gene populations that were compared across species)
