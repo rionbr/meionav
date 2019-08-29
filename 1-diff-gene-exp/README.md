@@ -10,10 +10,12 @@ Instructions:
 
 
 Other files:
-- `plot_DM_diff_gene_exp.py` and `plot_HS_MM_diff_gene_exp.py` plots the results from (1).
 - `calc_plot_HS_PCA.py` and `calc_plot_MM_PCA.py` calculate Principal Component Analysis (PCA) and plot the results.
+- `stats_genes.py` generates statistis about the DGE genes, the output of which is shown in `stats_genes.md`.
+
 
 ## R Session Info
+
 ```R
 > sessionInfo()
 R version 3.6.1 (2019-07-05)
@@ -31,15 +33,14 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] ggplot2_3.2.0 edgeR_3.26.5  limma_3.40.6 
+[1] ggplot2_3.2.1 edgeR_3.26.7  limma_3.40.6 
 
 loaded via a namespace (and not attached):
- [1] Rcpp_1.0.1       rstudioapi_0.10  magrittr_1.5     splines_3.6.1    tidyselect_0.2.5
- [6] munsell_0.5.0    statmod_1.4.32   colorspace_1.4-1 lattice_0.20-38  R6_2.4.0        
-[11] rlang_0.4.0      dplyr_0.8.3      tools_3.6.1      grid_3.6.1       gtable_0.3.0    
-[16] withr_2.1.2      lazyeval_0.2.2   assertthat_0.2.1 tibble_2.1.3     crayon_1.3.4    
-[21] purrr_0.3.2      glue_1.3.1       compiler_3.6.1   pillar_1.4.2     scales_1.0.0    
-[26] locfit_1.5-9.1   pkgconfig_2.0.2 
+ [1] locfit_1.5-9.1   Rcpp_1.0.2       lattice_0.20-38  withr_2.1.2      assertthat_0.2.1
+ [6] dplyr_0.8.3      crayon_1.3.4     R6_2.4.0         grid_3.6.1       gtable_0.3.0    
+[11] magrittr_1.5     scales_1.0.0     pillar_1.4.2     rlang_0.4.0      lazyeval_0.2.2  
+[16] rstudioapi_0.10  tools_3.6.1      glue_1.3.1       purrr_0.3.2      munsell_0.5.0   
+[21] compiler_3.6.1   pkgconfig_2.0.2  colorspace_1.4-1 tidyselect_0.2.5 tibble_2.1.3   
 ```
 
 ---
@@ -56,44 +57,44 @@ Homo Sapiens:
 Mus Musculus:
 - [GSE43717](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE43717)
 
-> Soumillon et al. *Cell Rep*. 2013 Jun 27;3(6):2179-90. doi: [10.1016/j.celrep.2013.05.031](https://www.sciencedirect.com/science/article/pii/S2211124713002489)
+> Soumillon, et al. *Cell Rep*. 2013 Jun 27;3(6):2179-90. doi: [10.1016/j.celrep.2013.05.031](https://www.sciencedirect.com/science/article/pii/S2211124713002489)
 
+
+Drosophila Melanogaster:
+- [PRJNA496287](https://www.ncbi.nlm.nih.gov/Traces/study/?acc=PRJNA496287)
+
+> Vedelek, et al. *BMC Genomics*. 2018 Sept 24;19(1):697. doi: [10.1186/s12864-018-5085-z](https://bmcgenomics.biomedcentral.com/articles/10.1186/s12864-018-5085-z)
+
+## Original MicroArray data
 
 Drosophila Melanogaster
-- [GSE18502](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE18502])
+- [GSE18502](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE18502)
 
 > Vibranovski, et al *PLOS Genetics* 2009 5(11): e1000731; doi: [10.1371/journal.pgen.1000731](https://journals.plos.org/plosgenetics/article?id=10.1371/journal.pgen.1000731)
 
-
 ---
-
 
 ## From FASTQ to count data
 
+Command line tools used to tranform the FASTQ files into feature count matrices.
+
 Homo Sapiens:
-
 - Alignment to Human Genome
-
 ```bash
 hisat2 -x HS_index -U HS_Dataset_1_reads.fq.gz | samtools view -b | samtools sort -o HS_Dataset_1.bam
 ```
 
 - Feature counts
-
 ```bash
 featureCounts -a HS_annotation.gtf -t exon -g gene_id -o HS_Dataset_1.txt HS_Dataset_1.bam
 ```
 
 Mouse:
-
 - Alignment to Mouse Genome
-
 ```bash
 hisat2 --rna-strandness F -x MM_index -U MM_Dataset_1_reads.fq.gz | samtools view -b | samtools sort -o MM_Dataset_1.bam
 ```
-
-- To count uniquely mapped aligned reads
-
+- Feature counts
 ```bash
 featureCounts –s1 -a MM_annotation.gtf -t exon -g gene_id -o MM_Dataset_1.txt MM_Dataset_1.bam
 ```

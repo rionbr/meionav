@@ -13,59 +13,64 @@ pd.set_option('display.width', 1000)
 from utils import open_undefined_last_column_files, ensurePathExists
 from pybiomart import Dataset
 
+
+def combine_id_string_x_with_id_string_y(row):
+    if pd.isna(row['id_string_x']):
+        return row['id_string_y']
+    else:
+        return row['id_string_x']
+
+
 if __name__ == '__main__':
-
-    def combine_id_string_x_with_id_string_y(row):
-        if pd.isna(row['id_string_x']):
-            return row['id_string_y']
-        else:
-            return row['id_string_x']
-
-    #
-    # [D]rosophila [M]elanogaster (7227) - [A]liases
-    #
-    print('Mapping DM')
-    id_genes_DM_up = pd.read_csv("../1-diff-gene-exp/results/DM/DE/DM_DE_UpApicalTestis.csv", usecols=[0], squeeze=True, nrows=None).rename('DS_idgene_up')
-    id_genes_DM_down = pd.read_csv("../1-diff-gene-exp/results/DM/DE/DM_DE_DownMidTestis.csv", usecols=[0], squeeze=True, nrows=None).rename('DS_idgene_down')
-
-    df_DM_A = open_undefined_last_column_files('StringDB/7227/7227.protein.aliases.v11.0.txt.gz', skiprows=1, n_fixed_cols=2, names=["id_string", "alias", "source"])
-    # Map: id_gene <-> id_string
-    df_DM_up = df_DM_A.loc[df_DM_A['alias'].isin(id_genes_DM_up), ["alias", "id_string"]].\
-        rename(columns={"alias": "id_gene"}).\
-        set_index('id_gene', drop=True)
-    df_DM_up['up'] = True
-
-    df_DM_down = df_DM_A.loc[df_DM_A['alias'].isin(id_genes_DM_down), ["alias", "id_string"]].\
-        rename(columns={"alias": "id_gene"}).\
-        set_index('id_gene', drop=True)
-    df_DM_down['down'] = True
-
-    df_DM = pd.merge(df_DM_up, df_DM_down, how='outer', left_index=True, right_index=True)
-    df_DM['id_string'] = df_DM.apply(lambda r: r['id_string_x'] if pd.isna(r['id_string_y']) else r['id_string_y'], axis='columns')
-    df_DM = df_DM[['id_string', 'up', 'down']]
-    df_DM[['up', 'down']] = df_DM[['up', 'down']].fillna(False)
-
-    # Query bioMart for Gene Name/Description
-    ds_DM = Dataset(name='dmelanogaster_gene_ensembl', host='http://www.ensembl.org')
-    df_DM_G = ds_DM.query(attributes=['ensembl_gene_id', 'external_gene_name', 'gene_biotype']).set_index('Gene stable ID')
-
-    # Manual Inclusion
-    df_DM_G.loc['FBgn0035707', 'Gene name'] = 'Rexo5'
-    df_DM_G.loc['FBgn0038035', 'Gene name'] = 'CG17227 (DNAlig3)'
-    df_DM_G.loc['FBgn0038341', 'Gene name'] = 'CG14869 (AdamTS-A)'
-
-    df_DM['gene'] = df_DM_G['Gene name']
-    df_DM['biotype'] = df_DM_G['Gene type']
-
-    wCSVFileDM = 'results/DM/genes_DM.csv'
-    ensurePathExists(wCSVFileDM)
-    df_DM.to_csv(wCSVFileDM)
 
     # Compute results for both FDR <= 0.05 and FDR <= 0.01
     for maxFDR in [0.01, 0.05]:
-        
+
         print("- FDR <= {:f}".format(maxFDR))
         maxFDR_str = "FDR_{:s}".format(str(maxFDR).replace(".", "p"))
+        #
+        # [D]rosophila [M]elanogaster (7227) - [A]liases
+        #
+        print('Mapping DM')
+        rCSVFileUp = "../1-diff-gene-exp/results/DM/DE/DM_DE_UpMiddle_vs_Apical-{maxFDR:s}.csv".format(maxFDR=maxFDR_str)
+        rCSVFileDown = "../1-diff-gene-exp/results/DM/DE/DM_DE_DownMiddle_vs_Basal-{maxFDR:s}.csv".format(maxFDR=maxFDR_str)
+        id_genes_DM_up = pd.read_csv(rCSVFileUp, usecols=[0], squeeze=True, nrows=None).rename('id_gene_DM_up')
+        id_genes_DM_down = pd.read_csv(rCSVFileDown, usecols=[0], squeeze=True, nrows=None).rename('id_gene_DM_down')
+
+        df_DM_A = open_undefined_last_column_files('StringDB/7227/7227.protein.aliases.v11.0.txt.gz', skiprows=1, n_fixed_cols=2, names=["id_string", "alias", "source"])
+        # Map: id_gene <-> id_string
+        df_DM_up = df_DM_A.loc[df_DM_A['alias'].isin(id_genes_DM_up), ["alias", "id_string"]].\
+            rename(columns={"alias": "id_gene"}).\
+            set_index('id_gene', drop=True)
+        df_DM_up['up'] = True
+
+        df_DM_down = df_DM_A.loc[df_DM_A['alias'].isin(id_genes_DM_down), ["alias", "id_string"]].\
+            rename(columns={"alias": "id_gene"}).\
+            set_index('id_gene', drop=True)
+        df_DM_down['down'] = True
+
+        df_DM = pd.merge(df_DM_up, df_DM_down, how='outer', left_index=True, right_index=True)
+        df_DM['id_string'] = df_DM.apply(lambda r: r['id_string_x'] if pd.isna(r['id_string_y']) else r['id_string_y'], axis='columns')
+        df_DM = df_DM[['id_string', 'up', 'down']]
+        df_DM[['up', 'down']] = df_DM[['up', 'down']].fillna(False)
+
+        # Query bioMart for Gene Name/Description
+        ds_DM = Dataset(name='dmelanogaster_gene_ensembl', host='http://www.ensembl.org')
+        df_DM_G = ds_DM.query(attributes=['ensembl_gene_id', 'external_gene_name', 'gene_biotype']).set_index('Gene stable ID')
+
+        # Manual Inclusion
+        # df_DM_G.loc['FBgn0035707', 'Gene name'] = 'Rexo5'
+        # df_DM_G.loc['FBgn0038035', 'Gene name'] = 'CG17227 (DNAlig3)'
+        # df_DM_G.loc['FBgn0038341', 'Gene name'] = 'CG14869 (AdamTS-A)'
+
+        df_DM['gene'] = df_DM_G['Gene name']
+        df_DM['biotype'] = df_DM_G['Gene type']
+
+        wCSVFileDM = 'results/DM/genes_DM-{maxFDR:s}.csv'.format(maxFDR=maxFDR_str)
+        ensurePathExists(wCSVFileDM)
+        df_DM.to_csv(wCSVFileDM)
+
+
         #
         # [H]omo [S]apiens (9606) - [A]liases
         #

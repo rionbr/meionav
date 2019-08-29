@@ -2,7 +2,7 @@
 # Author: Rion Brattig Correia
 # Date: 24/07/2019
 #
-# Description: Code to compute Differential Gene Expression (DGE)
+# Description: Code to compute Differential Gene Expression (DGE) from RNAseq data.
 # In HS and MM we are interested in comparing:
 #  - SpermatoGonia vs SpermatoCyte (interested in upregulated genes in spermatocytes)
 #  - SpermatoCyte vs SpermaTid (interested in genes downregulated in spermatocytes)
@@ -17,9 +17,9 @@
 # > BiocManager::install("limma")
 
 # Load Packages (version)
-library(edgeR) # edgeR_3.26.5
+library(edgeR) # edgeR_3.26.7
 library(limma) # limma_3.40.6 
-library(ggplot2) # ggplot2_3.2.0
+library(ggplot2) # ggplot2_3.2.1
 
 setwd('/Users/rionbr/Sites/spermnet/1-diff-gene-exp')
 
@@ -137,3 +137,39 @@ de = calc_diff_gene_exp(
   min.rowsum=4,
   file="results/MM/MM-DGE_Cyte_vs_Tid.csv")
 
+
+###############################
+# [D]rosophila [M]elanogaster #
+###############################
+cHS = read.table("data/DM/DM_RawCounts_AllSperm.csv", header=TRUE, sep=",", row.names=1)
+dHS = read.table("data/DM/DM_Design_AllSperm.csv", header=TRUE, sep=",", row.names=1)
+
+#
+# Middle (Cyte) vs Apical (Gonia)
+#
+design <- subset(dHS, condition=="Middle" | condition=="Apical")
+design$condition <- droplevels(design$condition)
+counts <- subset(cHS, select=rownames(design))
+
+de = calc_diff_gene_exp(
+  counts=counts,
+  group=design$condition,
+  contrasts="Middle-Apical",
+  min.cpm=1,
+  min.rowsum=2,
+  file="results/DM/DM-DGE_Middle_vs_Apical.csv")
+
+#
+# Middle (Cyte) vs Basal (Tid)
+#
+design <- subset(dHS, condition=="Middle" | condition=="Basal")
+design$condition <- droplevels(design$condition)
+counts <- subset(cHS, select=rownames(design))
+
+de = calc_diff_gene_exp(
+  counts=counts,
+  group=design$condition,
+  contrasts="Middle-Basal",
+  min.cpm=1,
+  min.rowsum=2,
+  file="results/DM/DM-DGE_Middle_vs_Basal.csv")

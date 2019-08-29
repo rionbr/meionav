@@ -21,7 +21,8 @@ if __name__ == '__main__':
         maxFDR_str = "FDR_{:s}".format(str(maxFDR).replace(".", "p"))
 
         # Load Species Files
-        df_DM = pd.read_csv('results/DM/genes_DM.csv', index_col='id_string')
+        rCSVFileDM = 'results/DM/genes_DM-{maxFDR:s}.csv'.format(maxFDR=maxFDR_str)
+        df_DM = pd.read_csv(rCSVFileDM, index_col='id_string')
         rCSVFileHS = "results/HS/genes_HS-{maxFDR:s}.csv".format(maxFDR=maxFDR_str)
         df_HS = pd.read_csv(rCSVFileHS, index_col='id_string')
         rCSVFileMM = "results/MM/genes_MM-{maxFDR:s}.csv".format(maxFDR=maxFDR_str)

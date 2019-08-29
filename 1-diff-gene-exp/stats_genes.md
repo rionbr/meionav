@@ -1,11 +1,13 @@
 # Number of genes
 
-|  Species   | Cell          |   Genes |   Prot. Coding |      % |
-| :----------|:--------------|--------:|---------------:|-------:|
-|  HS        | Cyte vs Gonia |   16165 |          12925 | 0.7996 |
-|  HS        | Cyte vs Tid   |   13561 |          10817 | 0.7977 |
-|  MM        | Cyte vs Gonia |   11806 |          11044 | 0.9355 |
-|  MM        | Cyte vs Tid   |   13995 |          11642 | 0.8319 |
+|  Species   | Cell             |   Genes |   Prot. Coding |      % |
+| :----------|:-----------------|--------:|---------------:|-------:|
+|  HS        | Cyte vs Gonia    |   16165 |          12925 | 0.7996 |
+|  HS        | Cyte vs Tid      |   13561 |          10817 | 0.7977 |
+|  MM        | Cyte vs Gonia    |   11806 |          11044 | 0.9355 |
+|  MM        | Cyte vs Tid      |   13995 |          11642 | 0.8319 |
+|  DM        | Middle vs Apical |   13088 |          12105 | 0.9249 |
+|  DM        | Middle vs Basal  |   12597 |          11708 | 0.9294 |
 
 
 # Number of genes differently expressed
@@ -33,3 +35,15 @@
 |  MM       | Cyte vs Tid | Up     |  0.05 |    3481 | 0.2487 |           2619 |  0.7524 |
 |  MM       | Cyte vs Tid | Not    |  0.05 |    7820 | 0.5588 |           6655 |  0.8510 |
 |  MM       | Cyte vs Tid | Down   |  0.05 |    2694 | 0.1925 |           2368 |  0.8790 |
+
+|  Specie   | Cell             | Reg.   |   FDR |   Genes |   %(G) |   Prot. Coding |   %(PC) |
+| :---------|:-----------------|:-------|------:|--------:|-------:|---------------:|--------:|
+|  DM       | Middle vs Apical | Up     |  0.05 |    2318 | 0.1771 |           1933 |  0.8339 |
+|  DM       | Middle vs Apical | Not    |  0.05 |    7605 | 0.5811 |           7066 |  0.9291 |
+|  DM       | Middle vs Apical | Down   |  0.05 |    3165 | 0.2418 |           3106 |  0.9814 |
+
+|  Specie   | Cell            | Reg.   |   FDR |   Genes |   %(G) |   Prot. Coding |   %(PC) |
+| :---------|:----------------|:-------|------:|--------:|-------:|---------------:|--------:|
+|  DM       | Middle vs Basal | Up     |  0.05 |     476 | 0.0378 |            441 |  0.9265 |
+|  DM       | Middle vs Basal | Not    |  0.05 |   11207 | 0.8897 |          10370 |  0.9253 |
+|  DM       | Middle vs Basal | Down   |  0.05 |     914 | 0.0726 |            897 |  0.9814 |
