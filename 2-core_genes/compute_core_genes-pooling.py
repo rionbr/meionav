@@ -15,8 +15,8 @@ from utils import ensurePathExists
 
 if __name__ == '__main__':
 
-    pipeline = 'all3-pooling-DM-FDRp05'
-    maxFDR = 0.05
+    pipeline = 'all3-pooling-DM-FDRp01'
+    maxFDR = 0.01
     minLogFC = math.log2(2)
     minLogCPM = math.log(2)
 
