@@ -84,7 +84,7 @@ de = calc_diff_gene_exp(
   contrasts="Cyte-Gonia",
   min.cpm=1,
   min.rowsum=11,
-  file="results/DGE/HS/HS-DGE_Cyte_vs_Gonia.csv")
+  file="results/HS/HS-DGE_Cyte_vs_Gonia.csv")
 
 #
 # Cyte vs Tid
@@ -99,7 +99,7 @@ de = calc_diff_gene_exp(
   contrasts="Tid-Cyte",
   min.cpm=1,
   min.rowsum=9,
-  file="results/DGE/HS/HS-DGE_Cyte_vs_Tid.csv")
+  file="results/HS/HS-DGE_Cyte_vs_Tid.csv")
 
 ####################
 # [M]us [M]usculus #
@@ -120,7 +120,7 @@ de = calc_diff_gene_exp(
   contrasts="Cyte-Gonia",
   min.cpm=1,
   min.rowsum=4,
-  file="results/DGE/MM/MM-DGE_Cyte_vs_Gonia.csv")
+  file="results/MM/MM-DGE_Cyte_vs_Gonia.csv")
 
 #
 # Cyte vs Tid
@@ -135,7 +135,7 @@ de = calc_diff_gene_exp(
   contrasts="Tid-Cyte",
   min.cpm=1,
   min.rowsum=4,
-  file="results/DGE/MM/MM-DGE_Cyte_vs_Tid.csv")
+  file="results/MM/MM-DGE_Cyte_vs_Tid.csv")
 
 
 ###############################
@@ -157,7 +157,7 @@ de = calc_diff_gene_exp(
   contrasts="Middle-Apical",
   min.cpm=1,
   min.rowsum=2,
-  file="results/DGE/DM/DM-DGE_Middle_vs_Apical.csv")
+  file="results/DM/DM-DGE_Middle_vs_Apical.csv")
 
 #
 # Middle (Cyte) vs Basal (Tid)
@@ -172,4 +172,4 @@ de = calc_diff_gene_exp(
   contrasts="Middle-Basal",
   min.cpm=1,
   min.rowsum=2,
-  file="results/DGE/DM/DM-DGE_Middle_vs_Basal.csv")
+  file="results/DM/DM-DGE_Middle_vs_Basal.csv")

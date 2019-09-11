@@ -3,6 +3,7 @@ backup/
 bkp-results
 1-diff-gene-exp/goldstandard/
 1-diff-gene-exp/data/fromPaulo
+1-diff-gene-exp/chipster_log
 .Rhistory
 .pybiomart.sqlite
 .DS_Store
@@ -12,7 +13,6 @@ bkp-results
 StringDB/7227/
 StringDB/9606/
 StringDB/10090/
-StringDB/selected/
 
 ## EggNog
 eggnog/*.tsv
