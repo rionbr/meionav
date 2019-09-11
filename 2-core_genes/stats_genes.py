@@ -14,7 +14,6 @@ pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
 pd.set_option('display.precision', 4)
 from tabulate import tabulate
-from pybiomart import Dataset
 
 
 def df2md(df, y_index=False, *args, **kwargs):
@@ -28,85 +27,63 @@ if __name__ == '__main__':
     maxFDR = 0.05
     minLogFC = math.log2(2)
 
-    # Query bioMart for Gene Name/Description    
-    ds_HS = Dataset(name='hsapiens_gene_ensembl', host='http://www.ensembl.org')
-    df_HS_G = ds_HS.query(attributes=['ensembl_gene_id', 'external_gene_name', 'gene_biotype', 'description']).set_index('Gene stable ID')
-    ds_MM = Dataset(name='mmusculus_gene_ensembl', host='http://www.ensembl.org')
-    df_MM_G = ds_MM.query(attributes=['ensembl_gene_id', 'external_gene_name', 'gene_biotype', 'description']).set_index('Gene stable ID')
-    ds_DM = Dataset(name='dmelanogaster_gene_ensembl', host='http://www.ensembl.org')
-    df_DM_G = ds_DM.query(attributes=['affy_drosophila_2', 'ensembl_gene_id', 'external_gene_name', 'gene_biotype']).set_index('Gene stable ID')
     #
     # HS 
     #
-    df_HS_DGE_CyteGonia = pd.read_csv('results/HS/HS-DGE_Cyte_vs_Gonia.csv', index_col=0)
-    df_HS_DGE_CyteTid = pd.read_csv('results/HS/HS-DGE_Cyte_vs_Tid.csv', index_col=0)
-    # Fix Gene ID
-    df_HS_DGE_CyteGonia.index = df_HS_DGE_CyteGonia.index.map(lambda x: x.split('.')[0])
-    df_HS_DGE_CyteTid.index = df_HS_DGE_CyteTid.index.map(lambda x: x.split('.')[0])
-    # Add Additional Info
-    df_HS_DGE_CyteGonia['biotype'] = df_HS_G['Gene type']
-    df_HS_DGE_CyteTid['biotype'] = df_HS_G['Gene type']
+    df_HS = pd.read_csv('results/HS-DE_genes.csv', index_col=0)
+
+    df_HS_CyteGonia = df_HS.loc[(df_HS['Cyte_vs_Gonia']) == True, :]
+    df_HS_CyteTid = df_HS.loc[(df_HS['Cyte_vs_Tid']) == True, :]
     # DE (Up/Down/Not)
-    df_HS_DE_UpCyteGonia = df_HS_DGE_CyteGonia.loc[((df_HS_DGE_CyteGonia['FDR'] <= maxFDR) & (df_HS_DGE_CyteGonia['logFC'].abs() >= minLogFC) & (df_HS_DGE_CyteGonia['logFC'] >= 0)), :]
-    df_HS_DE_DownCyteGonia = df_HS_DGE_CyteGonia.loc[((df_HS_DGE_CyteGonia['FDR'] <= maxFDR) & (df_HS_DGE_CyteGonia['logFC'].abs() >= minLogFC) & (df_HS_DGE_CyteGonia['logFC'] <= 0)), :]
-    df_HS_DE_NotCyteGonia = df_HS_DGE_CyteGonia.loc[~df_HS_DGE_CyteGonia.index.isin(df_HS_DE_UpCyteGonia.index.tolist() + df_HS_DE_DownCyteGonia.index.tolist()), :]
-    df_HS_DE_UpCyteTid = df_HS_DGE_CyteTid.loc[((df_HS_DGE_CyteTid['FDR'] <= maxFDR) & (df_HS_DGE_CyteTid['logFC'].abs() >= minLogFC) & (df_HS_DGE_CyteTid['logFC'] >= 0)), :]
-    df_HS_DE_DownCyteTid = df_HS_DGE_CyteTid.loc[((df_HS_DGE_CyteTid['FDR'] <= maxFDR) & (df_HS_DGE_CyteTid['logFC'].abs() >= minLogFC) & (df_HS_DGE_CyteTid['logFC'] <= 0)), :]
-    df_HS_DE_NotCyteTid = df_HS_DGE_CyteTid.loc[~df_HS_DGE_CyteTid.index.isin(df_HS_DE_UpCyteTid.index.tolist() + df_HS_DE_DownCyteTid.index.tolist()), :]
+    df_HS_DE_UpCyteGonia = df_HS_CyteGonia.loc[((df_HS_CyteGonia['FDR_CyteGonia'] <= maxFDR) & (df_HS_CyteGonia['logFC_CyteGonia'].abs() >= minLogFC) & (df_HS_CyteGonia['logFC_CyteGonia'] >= 0)), :]
+    df_HS_DE_DownCyteGonia = df_HS_CyteGonia.loc[((df_HS_CyteGonia['FDR_CyteGonia'] <= maxFDR) & (df_HS_CyteGonia['logFC_CyteGonia'].abs() >= minLogFC) & (df_HS_CyteGonia['logFC_CyteGonia'] <= 0)), :]
+    df_HS_DE_NotCyteGonia = df_HS_CyteGonia.loc[~df_HS_CyteGonia.index.isin(df_HS_DE_UpCyteGonia.index.tolist() + df_HS_DE_DownCyteGonia.index.tolist()), :]
+    df_HS_DE_UpCyteTid = df_HS_CyteTid.loc[((df_HS_CyteTid['FDR_CyteTid'] <= maxFDR) & (df_HS_CyteTid['logFC_CyteTid'].abs() >= minLogFC) & (df_HS_CyteTid['logFC_CyteTid'] >= 0)), :]
+    df_HS_DE_DownCyteTid = df_HS_CyteTid.loc[((df_HS_CyteTid['FDR_CyteTid'] <= maxFDR) & (df_HS_CyteTid['logFC_CyteTid'].abs() >= minLogFC) & (df_HS_CyteTid['logFC_CyteTid'] <= 0)), :]
+    df_HS_DE_NotCyteTid = df_HS_CyteTid.loc[~df_HS_CyteTid.index.isin(df_HS_DE_UpCyteTid.index.tolist() + df_HS_DE_DownCyteTid.index.tolist()), :]
 
     #
     # MM
     #
-    df_MM_DGE_CyteGonia = pd.read_csv('results/MM/MM-DGE_Cyte_vs_Gonia.csv', index_col=0)
-    df_MM_DGE_CyteTid = pd.read_csv('results/MM/MM-DGE_Cyte_vs_Tid.csv', index_col=0)
-    # Add Additional Info
-    df_MM_DGE_CyteGonia['biotype'] = df_MM_G['Gene type']
-    df_MM_DGE_CyteTid['biotype'] = df_MM_G['Gene type']
+    df_MM_CyteGonia = pd.read_csv('results/MM-DE_genes.csv', index_col=0)
+    df_MM_CyteTid = pd.read_csv('results/MM-DE_genes.csv', index_col=0)
     # DE (Up/Down/Not)
-    df_MM_DE_UpCyteGonia = df_MM_DGE_CyteGonia.loc[((df_MM_DGE_CyteGonia['FDR'] <= maxFDR) & (df_MM_DGE_CyteGonia['logFC'].abs() >= minLogFC) & (df_MM_DGE_CyteGonia['logFC'] >= 0)), :]
-    df_MM_DE_DownCyteGonia = df_MM_DGE_CyteGonia.loc[((df_MM_DGE_CyteGonia['FDR'] <= maxFDR) & (df_MM_DGE_CyteGonia['logFC'].abs() >= minLogFC) & (df_MM_DGE_CyteGonia['logFC'] <= 0)), :]
-    df_MM_DE_NotCyteGonia = df_MM_DGE_CyteGonia.loc[~df_MM_DGE_CyteGonia.index.isin(df_MM_DE_UpCyteGonia.index.tolist() + df_MM_DE_DownCyteGonia.index.tolist()), :]
-    df_MM_DE_UpCyteTid = df_MM_DGE_CyteTid.loc[((df_MM_DGE_CyteTid['FDR'] <= maxFDR) & (df_MM_DGE_CyteTid['logFC'].abs() >= minLogFC) & (df_MM_DGE_CyteTid['logFC'] >= 0)), :]
-    df_MM_DE_DownCyteTid = df_MM_DGE_CyteTid.loc[((df_MM_DGE_CyteTid['FDR'] <= maxFDR) & (df_MM_DGE_CyteTid['logFC'].abs() >= minLogFC) & (df_MM_DGE_CyteTid['logFC'] <= 0)), :]
-    df_MM_DE_NotCyteTid = df_MM_DGE_CyteTid.loc[~df_MM_DGE_CyteTid.index.isin(df_MM_DE_UpCyteTid.index.tolist() + df_MM_DE_DownCyteTid.index.tolist()), :]
-    
+    df_MM_DE_UpCyteGonia = df_MM_CyteGonia.loc[((df_MM_CyteGonia['FDR_CyteGonia'] <= maxFDR) & (df_MM_CyteGonia['logFC_CyteGonia'].abs() >= minLogFC) & (df_MM_CyteGonia['logFC_CyteGonia'] >= 0)), :]
+    df_MM_DE_DownCyteGonia = df_MM_CyteGonia.loc[((df_MM_CyteGonia['FDR_CyteGonia'] <= maxFDR) & (df_MM_CyteGonia['logFC_CyteGonia'].abs() >= minLogFC) & (df_MM_CyteGonia['logFC_CyteGonia'] <= 0)), :]
+    df_MM_DE_NotCyteGonia = df_MM_CyteGonia.loc[~df_MM_CyteGonia.index.isin(df_MM_DE_UpCyteGonia.index.tolist() + df_MM_DE_DownCyteGonia.index.tolist()), :]
+    df_MM_DE_UpCyteTid = df_MM_CyteTid.loc[((df_MM_CyteTid['FDR_CyteTid'] <= maxFDR) & (df_MM_CyteTid['logFC_CyteTid'].abs() >= minLogFC) & (df_MM_CyteTid['logFC_CyteTid'] >= 0)), :]
+    df_MM_DE_DownCyteTid = df_MM_CyteTid.loc[((df_MM_CyteTid['FDR_CyteTid'] <= maxFDR) & (df_MM_CyteTid['logFC_CyteTid'].abs() >= minLogFC) & (df_MM_CyteTid['logFC_CyteTid'] <= 0)), :]
+    df_MM_DE_NotCyteTid = df_MM_CyteTid.loc[~df_MM_CyteTid.index.isin(df_MM_DE_UpCyteTid.index.tolist() + df_MM_DE_DownCyteTid.index.tolist()), :]
+
     #
     # DM
     #
-    df_DM_DGE_MiddleApical = pd.read_csv('results/DM/DM-DGE_Middle_vs_Apical.csv', index_col=0)
-    df_DM_DGE_MiddleBasal = pd.read_csv('results/DM/DM-DGE_Middle_vs_Basal.csv', index_col=0)
-    
-    df_DM_DGE_MiddleApical = pd.merge(df_DM_DGE_MiddleApical, df_DM_G, left_index=True, right_index=True, how='left')
-    df_DM_DGE_MiddleBasal = pd.merge(df_DM_DGE_MiddleBasal, df_DM_G, left_index=True, right_index=True, how='left')
-
-    # Note we rename column 'adj.P.Val' for 'FDR' for simplicity.
-    df_DM_DGE_MiddleApical.rename(columns={'adj.P.Val': 'FDR', 'Gene type': 'biotype'}, inplace=True)
-    df_DM_DGE_MiddleBasal.rename(columns={'adj.P.Val': 'FDR', 'Gene type': 'biotype'}, inplace=True)
-
+    df_DM_MiddleApical = pd.read_csv('results/DM-DE_genes.csv', index_col=0)
+    df_DM_MiddleBasal = pd.read_csv('results/DM-DE_genes.csv', index_col=0)
     # DE (Up/Down/Not)
-    df_DM_DE_UpMiddleApical = df_DM_DGE_MiddleApical.loc[((df_DM_DGE_MiddleApical['FDR'] <= maxFDR) & (df_DM_DGE_MiddleApical['logFC'].abs() >= minLogFC) & (df_DM_DGE_MiddleApical['logFC'] >= 0)), :]
-    df_DM_DE_DownMiddleApical = df_DM_DGE_MiddleApical.loc[((df_DM_DGE_MiddleApical['FDR'] <= maxFDR) & (df_DM_DGE_MiddleApical['logFC'].abs() >= minLogFC) & (df_DM_DGE_MiddleApical['logFC'] <= 0)), :]
-    df_DM_DE_NotMiddleApical = df_DM_DGE_MiddleApical.loc[~df_DM_DGE_MiddleApical.index.isin(df_DM_DE_UpMiddleApical.index.tolist() + df_DM_DE_DownMiddleApical.index.tolist()), :]
-    df_DM_DE_UpMiddleBasal = df_DM_DGE_MiddleBasal.loc[((df_DM_DGE_MiddleBasal['FDR'] <= maxFDR) & (df_DM_DGE_MiddleBasal['logFC'].abs() >= minLogFC) & (df_DM_DGE_MiddleBasal['logFC'] >= 0)), :]
-    df_DM_DE_DownMiddleBasal = df_DM_DGE_MiddleBasal.loc[((df_DM_DGE_MiddleBasal['FDR'] <= maxFDR) & (df_DM_DGE_MiddleBasal['logFC'].abs() >= minLogFC) & (df_DM_DGE_MiddleBasal['logFC'] <= 0)), :]
-    df_DM_DE_NotMiddleBasal = df_DM_DGE_MiddleBasal.loc[~df_DM_DGE_MiddleBasal.index.isin(df_DM_DE_UpMiddleBasal.index.tolist() + df_DM_DE_DownMiddleBasal.index.tolist()), :]
+    df_DM_DE_UpMiddleApical = df_DM_MiddleApical.loc[((df_DM_MiddleApical['FDR_MiddleApical'] <= maxFDR) & (df_DM_MiddleApical['logFC_MiddleApical'].abs() >= minLogFC) & (df_DM_MiddleApical['logFC_MiddleApical'] >= 0)), :]
+    df_DM_DE_DownMiddleApical = df_DM_MiddleApical.loc[((df_DM_MiddleApical['FDR_MiddleApical'] <= maxFDR) & (df_DM_MiddleApical['logFC_MiddleApical'].abs() >= minLogFC) & (df_DM_MiddleApical['logFC_MiddleApical'] <= 0)), :]
+    df_DM_DE_NotMiddleApical = df_DM_MiddleApical.loc[~df_DM_MiddleApical.index.isin(df_DM_DE_UpMiddleApical.index.tolist() + df_DM_DE_DownMiddleApical.index.tolist()), :]
+    df_DM_DE_UpMiddleBasal = df_DM_MiddleBasal.loc[((df_DM_MiddleBasal['FDR_MiddleBasal'] <= maxFDR) & (df_DM_MiddleBasal['logFC_MiddleBasal'].abs() >= minLogFC) & (df_DM_MiddleBasal['logFC_MiddleBasal'] >= 0)), :]
+    df_DM_DE_DownMiddleBasal = df_DM_MiddleBasal.loc[((df_DM_MiddleBasal['FDR_MiddleBasal'] <= maxFDR) & (df_DM_MiddleBasal['logFC_MiddleBasal'].abs() >= minLogFC) & (df_DM_MiddleBasal['logFC_MiddleBasal'] <= 0)), :]
+    df_DM_DE_NotMiddleBasal = df_DM_MiddleBasal.loc[~df_DM_MiddleBasal.index.isin(df_DM_DE_UpMiddleBasal.index.tolist() + df_DM_DE_DownMiddleBasal.index.tolist()), :]
 
     #
     # - number of genes
     #
-    n_HS_CyteGonia_g = df_HS_DGE_CyteGonia.shape[0]
-    n_HS_CyteTid_g = df_HS_DGE_CyteTid.shape[0]
-    n_MM_CyteGonia_g = df_MM_DGE_CyteGonia.shape[0]
-    n_MM_CyteTid_g = df_MM_DGE_CyteTid.shape[0]
-    n_DM_MiddleApical_g = df_DM_DGE_MiddleApical.shape[0]
-    n_DM_MiddleBasal_g = df_DM_DGE_MiddleBasal.shape[0]
+    n_HS_CyteGonia_g = df_HS_CyteGonia.shape[0]
+    n_HS_CyteTid_g = df_HS_CyteTid.shape[0]
+    n_MM_CyteGonia_g = df_MM_CyteGonia.shape[0]
+    n_MM_CyteTid_g = df_MM_CyteTid.shape[0]
+    n_DM_MiddleApical_g = df_DM_MiddleApical.shape[0]
+    n_DM_MiddleBasal_g = df_DM_MiddleBasal.shape[0]
 
-    n_HS_CyteGonia_pcg = df_HS_DGE_CyteGonia['biotype'].value_counts()['protein_coding']
-    n_HS_CyteTid_pcg = df_HS_DGE_CyteTid['biotype'].value_counts()['protein_coding']
-    n_MM_CyteGonia_pcg = df_MM_DGE_CyteGonia['biotype'].value_counts()['protein_coding']
-    n_MM_CyteTid_pcg = df_MM_DGE_CyteTid['biotype'].value_counts()['protein_coding']
-    n_DM_MiddleApical_pcg = df_DM_DGE_MiddleApical['biotype'].value_counts()['protein_coding']
-    n_DM_MiddleBasal_pcg = df_DM_DGE_MiddleBasal['biotype'].value_counts()['protein_coding']
+    n_HS_CyteGonia_pcg = df_HS_CyteGonia['biotype'].value_counts()['protein_coding']
+    n_HS_CyteTid_pcg = df_HS_CyteTid['biotype'].value_counts()['protein_coding']
+    n_MM_CyteGonia_pcg = df_MM_CyteGonia['biotype'].value_counts()['protein_coding']
+    n_MM_CyteTid_pcg = df_MM_CyteTid['biotype'].value_counts()['protein_coding']
+    n_DM_MiddleApical_pcg = df_DM_MiddleApical['biotype'].value_counts()['protein_coding']
+    n_DM_MiddleBasal_pcg = df_DM_MiddleBasal['biotype'].value_counts()['protein_coding']
 
     print('# Number of genes\n')
 
@@ -173,7 +150,7 @@ if __name__ == '__main__':
     n_DM_NotMiddleBasal_pcg = df_DM_DE_NotMiddleBasal['biotype'].value_counts()['protein_coding']
 
     columns = ['Specie', 'Cell', 'Reg.', 'FDR', 'Genes']
-    
+
     # HS
     df_HS_CyteGonia_stat = pd.DataFrame.from_records([
         ('HS', 'Cyte vs Gonia', 'Up', maxFDR, n_HS_UpCyteGonia_g),
