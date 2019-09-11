@@ -71,6 +71,9 @@ def plot_MA(df, core=[], file='image.pdf', title="plotMA",
     dfNot = df.loc[mask_not, :]
     dfDown = df.loc[mask_down, :]
     dfDownC = df.loc[mask_down_core, :]
+    # Sanity Check
+    if not set(df.index.tolist()) == set(dfUp.index.tolist() + dfUpC.index.tolist() + dfNot.index.tolist() + dfDown.index.tolist() + dfDownC.index.tolist()):
+        raise ValueError('Sanity check has failed!')
     # Counts
     n_up, n_up_core, n_not, n_down, n_down_core = len(dfUp), len(dfUpC), len(dfNot), len(dfDown), len(dfDownC)
     # Plot
@@ -83,10 +86,10 @@ def plot_MA(df, core=[], file='image.pdf', title="plotMA",
     ax.axhline(y=-1, color='b', lw=1, linestyle='--')
     ax.axhline(y=0, color='gray', lw=1, linestyle='--')
     ax.axhline(y=+1, color='b', lw=1, linestyle='--')
-    
+
     ax.set_xlim(ax.get_xlim())
     ax.set_ylim(ax.get_ylim())
-    
+
     # Number of Selected Genes
     # Up
     if n_up_core > 0:
@@ -140,7 +143,7 @@ if __name__ == '__main__':
     df = pd.read_csv('../1-diff-gene-exp/results/HS/HS-DGE_Cyte_vs_Gonia.csv', index_col=0, nrows=None)
     df.index = df.index.map(lambda x: x.split('.')[0])
     dfC = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0, nrows=None)
-    core = dfC.loc[(dfC['UpCyte_vs_Gonia'] == True) & (dfC['logFC_up'] > 0), :].index.tolist()
+    core = dfC.loc[(dfC['Cyte_vs_Gonia'] == True) & (dfC['logFC_CyteGonia'] > 0), :].index.tolist()
     
     plot_MA(df=df, core=core, file='images/{pipeline:s}/HS-DGE_UpCyte_vs_Gonia.pdf'.format(pipeline=pipeline), title="HS (Up)Cyte vs Gonia",
         x_up=10, y_up=5, x_not=15, y_not=0, x_down=15, y_down=-7,
@@ -152,7 +155,7 @@ if __name__ == '__main__':
     df = pd.read_csv('../1-diff-gene-exp/results/HS/HS-DGE_Cyte_vs_Tid.csv', index_col=0, nrows=None)
     df.index = df.index.map(lambda x: x.split('.')[0])
     dfC = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0, nrows=None)
-    core = dfC.loc[(dfC['DownCyte_vs_Tid'] == True) & (dfC['logFC_down'] < 0), :].index.tolist()
+    core = dfC.loc[(dfC['Cyte_vs_Tid'] == True) & (dfC['logFC_CyteTid'] < 0), :].index.tolist()
 
     plot_MA(df=df, core=core, file='images/{pipeline:s}/HS-DGE_DownCyte_vs_Tid.pdf'.format(pipeline=pipeline), title="HS (Down)Gonia vs Tid",
         x_up=14, y_up=6, x_not=14, y_not=0, x_down=9, y_down=-13,
@@ -166,7 +169,7 @@ if __name__ == '__main__':
     #
     df = pd.read_csv('../1-diff-gene-exp/results/MM/MM-DGE_Cyte_vs_Gonia.csv', index_col=0, nrows=None)
     dfC = pd.read_csv('results/{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0, nrows=None)
-    core = dfC.loc[(dfC['UpCyte_vs_Gonia'] == True) & (dfC['logFC_up'] > 0), :].index.tolist()
+    core = dfC.loc[(dfC['Cyte_vs_Gonia'] == True) & (dfC['logFC_CyteGonia'] > 0), :].index.tolist()
     
     plot_MA(df=df, core=core, file='images/{pipeline:s}/MM-DGE_UpCyte_vs_Gonia.pdf'.format(pipeline=pipeline), title="MM (Up)Cyte vs Gonia",
         x_up=1, y_up=9, x_not=11, y_not=0, x_down=1, y_down=-9,
@@ -177,7 +180,7 @@ if __name__ == '__main__':
     #
     df = pd.read_csv('../1-diff-gene-exp/results/MM/MM-DGE_Cyte_vs_Tid.csv', index_col=0, nrows=None)
     dfC = pd.read_csv('results/{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0, nrows=None)
-    core = dfC.loc[(dfC['DownCyte_vs_Tid'] == True) & (dfC['logFC_down'] < 0), :].index.tolist()
+    core = dfC.loc[(dfC['Cyte_vs_Tid'] == True) & (dfC['logFC_CyteTid'] < 0), :].index.tolist()
 
     plot_MA(df=df, core=core, file='images/{pipeline:s}/MM-DGE_DownCyte_vs_Tid.pdf'.format(pipeline=pipeline), title="MM (Down)Cyte vs Tid",
         x_up=11, y_up=4, x_not=11, y_not=0, x_down=7, y_down=-6,
@@ -191,7 +194,7 @@ if __name__ == '__main__':
     #
     df = pd.read_csv('../1-diff-gene-exp/results/DM/DM-DGE_Middle_vs_Apical.csv', index_col=0, nrows=None)
     dfC = pd.read_csv('results/{pipeline:s}/DM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0, nrows=None)
-    core = dfC.loc[(dfC['UpMiddle_vs_Apical'] == True) & (dfC['logFC_up'] > 0), :].index.tolist()
+    core = dfC.loc[(dfC['Middle_vs_Apical'] == True) & (dfC['logFC_MiddleApical'] > 0), :].index.tolist()
     
     plot_MA(df=df, core=core, file='images/{pipeline:s}/DM-DGE_UpMiddle_vs_Apical.pdf'.format(pipeline=pipeline), title="DM (Up)Middle vs Apical",
         x_up=8, y_up=4, x_not=12, y_not=-0.40, x_down=12, y_down=-5,
@@ -202,7 +205,7 @@ if __name__ == '__main__':
     #
     df = pd.read_csv('../1-diff-gene-exp/results/DM/DM-DGE_Middle_vs_Basal.csv', index_col=0, nrows=None)
     dfC = pd.read_csv('results/{pipeline:s}/DM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0, nrows=None)
-    core = dfC.loc[(dfC['DownMiddle_vs_Basal'] == True) & (dfC['logFC_down'] < 0), :].index.tolist()
+    core = dfC.loc[(dfC['Middle_vs_Basal'] == True) & (dfC['logFC_MiddleBasal'] < 0), :].index.tolist()
 
     plot_MA(df=df, core=core, file='images/{pipeline:s}/DM-DGE_DownMiddle_vs_Basal.pdf'.format(pipeline=pipeline), title="DM (Down)Middle vs Basal",
         x_up=12.5, y_up=4, x_not=12, y_not=0.375, x_down=9, y_down=-6,
