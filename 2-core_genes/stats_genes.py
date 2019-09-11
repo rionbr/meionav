@@ -45,8 +45,10 @@ if __name__ == '__main__':
     #
     # MM
     #
-    df_MM_CyteGonia = pd.read_csv('results/MM-DE_genes.csv', index_col=0)
-    df_MM_CyteTid = pd.read_csv('results/MM-DE_genes.csv', index_col=0)
+    df_MM = pd.read_csv('results/MM-DE_genes.csv', index_col=0)
+
+    df_MM_CyteGonia = df_MM.loc[(df_MM['Cyte_vs_Gonia']) == True, :]
+    df_MM_CyteTid = df_MM.loc[(df_MM['Cyte_vs_Tid']) == True, :]
     # DE (Up/Down/Not)
     df_MM_DE_UpCyteGonia = df_MM_CyteGonia.loc[((df_MM_CyteGonia['FDR_CyteGonia'] <= maxFDR) & (df_MM_CyteGonia['logFC_CyteGonia'].abs() >= minLogFC) & (df_MM_CyteGonia['logFC_CyteGonia'] >= 0)), :]
     df_MM_DE_DownCyteGonia = df_MM_CyteGonia.loc[((df_MM_CyteGonia['FDR_CyteGonia'] <= maxFDR) & (df_MM_CyteGonia['logFC_CyteGonia'].abs() >= minLogFC) & (df_MM_CyteGonia['logFC_CyteGonia'] <= 0)), :]
@@ -58,8 +60,10 @@ if __name__ == '__main__':
     #
     # DM
     #
-    df_DM_MiddleApical = pd.read_csv('results/DM-DE_genes.csv', index_col=0)
-    df_DM_MiddleBasal = pd.read_csv('results/DM-DE_genes.csv', index_col=0)
+    df_DM = pd.read_csv('results/DM-DE_genes.csv', index_col=0)
+
+    df_DM_MiddleApical = df_DM.loc[(df_DM['Middle_vs_Apical']) == True, :]
+    df_DM_MiddleBasal = df_DM.loc[(df_DM['Middle_vs_Basal']) == True, :]
     # DE (Up/Down/Not)
     df_DM_DE_UpMiddleApical = df_DM_MiddleApical.loc[((df_DM_MiddleApical['FDR_MiddleApical'] <= maxFDR) & (df_DM_MiddleApical['logFC_MiddleApical'].abs() >= minLogFC) & (df_DM_MiddleApical['logFC_MiddleApical'] >= 0)), :]
     df_DM_DE_DownMiddleApical = df_DM_MiddleApical.loc[((df_DM_MiddleApical['FDR_MiddleApical'] <= maxFDR) & (df_DM_MiddleApical['logFC_MiddleApical'].abs() >= minLogFC) & (df_DM_MiddleApical['logFC_MiddleApical'] <= 0)), :]
@@ -104,7 +108,7 @@ if __name__ == '__main__':
     #
     print("# Number of genes differently expressed\n")
 
-    # HS     
+    # HS
     n_HS_UpCyteGonia_g = df_HS_DE_UpCyteGonia.shape[0]
     n_HS_DownCyteGonia_g = df_HS_DE_DownCyteGonia.shape[0]
     n_HS_NotCyteGonia_g = df_HS_DE_NotCyteGonia.shape[0]
