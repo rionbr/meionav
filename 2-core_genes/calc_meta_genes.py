@@ -3,7 +3,8 @@
 # Date: Jul 05, 2019
 #
 # Description: Processes original String-DB .zip.gz files.
-#    Keeps only those ids we want.
+#    Keeps only those ids that are present in at least one of the species.
+#    In practice it lowers the search space for next scripts.
 #
 #
 import math
@@ -59,7 +60,7 @@ if __name__ == '__main__':
         return [i for i in text.split(',') if i.split('.', 1)[0] in keeplist]
 
     df = df_Egg.apply(select_by_species, args=(wanted_species,))
-    
+
     def select_by_at_lest_one_match(ilist, keeplist):
         # Only keep genes that are found in any of our gene list (lower the search space)
         spermgenes = [i for i in ilist if i in keeplist]

@@ -2,7 +2,8 @@
 # Author: Rion B Correia
 # Date: Jul 05, 2019
 #
-# Description: Indexes meta-genes and combines with DGE information to select core meiotic genes.
+# Description: Indexes meta-genes to select core meiotic genes.
+#   Pipeline: All 3 species (HS, MM & MM) conserved genes that Up/Down Regulated.
 #
 #
 import math
