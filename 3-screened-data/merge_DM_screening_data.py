@@ -37,7 +37,7 @@ if __name__ == '__main__':
     df[cols3] = dfS[cols3]
 
     # Export
-    wDMfile = 'results/{pipeline:s}/core_DM_meiotic_genes_screened.csv'.format(pipeline=pipeline)
+    wDMfile = 'results/{pipeline:s}/DM_meiotic_genes_screened.csv'.format(pipeline=pipeline)
     ensurePathExists(wDMfile)
     df.to_csv(wDMfile)
 
