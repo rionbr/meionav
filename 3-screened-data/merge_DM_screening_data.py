@@ -9,14 +9,19 @@ import pandas as pd
 pd.set_option('display.max_rows', 100)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
+from utils import ensurePathExists
+
 
 if __name__ == '__main__':
 
+    pipeline = 'all3-pooling-DM-FDRp01'  # 'all3-conserved-FDRp05' or 'all3-pooling-DM-FDRp01'
+
     # This is the 'dfU' object from [3]
-    df = pd.read_csv('../2-core_genes/results/DM/core_DM_meiotic_genes.csv').set_index('id_gene_DM')
+    rDMfile = '../2-core_genes/results/{pipeline:s}/DM_meiotic_genes.csv'.format(pipeline=pipeline)
+    df = pd.read_csv(rDMfile, index_col=0)
     
     # Screened Data (From Experimental Analysis)
-    dfS = pd.read_csv('data/core_DM_screened_2019-08.csv').set_index('id_gene_DM')
+    dfS = pd.read_csv('data/core_DM_screened_2019-09.csv', index_col=0)
 
     cols1 = [
         'StockNumber', 'FlyBase Genotype'
@@ -32,6 +37,8 @@ if __name__ == '__main__':
     df[cols3] = dfS[cols3]
 
     # Export
-    df.to_csv('results/core_DM_meiotic_genes_screened.csv')
+    wDMfile = 'results/{pipeline:s}/core_DM_meiotic_genes_screened.csv'.format(pipeline=pipeline)
+    ensurePathExists(wDMfile)
+    df.to_csv(wDMfile)
 
     print('Done.')
