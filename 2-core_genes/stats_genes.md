@@ -3,11 +3,11 @@
 |  Species   | Cell             |   Genes |   Prot. Coding |      % |
 | :----------|:-----------------|--------:|---------------:|-------:|
 |  HS        | Cyte vs Gonia    |   16165 |          12925 | 0.7996 |
-|  HS        | Cyte vs Tid      |   13561 |          10817 | 0.7977 |
+|  HS        | Tid vs Cyte      |   13561 |          10817 | 0.7977 |
 |  MM        | Cyte vs Gonia    |   11806 |          11044 | 0.9355 |
-|  MM        | Cyte vs Tid      |   13995 |          11642 | 0.8319 |
+|  MM        | Tid vs Cyte      |   13995 |          11642 | 0.8319 |
 |  DM        | Middle vs Apical |   11154 |          10197 | 0.9142 |
-|  DM        | Middle vs Basal  |   10707 |           9842 | 0.9192 |
+|  DM        | Basal vs Middle  |   10707 |           9842 | 0.9192 |
 
 
 # Number of genes differently expressed
@@ -20,9 +20,9 @@
 
 |  Specie   | Cell        | Reg.   |   FDR |   Genes |   %(G) |   Prot. Coding |   %(PC) |
 | :---------|:------------|:-------|------:|--------:|-------:|---------------:|--------:|
-|  HS       | Cyte vs Tid | Up     |  0.05 |    2289 | 0.1688 |           1779 |  0.7772 |
-|  HS       | Cyte vs Tid | Not    |  0.05 |    8139 | 0.6002 |           6759 |  0.8304 |
-|  HS       | Cyte vs Tid | Down   |  0.05 |    3133 | 0.2310 |           2279 |  0.7274 |
+|  HS       | Tid vs Cyte | Up     |  0.05 |    2289 | 0.1688 |           1779 |  0.7772 |
+|  HS       | Tid vs Cyte | Not    |  0.05 |    8139 | 0.6002 |           6759 |  0.8304 |
+|  HS       | Tid vs Cyte | Down   |  0.05 |    3133 | 0.2310 |           2279 |  0.7274 |
 
 |  Specie   | Cell          | Reg.   |   FDR |   Genes |   %(G) |   Prot. Coding |   %(PC) |
 | :---------|:--------------|:-------|------:|--------:|-------:|---------------:|--------:|
@@ -32,9 +32,9 @@
 
 |  Specie   | Cell        | Reg.   |   FDR |   Genes |   %(G) |   Prot. Coding |   %(PC) |
 | :---------|:------------|:-------|------:|--------:|-------:|---------------:|--------:|
-|  MM       | Cyte vs Tid | Up     |  0.05 |    3481 | 0.2487 |           2619 |  0.7524 |
-|  MM       | Cyte vs Tid | Not    |  0.05 |    7820 | 0.5588 |           6655 |  0.8510 |
-|  MM       | Cyte vs Tid | Down   |  0.05 |    2694 | 0.1925 |           2368 |  0.8790 |
+|  MM       | Tid vs Cyte | Up     |  0.05 |    3481 | 0.2487 |           2619 |  0.7524 |
+|  MM       | Tid vs Cyte | Not    |  0.05 |    7820 | 0.5588 |           6655 |  0.8510 |
+|  MM       | Tid vs Cyte | Down   |  0.05 |    2694 | 0.1925 |           2368 |  0.8790 |
 
 |  Specie   | Cell             | Reg.   |   FDR |   Genes |   %(G) |   Prot. Coding |   %(PC) |
 | :---------|:-----------------|:-------|------:|--------:|-------:|---------------:|--------:|
@@ -44,8 +44,8 @@
 
 |  Specie   | Cell            | Reg.   |   FDR |   Genes |   %(G) |   Prot. Coding |   %(PC) |
 | :---------|:----------------|:-------|------:|--------:|-------:|---------------:|--------:|
-|  DM       | Middle vs Basal | Up     |  0.05 |     445 | 0.0416 |            410 |  0.9213 |
-|  DM       | Middle vs Basal | Not    |  0.05 |    9550 | 0.8919 |           8735 |  0.9147 |
-|  DM       | Middle vs Basal | Down   |  0.05 |     712 | 0.0665 |            697 |  0.9789 |
+|  DM       | Basal vs Middle | Up     |  0.05 |     712 | 0.0665 |            697 |  0.9789 |
+|  DM       | Basal vs Middle | Not    |  0.05 |    9550 | 0.8919 |           8735 |  0.9147 |
+|  DM       | Basal vs Middle | Down   |  0.05 |     445 | 0.0416 |            410 |  0.9213 |
 
-[Finished in 2.0s]
+[Finished in 1.3s]
