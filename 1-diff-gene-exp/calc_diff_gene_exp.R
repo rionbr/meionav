@@ -99,7 +99,7 @@ de = calc_diff_gene_exp(
   contrasts="Tid-Cyte",
   min.cpm=1,
   min.rowsum=9,
-  file="results/HS/HS-DGE_Cyte_vs_Tid.csv")
+  file="results/HS/HS-DGE_Tid_vs_Cyte.csv")
 
 ####################
 # [M]us [M]usculus #
@@ -135,7 +135,7 @@ de = calc_diff_gene_exp(
   contrasts="Tid-Cyte",
   min.cpm=1,
   min.rowsum=4,
-  file="results/MM/MM-DGE_Cyte_vs_Tid.csv")
+  file="results/MM/MM-DGE_Tid_vs_Cyte.csv")
 
 
 ###############################
@@ -169,7 +169,7 @@ counts <- subset(cHS, select=rownames(design))
 de = calc_diff_gene_exp(
   counts=counts,
   group=design$condition,
-  contrasts="Middle-Basal",
+  contrasts="Basal-Middle",
   min.cpm=1,
   min.rowsum=2,
-  file="results/DM/DM-DGE_Middle_vs_Basal.csv")
+  file="results/DM/DM-DGE_Basal_vs_Middle.csv")

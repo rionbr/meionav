@@ -40,13 +40,13 @@ if __name__ == '__main__':
     df_HS_G = ds_HS.query(attributes=['ensembl_gene_id', 'external_gene_name', 'gene_biotype', 'description']).set_index('Gene stable ID')
 
     rCSVFileCG = "../1-diff-gene-exp/results/HS/HS-DGE_Cyte_vs_Gonia.csv"
-    rCSVFileCT = "../1-diff-gene-exp/results/HS/HS-DGE_Cyte_vs_Tid.csv"
+    rCSVFileCT = "../1-diff-gene-exp/results/HS/HS-DGE_Tid_vs_Cyte.csv"
     df_HS_CG = pd.read_csv(rCSVFileCG, index_col=0).loc[:, ['logFC', 'logCPM', 'FDR']]
     df_HS_CG.index.name = 'id_gene'
     df_HS_CG.index = df_HS_CG.index.map(lambda x: x.split('.')[0])
     df_HS_CG.columns = [x + '_CyteGonia' for x in df_HS_CG.columns]
     df_HS_CT = pd.read_csv(rCSVFileCT, index_col=0).loc[:, ['logFC', 'logCPM', 'FDR']]
-    df_HS_CT.columns = [x + '_CyteTid' for x in df_HS_CT.columns]
+    df_HS_CT.columns = [x + '_TidCyte' for x in df_HS_CT.columns]
     df_HS_CT.index.name = 'id_gene'
     df_HS_CT.index = df_HS_CT.index.map(lambda x: x.split('.')[0])
     
@@ -60,19 +60,19 @@ if __name__ == '__main__':
     df_HS_CG['Cyte_vs_Gonia'] = True
     # Down
     df_HS_CT['id_string'] = df_SAg['id_string']
-    df_HS_CT['Cyte_vs_Tid'] = True
+    df_HS_CT['Tid_vs_Cyte'] = True
 
     # Merge Up/Down
     df_HS = pd.merge(df_HS_CG, df_HS_CT, how='outer', left_index=True, right_index=True)
     df_HS['id_string'] = df_HS.apply(combine_id_string_x_with_id_string_y, axis='columns')
     df_HS['gene'] = df_HS_G['Gene name']
     df_HS['biotype'] = df_HS_G['Gene type']
-    df_HS[['Cyte_vs_Gonia', 'Cyte_vs_Tid']] = df_HS[['Cyte_vs_Gonia', 'Cyte_vs_Tid']].fillna(False)
+    df_HS[['Cyte_vs_Gonia', 'Tid_vs_Cyte']] = df_HS[['Cyte_vs_Gonia', 'Tid_vs_Cyte']].fillna(False)
     # Index Rows/Cols
     maskcols = [
-        'id_string', 'gene', 'Cyte_vs_Gonia', 'Cyte_vs_Tid',
+        'id_string', 'gene', 'Cyte_vs_Gonia', 'Tid_vs_Cyte',
         'logCPM_CyteGonia', 'logFC_CyteGonia', 'FDR_CyteGonia',
-        'logCPM_CyteTid', 'logFC_CyteTid', 'FDR_CyteTid',
+        'logCPM_TidCyte', 'logFC_TidCyte', 'FDR_TidCyte',
         'biotype'
     ]
     df_HS = df_HS.loc[:, maskcols]
@@ -88,13 +88,13 @@ if __name__ == '__main__':
     df_MM_G = ds_MM.query(attributes=['ensembl_gene_id', 'external_gene_name', 'gene_biotype', 'description']).set_index('Gene stable ID')
 
     rCSVFileCG = "../1-diff-gene-exp/results/MM/MM-DGE_Cyte_vs_Gonia.csv"
-    rCSVFileCT = "../1-diff-gene-exp/results/MM/MM-DGE_Cyte_vs_Tid.csv"
+    rCSVFileCT = "../1-diff-gene-exp/results/MM/MM-DGE_Tid_vs_Cyte.csv"
     df_MM_CG = pd.read_csv(rCSVFileCG, index_col=0).loc[:, ['logFC', 'logCPM', 'FDR']]
     df_MM_CG.index.name = 'id_gene'
     df_MM_CG.index = df_MM_CG.index.map(lambda x: x.split('.')[0])
     df_MM_CG.columns = [x + '_CyteGonia' for x in df_MM_CG.columns]
     df_MM_CT = pd.read_csv(rCSVFileCT, index_col=0).loc[:, ['logFC', 'logCPM', 'FDR']]
-    df_MM_CT.columns = [x + '_CyteTid' for x in df_MM_CT.columns]
+    df_MM_CT.columns = [x + '_TidCyte' for x in df_MM_CT.columns]
     df_MM_CT.index.name = 'id_gene'
     df_MM_CT.index = df_MM_CT.index.map(lambda x: x.split('.')[0])
 
@@ -108,19 +108,19 @@ if __name__ == '__main__':
     df_MM_CG['Cyte_vs_Gonia'] = True
     # Down
     df_MM_CT['id_string'] = df_SAg['id_string']
-    df_MM_CT['Cyte_vs_Tid'] = True
+    df_MM_CT['Tid_vs_Cyte'] = True
 
     # Merge Up/Down
     df_MM = pd.merge(df_MM_CG, df_MM_CT, how='outer', left_index=True, right_index=True)
     df_MM['id_string'] = df_MM.apply(combine_id_string_x_with_id_string_y, axis='columns')
     df_MM['gene'] = df_MM_G['Gene name']
     df_MM['biotype'] = df_MM_G['Gene type']
-    df_MM[['Cyte_vs_Gonia', 'Cyte_vs_Tid']] = df_MM[['Cyte_vs_Gonia', 'Cyte_vs_Tid']].fillna(False)
+    df_MM[['Cyte_vs_Gonia', 'Tid_vs_Cyte']] = df_MM[['Cyte_vs_Gonia', 'Tid_vs_Cyte']].fillna(False)
     # Index Rows/Cols
     maskcols = [
-        'id_string', 'gene', 'Cyte_vs_Gonia', 'Cyte_vs_Tid',
+        'id_string', 'gene', 'Cyte_vs_Gonia', 'Tid_vs_Cyte',
         'logCPM_CyteGonia', 'logFC_CyteGonia', 'FDR_CyteGonia',
-        'logCPM_CyteTid', 'logFC_CyteTid', 'FDR_CyteTid',
+        'logCPM_TidCyte', 'logFC_TidCyte', 'FDR_TidCyte',
         'biotype'
     ]
     df_MM = df_MM.loc[:, maskcols]
@@ -136,12 +136,12 @@ if __name__ == '__main__':
     df_DM_G = ds_DM.query(attributes=['ensembl_gene_id', 'external_gene_name', 'gene_biotype']).set_index('Gene stable ID')
     #
     rCSVFileMA = "../1-diff-gene-exp/results/DM/DM-DGE_Middle_vs_Apical.csv"
-    rCSVFileMB = "../1-diff-gene-exp/results/DM/DM-DGE_Middle_vs_Basal.csv"
+    rCSVFileMB = "../1-diff-gene-exp/results/DM/DM-DGE_Basal_vs_Middle.csv"
     df_DM_MA = pd.read_csv(rCSVFileMA, index_col=0).loc[:, ['logFC', 'logCPM', 'FDR']]
     df_DM_MA.index.name = 'id_gene'
     df_DM_MA.columns = [x + '_MiddleApical' for x in df_DM_MA.columns]
     df_DM_MB = pd.read_csv(rCSVFileMB, index_col=0).loc[:, ['logFC', 'logCPM', 'FDR']]
-    df_DM_MB.columns = [x + '_MiddleBasal' for x in df_DM_MB.columns]
+    df_DM_MB.columns = [x + '_BasalMiddle' for x in df_DM_MB.columns]
     df_DM_MB.index.name = 'id_gene'
 
     # Map: id_gene <-> id_string
@@ -155,19 +155,19 @@ if __name__ == '__main__':
     df_DM_MA['Middle_vs_Apical'] = True
     # Down
     df_DM_MB['id_string'] = df_SAg['id_string']
-    df_DM_MB['Middle_vs_Basal'] = True
+    df_DM_MB['Basal_vs_Middle'] = True
 
     # Merge Up/Down
     df_DM = pd.merge(df_DM_MA, df_DM_MB, how='outer', left_index=True, right_index=True)
     df_DM['id_string'] = df_DM.apply(combine_id_string_x_with_id_string_y, axis='columns')
     df_DM['gene'] = df_DM_G['Gene name']
     df_DM['biotype'] = df_DM_G['Gene type']
-    df_DM[['Middle_vs_Apical', 'Middle_vs_Basal']] = df_DM[['Middle_vs_Apical', 'Middle_vs_Basal']].fillna(False)
+    df_DM[['Middle_vs_Apical', 'Basal_vs_Middle']] = df_DM[['Middle_vs_Apical', 'Basal_vs_Middle']].fillna(False)
     # Index Rows/Cols
     maskcols = [
-        'id_string', 'gene', 'Middle_vs_Apical', 'Middle_vs_Basal',
+        'id_string', 'gene', 'Middle_vs_Apical', 'Basal_vs_Middle',
         'logCPM_MiddleApical', 'logFC_MiddleApical', 'FDR_MiddleApical',
-        'logCPM_MiddleBasal', 'logFC_MiddleBasal', 'FDR_MiddleBasal',
+        'logCPM_BasalMiddle', 'logFC_BasalMiddle', 'FDR_BasalMiddle',
         'biotype'
     ]
     df_DM = df_DM.loc[:, maskcols] # For Drosophila, we actually need all genes because of pipeline 'pooling'

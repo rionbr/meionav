@@ -16,8 +16,8 @@ from utils import ensurePathExists
 
 if __name__ == '__main__':
 
-    pipeline = 'all3-conserved-FDRp05'
-    maxFDR = 0.05
+    pipeline = 'all3-conserved-FDRp01'
+    maxFDR = 0.01
     minLogFC = math.log2(2)
 
     # Load Species Gene Files
@@ -31,15 +31,15 @@ if __name__ == '__main__':
     # In the 'conserved' pipeline we need to restrict the DM genes
     maskrows_HS = (
         (df_HS['Cyte_vs_Gonia'] == True) & (df_HS['FDR_CyteGonia'] <= maxFDR) & (df_HS['logFC_CyteGonia'].abs() >= minLogFC) & (df_HS['logFC_CyteGonia'] >= 0) |
-        (df_HS['Cyte_vs_Tid'] == True) & (df_HS['FDR_CyteTid'] <= maxFDR) & (df_HS['logFC_CyteTid'].abs() >= minLogFC) & (df_HS['logFC_CyteTid'] <= 0)
+        (df_HS['Tid_vs_Cyte'] == True) & (df_HS['FDR_TidCyte'] <= maxFDR) & (df_HS['logFC_TidCyte'].abs() >= minLogFC) & (df_HS['logFC_TidCyte'] <= 0)
     )
     maskrows_MM = (
         (df_MM['Cyte_vs_Gonia'] == True) & (df_MM['FDR_CyteGonia'] <= maxFDR) & (df_MM['logFC_CyteGonia'].abs() >= minLogFC) & (df_MM['logFC_CyteGonia'] >= 0) |
-        (df_MM['Cyte_vs_Tid'] == True) & (df_MM['FDR_CyteTid'] <= maxFDR) & (df_MM['logFC_CyteTid'].abs() >= minLogFC) & (df_MM['logFC_CyteTid'] <= 0)
+        (df_MM['Tid_vs_Cyte'] == True) & (df_MM['FDR_TidCyte'] <= maxFDR) & (df_MM['logFC_TidCyte'].abs() >= minLogFC) & (df_MM['logFC_TidCyte'] <= 0)
     )
     maskrows_DM = (
         (df_DM['Middle_vs_Apical'] == True) & (df_DM['FDR_MiddleApical'] <= maxFDR) & (df_DM['logFC_MiddleApical'].abs() >= minLogFC) & (df_DM['logFC_MiddleApical'] >= 0) |
-        (df_DM['Middle_vs_Basal'] == True) & (df_DM['FDR_MiddleBasal'] <= maxFDR) & (df_DM['logFC_MiddleBasal'].abs() >= minLogFC) & (df_DM['logFC_MiddleBasal'] <= 0)
+        (df_DM['Basal_vs_Middle'] == True) & (df_DM['FDR_BasalMiddle'] <= maxFDR) & (df_DM['logFC_BasalMiddle'].abs() >= minLogFC) & (df_DM['logFC_BasalMiddle'] <= 0)
     )
     df_HS = df_HS.loc[maskrows_HS, :]
     df_MM = df_MM.loc[maskrows_MM, :]
@@ -96,7 +96,7 @@ if __name__ == '__main__':
 
     columns = [
         'HS_CyteGonia', 'MM_CyteGonia', 'DM_MiddleApical',
-        'HS_CyteTid', 'MM_CyteTid', 'DM_MiddleBasal',
+        'HS_TidCyte', 'MM_TidCyte', 'DM_BasalMiddle',
         'biotype_HS', 'biotype_MM', 'biotype_DM',
         'id_gene_HS', 'id_gene_MM', 'id_gene_DM',
         'gene_HS', 'gene_MM', 'gene_DM']

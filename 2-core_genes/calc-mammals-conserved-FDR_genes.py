@@ -29,11 +29,11 @@ if __name__ == '__main__':
 
     maskrows_HS = (
         (df_HS['Cyte_vs_Gonia'] == True) & (df_HS['FDR_CyteGonia'] <= maxFDR) & (df_HS['logFC_CyteGonia'].abs() >= minLogFC) & (df_HS['logFC_CyteGonia'] >= 0) |
-        (df_HS['Cyte_vs_Tid'] == True) & (df_HS['FDR_CyteTid'] <= maxFDR) & (df_HS['logFC_CyteTid'].abs() >= minLogFC) & (df_HS['logFC_CyteTid'] <= 0)
+        (df_HS['Tid_vs_Cyte'] == True) & (df_HS['FDR_TidCyte'] <= maxFDR) & (df_HS['logFC_TidCyte'].abs() >= minLogFC) & (df_HS['logFC_TidCyte'] <= 0)
     )
     maskrows_MM = (
         (df_MM['Cyte_vs_Gonia'] == True) & (df_MM['FDR_CyteGonia'] <= maxFDR) & (df_MM['logFC_CyteGonia'].abs() >= minLogFC) & (df_MM['logFC_CyteGonia'] >= 0) |
-        (df_MM['Cyte_vs_Tid'] == True) & (df_MM['FDR_CyteTid'] <= maxFDR) & (df_MM['logFC_CyteTid'].abs() >= minLogFC) & (df_MM['logFC_CyteTid'] <= 0)
+        (df_MM['Tid_vs_Cyte'] == True) & (df_MM['FDR_TidCyte'] <= maxFDR) & (df_MM['logFC_TidCyte'].abs() >= minLogFC) & (df_MM['logFC_TidCyte'] <= 0)
     )
 
     df_HS = df_HS.loc[maskrows_HS, :]
@@ -86,7 +86,7 @@ if __name__ == '__main__':
 
     columns = [
         'HS_CyteGonia', 'MM_CyteGonia',
-        'HS_CyteTid', 'MM_CyteTid',
+        'HS_TidCyte', 'MM_TidCyte',
         'biotype_HS', 'biotype_MM',
         'id_gene_HS', 'id_gene_MM',
         'gene_HS', 'gene_MM']

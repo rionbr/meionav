@@ -29,11 +29,11 @@ if __name__ == '__main__':
     # In the 'conserved' pipeline we need to restrict the DM genes
     maskrows_HS = (
         (df_HS['Cyte_vs_Gonia'] == True) & (df_HS['logCPM_CyteGonia'] >= minLogCPM) |
-        (df_HS['Cyte_vs_Tid'] == True) & (df_HS['logCPM_CyteTid'] >= minLogCPM)
+        (df_HS['Tid_vs_Cyte'] == True) & (df_HS['logCPM_TidCyte'] >= minLogCPM)
     )
     maskrows_MM = (
         (df_MM['Cyte_vs_Gonia'] == True) & (df_MM['logCPM_CyteGonia'] >= minLogCPM) |
-        (df_MM['Cyte_vs_Tid'] == True) & (df_MM['logCPM_CyteGonia'] >= minLogCPM)
+        (df_MM['Tid_vs_Cyte'] == True) & (df_MM['logCPM_TidCyte'] >= minLogCPM)
     )
     df_HS = df_HS.loc[maskrows_HS, :]
     df_MM = df_MM.loc[maskrows_MM, :]
@@ -72,7 +72,7 @@ if __name__ == '__main__':
 
     columns = [
         'HS_CyteGonia', 'MM_CyteGonia',
-        'HS_CyteTid', 'MM_CyteTid',
+        'HS_TidCyte', 'MM_TidCyte',
         'biotype_HS', 'biotype_MM',
         'id_gene_HS', 'id_gene_MM',
         'gene_HS', 'gene_MM']
