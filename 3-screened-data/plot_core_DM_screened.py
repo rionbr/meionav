@@ -23,7 +23,7 @@ if __name__ == '__main__':
 
     df = pd.read_csv('../2-core_genes/results/DM/core_DM_meiotic_genes.csv', index_col=0)
     dfC = pd.read_csv('data/core_DM_control.csv')
-    dfS = pd.read_csv('data/core_DM_screened_2019-08.csv', index_col=0, na_values='PENDING')
+    dfS = pd.read_csv('data/core_DM_screened_2019-10-03.csv', index_col=0, na_values='PENDING')
 
     # Add Gene Name
     dsDM = Dataset(name='dmelanogaster_gene_ensembl', host='http://www.ensembl.org')

@@ -30,7 +30,7 @@ if __name__ == '__main__':
     df['pooling'] = df.index.isin(dfB.index)
 
     # Load Screened data
-    dfS = pd.read_csv('data/core_DM_screened_2019-09.csv', index_col=0, na_values='PENDING')
+    dfS = pd.read_csv('data/core_DM_screened_2019-10-03.csv', index_col=0, na_values='PENDING')
     dfC = pd.read_csv('data/core_DM_control.csv')
 
     print(dfS.head())

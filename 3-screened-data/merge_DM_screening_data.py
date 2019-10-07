@@ -21,7 +21,7 @@ if __name__ == '__main__':
     df = pd.read_csv(rDMfile, index_col=0)
     
     # Screened Data (From Experimental Analysis)
-    dfS = pd.read_csv('data/core_DM_screened_2019-09.csv', index_col=0)
+    dfS = pd.read_csv('data/core_DM_screened_2019-10-03.csv', index_col=0)
 
     cols1 = [
         'StockNumber', 'FlyBase Genotype'
