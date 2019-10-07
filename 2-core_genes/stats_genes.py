@@ -43,6 +43,13 @@ if __name__ == '__main__':
     df_HS_DE_NotCyteTid = df_HS_TidCyte.loc[~df_HS_TidCyte.index.isin(df_HS_DE_UpCyteTid.index.tolist() + df_HS_DE_DownCyteTid.index.tolist()), :]
 
     #
+    # HS (Mitosis)
+    #
+    df_HS_mit = pd.read_csv('results/HS-E_mitotic_genes.csv', index_col=0)
+    df_HS_MitPre = df_HS_mit.loc[(df_HS_mit['Mit_vs_Pre']) == True, :]
+    df_HS_PosMit = df_HS_mit.loc[(df_HS_mit['Pos_vs_Mit']) == True, :]
+
+    #
     # MM
     #
     df_MM = pd.read_csv('results/MM-DE_genes.csv', index_col=0)
@@ -76,6 +83,8 @@ if __name__ == '__main__':
     #
     n_HS_CyteGonia_g = df_HS_CyteGonia.shape[0]
     n_HS_TidCyte_g = df_HS_TidCyte.shape[0]
+    n_HS_MitPre = df_HS_MitPre.shape[0]
+    n_HS_PosMit = df_HS_PosMit.shape[0]
     n_MM_CyteGonia_g = df_MM_CyteGonia.shape[0]
     n_MM_TidCyte_g = df_MM_TidCyte.shape[0]
     n_DM_MiddleApical_g = df_DM_MiddleApical.shape[0]
@@ -83,6 +92,8 @@ if __name__ == '__main__':
 
     n_HS_CyteGonia_pcg = df_HS_CyteGonia['biotype'].value_counts()['protein_coding']
     n_HS_TidCyte_pcg = df_HS_TidCyte['biotype'].value_counts()['protein_coding']
+    n_HS_MitPre_pcg = df_HS_MitPre['biotype'].value_counts()['protein_coding']
+    n_HS_PosMit_pcg = df_HS_PosMit['biotype'].value_counts()['protein_coding']
     n_MM_CyteGonia_pcg = df_MM_CyteGonia['biotype'].value_counts()['protein_coding']
     n_MM_TidCyte_pcg = df_MM_TidCyte['biotype'].value_counts()['protein_coding']
     n_DM_MiddleApical_pcg = df_DM_MiddleApical['biotype'].value_counts()['protein_coding']
@@ -93,6 +104,8 @@ if __name__ == '__main__':
     df_stat = pd.DataFrame.from_records([
         ('HS', 'Cyte vs Gonia', n_HS_CyteGonia_g, n_HS_CyteGonia_pcg),
         ('HS', 'Tid vs Cyte', n_HS_TidCyte_g, n_HS_TidCyte_pcg),
+        ('HS (mitosis)', 'Mitosis vs Pre-Mitosis', n_HS_MitPre, n_HS_MitPre_pcg),
+        ('HS (mitosis)', 'Pos-Mitosis vs Mitosis', n_HS_PosMit, n_HS_PosMit_pcg),
         ('MM', 'Cyte vs Gonia', n_MM_CyteGonia_g, n_MM_CyteGonia_pcg),
         ('MM', 'Tid vs Cyte', n_MM_TidCyte_g, n_MM_TidCyte_pcg),
         ('DM', 'Middle vs Apical', n_DM_MiddleApical_g, n_DM_MiddleApical_pcg),

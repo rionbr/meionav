@@ -34,6 +34,7 @@ if __name__ == '__main__':
     #
     # [H]omo [S]apiens (9606) - [A]liases
     #
+    
     print('Mapping HS')
     # Query bioMart for Gene Name/Description
     ds_HS = Dataset(name='hsapiens_gene_ensembl', host='http://www.ensembl.org')
@@ -78,7 +79,48 @@ if __name__ == '__main__':
     df_HS = df_HS.loc[:, maskcols]
     # To CSV
     df_HS.to_csv('results/HS-DE_genes.csv'.format(pipeline=pipeline))
-    
+
+    #
+    # !!Mitosis!! [H]omo [S]apiens (9606) - [A]liases
+    #
+    rCSVFileMP = "../1-diff-gene-exp/results/HS/HS-GE_Mitotic_vs_PreMitotic.csv"
+    rCSVFilePM = "../1-diff-gene-exp/results/HS/HS-GE_PostMitotic_vs_Mitotic.csv"
+    df_HS_MP = pd.read_csv(rCSVFileMP, index_col=0).loc[:, []]
+    df_HS_MP.index.name = 'id_gene'
+    df_HS_MP.index = df_HS_MP.index.map(lambda x: x.split('.')[0])
+    df_HS_MP.columns = [x + '_MitPre' for x in df_HS_MP.columns]
+    df_HS_PM = pd.read_csv(rCSVFilePM, index_col=0).loc[:, []]
+    df_HS_PM.columns = [x + '_PosMit' for x in df_HS_PM.columns]
+    df_HS_PM.index.name = 'id_gene'
+    df_HS_PM.index = df_HS_PM.index.map(lambda x: x.split('.')[0])
+
+    # Map: id_gene <-> id_string
+    df_SA = open_undefined_last_column_files('../StringDB/9606/9606.protein.aliases.v11.0.txt.gz', skiprows=1, n_fixed_cols=2, names=["id_string", "alias", "source"])
+    # Parse String Data - Note some genes have multiple id_string, others have no match
+    df_SA = df_SA.loc[df_SA['alias'].isin(df_HS_MP.index.to_list() + df_HS_PM.index.to_list()), ["alias", "id_string"]].rename(columns={"alias": "id_gene"})
+    df_SAg = df_SA.groupby('id_gene').agg({'id_string': lambda x: x if len(x) == 1 else list(x)})
+    # Up
+    df_HS_MP['id_string'] = df_SAg['id_string']
+    df_HS_MP['Mit_vs_Pre'] = True
+    # Down
+    df_HS_PM['id_string'] = df_SAg['id_string']
+    df_HS_PM['Pos_vs_Mit'] = True
+
+    # Merge Up/Down
+    df_HSmit = pd.merge(df_HS_MP, df_HS_PM, how='outer', left_index=True, right_index=True)
+    df_HSmit['id_string'] = df_HSmit.apply(combine_id_string_x_with_id_string_y, axis='columns')
+    df_HSmit['gene'] = df_HS_G['Gene name']
+    df_HSmit['biotype'] = df_HS_G['Gene type']
+    df_HSmit[['Mit_vs_Pre', 'Pos_vs_Mit']] = df_HSmit[['Mit_vs_Pre', 'Pos_vs_Mit']].fillna(False)
+    # Index Rows/Cols
+    maskcols = [
+        'id_string', 'gene', 'Mit_vs_Pre', 'Pos_vs_Mit',
+        'biotype'
+    ]
+    df_HSmit = df_HSmit.loc[:, maskcols]
+    # To CSV
+    df_HSmit.to_csv('results/HS-E_mitotic_genes.csv'.format(pipeline=pipeline))
+
     #
     # [M]us [M]usculus (10090) - [A]liases
     #

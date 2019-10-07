@@ -173,3 +173,51 @@ de = calc_diff_gene_exp(
   min.cpm=1,
   min.rowsum=2,
   file="results/DM/DM-DGE_Basal_vs_Middle.csv")
+
+
+###############################
+# Mitosis on [H]omo [S]apiens #
+###############################
+
+#
+# General Function to select genes expressed in mitosis
+#
+calc_gene_exp_mitosis <- function(counts, group, min.cpm, min.rowsum, file) {
+  # Create DGE object
+  dge <- DGEList(counts=counts, group=group)
+  # Remove rows with small count
+  keep <- rowSums(cpm(counts) > min.cpm) >= min.rowsum
+  dge <- dge[keep, , keep.lib.sizes=FALSE]
+  # Export toCSV
+  write.table(dge$counts, file=file, sep=",", col.names=NA)
+  # Return
+  return(dge$counts)
+}
+
+cHS = read.table("data/HS/HS_RawCounts_Mitosis.csv", header=TRUE, sep=",", row.names=1)
+
+#
+# Mitotic Cells vs Pre-Mitotic Cells
+#
+group <- c('Mitotic_Cells','Pre_Mitotic_Cells')
+counts <- subset(cHS, select=group)
+
+ge = calc_gene_exp_mitosis(
+  counts=counts,
+  group=group,
+  min.cpm=1,
+  min.rowsum=1,
+  file="results/HS/HS-GE_Mitotic_vs_PreMitotic.csv")
+
+#
+# Post-Mitotic Cells vs Mitotic Cells
+#
+group <- c('Post_Mitotic_Cells', 'Mitotic_Cells')
+counts <- subset(cHS, select=group)
+
+ge = calc_gene_exp_mitosis(
+  counts=counts,
+  group=group,
+  min.cpm=1,
+  min.rowsum=1,
+  file="results/HS/HS-GE_PostMitotic_vs_Mitotic.csv")
