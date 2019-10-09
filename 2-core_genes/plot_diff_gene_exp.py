@@ -41,13 +41,17 @@ def rainbow_text(x, y, strings, colors, orientation='horizontal',
         x += bbox.width
 
 
-def plot_MA(df, core=[], file='image.pdf', title="plotMA",
+def plot_MA(df, core=[], pool=[], file='image.pdf', title="plotMA",
             x_up=0, y_up=0,
             x_not=0, y_not=0,
             x_down=0, y_down=0,
-            c_up='black', c_up_core='black',
+            c_up='black', c_up_core='black', c_up_pool='black',
             c_not='black',
-            c_down='black', c_down_core='black'):
+            c_down='black', c_down_core='black', c_down_pool='black',
+            m_up='o', m_up_core='P', m_up_pool='X',
+            m_not='o',
+            m_down='o', m_down_core='P', m_down_pool='X',
+            ):
     s = 5
     lw = 0
     alpha = 0.8
@@ -57,68 +61,80 @@ def plot_MA(df, core=[], file='image.pdf', title="plotMA",
 
     # Mask Data
     mask_core = (df.index.isin(core))
+    mask_pool = (df.index.isin(pool))
     mask_logfc = (df['logFC'].abs() >= minLogFC)
     mask_fdr = (df['FDR'] <= 0.05)
     #
-    mask_up = ~mask_core & mask_logfc & mask_fdr & (df['logFC'] >= 0)
     mask_up_core = mask_core & mask_logfc & mask_fdr & (df['logFC'] >= 0)
-    mask_down = ~mask_core & mask_logfc & mask_fdr & (df['logFC'] <= 0)
+    mask_up_pool = mask_pool & ~mask_core & mask_logfc & mask_fdr & (df['logFC'] >= 0)
+    mask_up = ~mask_core & ~mask_pool & mask_logfc & mask_fdr & (df['logFC'] >= 0)
     mask_down_core = mask_core & mask_logfc & mask_fdr & (df['logFC'] <= 0)
-    mask_not = ~(mask_up | mask_up_core | mask_down | mask_down_core)
+    mask_down_pool = mask_pool & ~mask_core & mask_logfc & mask_fdr & (df['logFC'] <= 0)
+    mask_down = ~mask_core & ~mask_pool & mask_logfc & mask_fdr & (df['logFC'] <= 0)
+    mask_not = ~(mask_up | mask_up_core | mask_up_pool | mask_down | mask_down_core | mask_down_pool)
     # Filter Data
     dfUp = df.loc[mask_up, :]
     dfUpC = df.loc[mask_up_core, :]
+    dfUpP = df.loc[mask_up_pool, :]
     dfNot = df.loc[mask_not, :]
     dfDown = df.loc[mask_down, :]
     dfDownC = df.loc[mask_down_core, :]
+    dfDownP = df.loc[mask_down_pool, :]
+
     # Sanity Check
-    if not set(df.index.tolist()) == set(dfUp.index.tolist() + dfUpC.index.tolist() + dfNot.index.tolist() + dfDown.index.tolist() + dfDownC.index.tolist()):
+    if not set(df.index.tolist()) == set(dfUp.index.tolist() + dfUpC.index.tolist() + dfUpP.index.tolist() + dfNot.index.tolist() + dfDown.index.tolist() + dfDownC.index.tolist() + dfDownP.index.tolist()):
         raise ValueError('Sanity check has failed!')
     # Counts
-    n_up, n_up_core, n_not, n_down, n_down_core = len(dfUp), len(dfUpC), len(dfNot), len(dfDown), len(dfDownC)
+    n_up, n_up_core, n_up_pool, n_not, n_down, n_down_core, n_down_pool = len(dfUp), len(dfUpC), len(dfUpP), len(dfNot), len(dfDown), len(dfDownC), len(dfDownP)
     # Plot
-    ax.scatter(dfUp['logCPM'], dfUp['logFC'], c=c_up, s=s, lw=lw, alpha=alpha, zorder=2)
-    ax.scatter(dfUpC['logCPM'], dfUpC['logFC'], c=c_up_core, s=s * 2, lw=lw, alpha=alpha, zorder=3)
-    ax.scatter(dfNot['logCPM'], dfNot['logFC'], c=c_not, s=s / 3, lw=lw, alpha=alpha, zorder=1)
-    ax.scatter(dfDown['logCPM'], dfDown['logFC'], c=c_down, s=s, lw=lw, alpha=alpha, zorder=2)
-    ax.scatter(dfDownC['logCPM'], dfDownC['logFC'], c=c_down_core, s=s * 2, lw=lw, alpha=alpha, zorder=3)
+    ax.scatter(dfUp['logCPM'], dfUp['logFC'], c=c_up, s=s, lw=lw, alpha=alpha, marker=m_up, zorder=2)
+    ax.scatter(dfUpC['logCPM'], dfUpC['logFC'], c=c_up_core, s=s * 2, lw=lw, alpha=alpha, marker=m_up_core, zorder=4)
+    ax.scatter(dfUpP['logCPM'], dfUpP['logFC'], c=c_up_pool, s=s * 2, lw=lw, alpha=alpha, marker=m_up_pool, zorder=3)
+    ax.scatter(dfNot['logCPM'], dfNot['logFC'], c=c_not, s=s / 3, lw=lw, alpha=alpha, marker=m_not, zorder=1)
+    ax.scatter(dfDown['logCPM'], dfDown['logFC'], c=c_down, s=s, lw=lw, alpha=alpha, marker=m_down, zorder=2)
+    ax.scatter(dfDownC['logCPM'], dfDownC['logFC'], c=c_down_core, s=s * 2, lw=lw, alpha=alpha, marker=m_down_core, zorder=4)
+    ax.scatter(dfDownP['logCPM'], dfDownP['logFC'], c=c_down_pool, s=s * 2, lw=lw, alpha=alpha, marker=m_down_pool, zorder=3)
     # Draw a line at y=(-1,0,1)
     ax.axhline(y=-1, color='b', lw=1, linestyle='--')
     ax.axhline(y=0, color='gray', lw=1, linestyle='--')
     ax.axhline(y=+1, color='b', lw=1, linestyle='--')
 
-    ax.set_xlim(ax.get_xlim())
-    ax.set_ylim(ax.get_ylim())
+    ax.set_xlim(-1,18)
+    ax.set_ylim(-15,15)
 
     # Number of Selected Genes
     # Up
     if n_up_core > 0:
         strings = [
-            '{:,d}'.format(n_up),
-            '+',
             '{:,d}'.format(n_up_core),
+            '+',
+            '{:,d}'.format(n_up_pool),
+            '+',
+            '{:,d}'.format(n_up),
             '=',
-            '{:,d}'.format(n_up + n_up_core)]
-        colors = [c_up, 'black', c_up_core, 'black', 'black']
+            '{:,d}'.format(n_up_core + n_up_pool + n_up)]
+        colors = [c_up_core, 'black', c_up_pool, 'black', c_up, 'black', 'black']
     else:
         strings = ['{:,d}'.format(n_up)]
         colors = ['black']
-    rainbow_text(ax=ax, x=x_up, y=y_up, strings=strings, colors=colors, ha='left', va='center', fontsize='large')
+    rainbow_text(ax=ax, x=8, y=13, strings=strings, colors=colors, ha='left', va='center', fontsize='large')
     # Not
-    ax.text(x=x_not, y=y_not, s='{:,d}'.format(n_not), color=c_not, ha='left', va='center', fontsize='large')
+    ax.text(x=14, y=-0.1, s='{:,d}'.format(n_not), color=c_not, ha='left', va='center', fontsize='large')
     # Down
     if n_down_core > 0:
         strings = [
-            '{:,d}'.format(n_down),
-            '+',
             '{:,d}'.format(n_down_core),
+            '+',
+            '{:,d}'.format(n_down_pool),
+            '+',
+            '{:,d}'.format(n_down),
             '=',
-            '{:,d}'.format(n_down + n_down_core)]
-        colors = [c_down, 'black', c_down_core, 'black', 'black']
+            '{:,d}'.format(n_down_core + n_down_pool + n_down)]
+        colors = [c_down_core, 'black', c_down_pool, 'black', c_down, 'black', 'black']
     else:
         strings = ['{:,d}'.format(n_down)]
         colors = ['black']
-    rainbow_text(ax=ax, x=x_down, y=y_down, strings=strings, colors=colors, ha='left', va='center', fontsize='large')
+    rainbow_text(ax=ax, x=8, y=-13, strings=strings, colors=colors, ha='left', va='center', fontsize='large')
     
     # Labels
     ax.set_title(title)
@@ -134,7 +150,8 @@ def plot_MA(df, core=[], file='image.pdf', title="plotMA",
 
 if __name__ == '__main__':
 
-    pipeline = 'all3-conserved-FDRp05'
+    core_pipeline = 'all3-conserved-FDRp05'
+    pool_pipeline = 'all3-pooling-DM-FDRp01'
     #
     # [H]omo [S]apiens
     #
@@ -142,72 +159,83 @@ if __name__ == '__main__':
     #
     df = pd.read_csv('../1-diff-gene-exp/results/HS/HS-DGE_Cyte_vs_Gonia.csv', index_col=0, nrows=None)
     df.index = df.index.map(lambda x: x.split('.')[0])
-    dfC = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0, nrows=None)
+    dfC = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=core_pipeline), index_col=0, nrows=None)
     core = dfC.loc[(dfC['Cyte_vs_Gonia'] == True) & (dfC['logFC_CyteGonia'] > 0), :].index.tolist()
-    
-    plot_MA(df=df, core=core, file='images/{pipeline:s}/HS-DGE_UpCyte_vs_Gonia.pdf'.format(pipeline=pipeline), title="HS (Up)Cyte vs Gonia",
+    dfP = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pool_pipeline), index_col=0, nrows=None)
+    pool = dfP.loc[(dfP['Cyte_vs_Gonia']== True) & (dfP['logFC_CyteGonia'] > 0), :].index.tolist()
+    print(len(core))
+    print(len(pool))
+    plot_MA(df=df, core=core, pool=pool, file='images/HS-DGE_UpCyte_vs_Gonia.pdf', title="HS (Up)Cyte vs Gonia",
         x_up=10, y_up=5, x_not=15, y_not=0, x_down=15, y_down=-7,
-        c_up_core='#d62728', c_up='#ff9896', c_down='gray'
-        )
+        c_up_core='#d62728', c_up_pool='#9467bd', c_up='#ff9896', c_down='gray'
+    )
     #
     # Cytes vs Tids (interested in genes downregulated in Cytes)
     #
-    df = pd.read_csv('../1-diff-gene-exp/results/HS/HS-DGE_Cyte_vs_Tid.csv', index_col=0, nrows=None)
+    df = pd.read_csv('../1-diff-gene-exp/results/HS/HS-DGE_Tid_vs_Cyte.csv', index_col=0, nrows=None)
     df.index = df.index.map(lambda x: x.split('.')[0])
-    dfC = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0, nrows=None)
-    core = dfC.loc[(dfC['Cyte_vs_Tid'] == True) & (dfC['logFC_CyteTid'] < 0), :].index.tolist()
-
-    plot_MA(df=df, core=core, file='images/{pipeline:s}/HS-DGE_DownCyte_vs_Tid.pdf'.format(pipeline=pipeline), title="HS (Down)Gonia vs Tid",
+    dfC = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=core_pipeline), index_col=0, nrows=None)
+    core = dfC.loc[(dfC['Tid_vs_Cyte'] == True) & (dfC['logFC_TidCyte'] < 0), :].index.tolist()
+    dfP = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pool_pipeline), index_col=0, nrows=None)
+    pool = dfP.loc[(dfP['Tid_vs_Cyte'] == True) & (dfP['logFC_TidCyte'] < 0), :].index.tolist()
+    
+    plot_MA(df=df, core=core, pool=pool, file='images/HS-DGE_DownTid_vs_Cyte.pdf', title="HS (Down)Tid vs Cyte",
         x_up=14, y_up=6, x_not=14, y_not=0, x_down=9, y_down=-13,
-        c_down_core='#1f77b4', c_down='#aec7e8', c_up='gray'
-        )
-
+        c_down_core='#1f77b4', c_down_pool='#9467bd', c_up='gray', c_down='#aec7e8'
+    )
     #
     # MM
     #
     # Cytes vs Gonia (interested in genes upregulated in Cytes)
     #
     df = pd.read_csv('../1-diff-gene-exp/results/MM/MM-DGE_Cyte_vs_Gonia.csv', index_col=0, nrows=None)
-    dfC = pd.read_csv('results/{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0, nrows=None)
+    dfC = pd.read_csv('results/{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=core_pipeline), index_col=0, nrows=None)
     core = dfC.loc[(dfC['Cyte_vs_Gonia'] == True) & (dfC['logFC_CyteGonia'] > 0), :].index.tolist()
-    
-    plot_MA(df=df, core=core, file='images/{pipeline:s}/MM-DGE_UpCyte_vs_Gonia.pdf'.format(pipeline=pipeline), title="MM (Up)Cyte vs Gonia",
+    dfP = pd.read_csv('results/{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=pool_pipeline), index_col=0, nrows=None)
+    pool = dfP.loc[(dfP['Cyte_vs_Gonia']== True) & (dfP['logFC_CyteGonia'] > 0), :].index.tolist()
+
+    plot_MA(df=df, core=core, pool=pool, file='images/MM-DGE_UpCyte_vs_Gonia.pdf', title="MM (Up)Cyte vs Gonia",
         x_up=1, y_up=9, x_not=11, y_not=0, x_down=1, y_down=-9,
-        c_up_core='#d62728', c_up='#ff9896', c_down='gray'
-        )
+        c_up_core='#d62728', c_up_pool='#9467bd', c_up='#ff9896', c_down='gray'
+    )
     #
     # Cytes vs Tids (interested in genes downregulated in Cytes)
     #
-    df = pd.read_csv('../1-diff-gene-exp/results/MM/MM-DGE_Cyte_vs_Tid.csv', index_col=0, nrows=None)
-    dfC = pd.read_csv('results/{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0, nrows=None)
-    core = dfC.loc[(dfC['Cyte_vs_Tid'] == True) & (dfC['logFC_CyteTid'] < 0), :].index.tolist()
+    df = pd.read_csv('../1-diff-gene-exp/results/MM/MM-DGE_Tid_vs_Cyte.csv', index_col=0, nrows=None)
+    dfC = pd.read_csv('results/{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=core_pipeline), index_col=0, nrows=None)
+    core = dfC.loc[(dfC['Tid_vs_Cyte'] == True) & (dfC['logFC_TidCyte'] < 0), :].index.tolist()
+    dfP = pd.read_csv('results/{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=pool_pipeline), index_col=0, nrows=None)
+    pool = dfP.loc[(dfP['Tid_vs_Cyte'] == True) & (dfP['logFC_TidCyte'] < 0), :].index.tolist()
 
-    plot_MA(df=df, core=core, file='images/{pipeline:s}/MM-DGE_DownCyte_vs_Tid.pdf'.format(pipeline=pipeline), title="MM (Down)Cyte vs Tid",
+    plot_MA(df=df, core=core, pool=pool, file='images/MM-DGE_DownTid_vs_Cyte.pdf', title="MM (Down)Tid vs Cyte",
         x_up=11, y_up=4, x_not=11, y_not=0, x_down=7, y_down=-6,
-        c_down_core='#1f77b4', c_down='#aec7e8', c_up='gray'
-        )
-
+        c_down_core='#1f77b4', c_down_pool='#9467bd', c_down='#aec7e8', c_up='gray'
+    )
     #
     # DM
     #
     # Middle vs Apical (interested in genes upregulated in Middle)
     #
     df = pd.read_csv('../1-diff-gene-exp/results/DM/DM-DGE_Middle_vs_Apical.csv', index_col=0, nrows=None)
-    dfC = pd.read_csv('results/{pipeline:s}/DM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0, nrows=None)
+    dfC = pd.read_csv('results/{pipeline:s}/DM_meiotic_genes.csv'.format(pipeline=core_pipeline), index_col=0, nrows=None)
     core = dfC.loc[(dfC['Middle_vs_Apical'] == True) & (dfC['logFC_MiddleApical'] > 0), :].index.tolist()
-    
-    plot_MA(df=df, core=core, file='images/{pipeline:s}/DM-DGE_UpMiddle_vs_Apical.pdf'.format(pipeline=pipeline), title="DM (Up)Middle vs Apical",
+    dfP = pd.read_csv('results/{pipeline:s}/DM_meiotic_genes.csv'.format(pipeline=pool_pipeline), index_col=0, nrows=None)
+    pool = dfP.loc[(dfP['Middle_vs_Apical']== True) & (dfP['logFC_MiddleApical'] > 0), :].index.tolist()
+
+    plot_MA(df=df, core=core, pool=pool, file='images/DM-DGE_UpMiddle_vs_Apical.pdf', title="DM (Up)Middle vs Apical",
         x_up=8, y_up=4, x_not=12, y_not=-0.40, x_down=12, y_down=-5,
-        c_up_core='#d62728', c_up='#ff9896', c_down='gray'
-        )
+        c_up_core='#d62728', c_up_pool='#9467bd', c_up='#ff9896', c_down='gray'
+    )
     #
     # Middle vs Basal (interested in genes downregulated in Middle)
     #
-    df = pd.read_csv('../1-diff-gene-exp/results/DM/DM-DGE_Middle_vs_Basal.csv', index_col=0, nrows=None)
-    dfC = pd.read_csv('results/{pipeline:s}/DM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0, nrows=None)
-    core = dfC.loc[(dfC['Middle_vs_Basal'] == True) & (dfC['logFC_MiddleBasal'] < 0), :].index.tolist()
+    df = pd.read_csv('../1-diff-gene-exp/results/DM/DM-DGE_Basal_vs_Middle.csv', index_col=0, nrows=None)
+    dfC = pd.read_csv('results/{pipeline:s}/DM_meiotic_genes.csv'.format(pipeline=core_pipeline), index_col=0, nrows=None)
+    core = dfC.loc[(dfC['Basal_vs_Middle'] == True) & (dfC['logFC_BasalMiddle'] < 0), :].index.tolist()
+    dfP = pd.read_csv('results/{pipeline:s}/DM_meiotic_genes.csv'.format(pipeline=pool_pipeline), index_col=0, nrows=None)
+    pool = dfP.loc[(dfP['Basal_vs_Middle'] == True) & (dfP['logFC_BasalMiddle'] < 0), :].index.tolist()
 
-    plot_MA(df=df, core=core, file='images/{pipeline:s}/DM-DGE_DownMiddle_vs_Basal.pdf'.format(pipeline=pipeline), title="DM (Down)Middle vs Basal",
+    plot_MA(df=df, core=core, pool=pool, file='images/DM-DGE_DownBasal_vs_Middle.pdf', title="DM (Down)Basal vs Middle",
         x_up=12.5, y_up=4, x_not=12, y_not=0.375, x_down=9, y_down=-6,
         c_down_core='#1f77b4', c_down='#aec7e8', c_up='gray'
-        )
+    )
