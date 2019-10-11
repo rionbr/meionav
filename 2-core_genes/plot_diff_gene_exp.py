@@ -99,9 +99,9 @@ def plot_MA(df, core=[], pool=[], file='image.pdf', title="plotMA",
     ax.scatter(dfDP['logCPM'], dfDP['logFC'], c=c_pool, s=s * 2, lw=lw, alpha=alpha, marker=m_pool, zorder=3)
     ax.scatter(dfDN['logCPM'], dfDN['logFC'], c=c_down, s=s, lw=lw, alpha=alpha, marker=m_down, zorder=2)
 
-    ax.scatter(dfNC['logCPM'], dfNC['logFC'], c=c_core, s=s * 2, lw=lw, alpha=alpha, marker=m_core, zorder=4)  
-    ax.scatter(dfNP['logCPM'], dfNP['logFC'], c=c_pool, s=s * 2, lw=lw, alpha=alpha, marker=m_pool, zorder=3)  
-    ax.scatter(dfNN['logCPM'], dfNN['logFC'], c=c_not, s=s / 3, lw=lw, alpha=alpha, marker=m_not, zorder=2)  
+    ax.scatter(dfNC['logCPM'], dfNC['logFC'], c=c_core, s=s * 2, lw=lw, alpha=alpha, marker=m_core, zorder=4)
+    ax.scatter(dfNP['logCPM'], dfNP['logFC'], c=c_pool, s=s * 2, lw=lw, alpha=alpha, marker=m_pool, zorder=3)
+    ax.scatter(dfNN['logCPM'], dfNN['logFC'], c=c_not, s=s / 3, lw=lw, alpha=alpha, marker=m_not, zorder=2)
     
     # Draw a line at y=(-1,0,1)
     ax.axhline(y=-1, color='b', lw=1, linestyle='--')
@@ -112,6 +112,7 @@ def plot_MA(df, core=[], pool=[], file='image.pdf', title="plotMA",
     ax.set_ylim(-15,15)
 
     # Number of Selected Genes
+    """
     # Up
     strings, colors = [], []
     n_up_total = 0
@@ -159,7 +160,7 @@ def plot_MA(df, core=[], pool=[], file='image.pdf', title="plotMA",
     strings.extend(['{:,d}'.format(n_not_rest), '=', '{:,d}'.format(n_not_total)])
     colors.extend([c_not, 'black', 'black'])
     rainbow_text(ax=ax, x=10, y=-3, strings=strings, colors=colors, ha='left', va='center', fontsize='large')
-    
+    """
     # Labels
     ax.set_title(title)
     ax.set_ylabel('logFC')
@@ -181,7 +182,6 @@ if __name__ == '__main__':
     #
     # Cytes vs Gonia (interested in genes upregulated in Cytes)
     #
-    """
     df = pd.read_csv('../1-diff-gene-exp/results/HS/HS-DGE_Cyte_vs_Gonia.csv', index_col=0)
     df.index = df.index.map(lambda x: x.split('.')[0])
     dfC = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=core_pipeline), index_col=0)
@@ -252,7 +252,6 @@ if __name__ == '__main__':
         c_core='#d62728', c_pool='#9467bd',
         c_up='#ff9896', c_down='gray'
     )
-    """
     #
     # Basal vs Middle (interested in genes downregulated in Basal)
     #
