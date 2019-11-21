@@ -15,7 +15,7 @@ from utils import ensurePathExists
 
 if __name__ == '__main__':
 
-    pipeline = 'all3-pooling-DM-FDRp01'
+    pipeline = 'all3-pooling-DM-FDRp05'
     # Load Files
     df = pd.read_csv('results/{pipeline:s}/meta_meiotic_genes.csv'.format(pipeline=pipeline), index_col='id_eggnog')
     df_HS = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pipeline), index_col='id_string', usecols=['id_gene', 'id_string', 'gene'])
