@@ -1,4 +1,4 @@
-# Pipeline: all3-conserved-FDRp05
+# Pipeline: all3-conserved
 
 |  Species   |   Genes |
 | :----------|--------:|
@@ -8,37 +8,17 @@
 |  DM        |     147 |
 
 
-# Pipeline: all3-conserved-FDRp01
+# Pipeline: all3-pooling-DM
 
 |  Species   |   Genes |
 | :----------|--------:|
-|  Meta      |      71 |
-|  HS        |      94 |
-|  MM        |     108 |
-|  DM        |      84 |
+|  Meta      |     728 |
+|  HS        |     797 |
+|  MM        |     850 |
+|  DM        |     920 |
 
 
-# Pipeline: all3-pooling-DM-FDRp05
-
-|  Species   |   Genes |
-| :----------|--------:|
-|  Meta      |     731 |
-|  HS        |     800 |
-|  MM        |     853 |
-|  DM        |     928 |
-
-
-# Pipeline: all3-pooling-DM-FDRp01
-
-|  Species   |   Genes |
-| :----------|--------:|
-|  Meta      |     478 |
-|  HS        |     518 |
-|  MM        |     571 |
-|  DM        |     616 |
-
-
-# Pipeline: mammals-conserved-FDRp05
+# Pipeline: mammals-conserved
 
 |  Species   |   Genes |
 | :----------|--------:|
@@ -51,9 +31,9 @@
 
 |  Species   |   Genes |
 | :----------|--------:|
-|  Meta      |    8558 |
-|  HS        |   10590 |
+|  Meta      |    8495 |
+|  HS        |   10502 |
 |  MM        |    1396 |
 
 
-[Finished in 1.2s]
+[Finished in 1.7s]
