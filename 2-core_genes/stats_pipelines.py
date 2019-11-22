@@ -24,9 +24,9 @@ def df2md(df, y_index=False, *args, **kwargs):
 if __name__ == '__main__':
 
     #
-    # All 3 Species Conserved FDRp05
+    # All 3 Species Conserved
     #
-    pipeline = 'all3-conserved-FDRp05'
+    pipeline = 'all3-conserved'
     print('# Pipeline: {pipeline:s}\n'.format(pipeline=pipeline))
 
     df_M = pd.read_csv('results/{pipeline:s}/meta_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
@@ -50,59 +50,9 @@ if __name__ == '__main__':
 
 
     #
-    # All 3 Species Conserved FDRp01
+    # All 3 Species Pooling
     #
-    pipeline = 'all3-conserved-FDRp01'
-    print('# Pipeline: {pipeline:s}\n'.format(pipeline=pipeline))
-
-    df_M = pd.read_csv('results/{pipeline:s}/meta_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-    df_HS = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-    df_MM = pd.read_csv('results/{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-    df_DM = pd.read_csv('results/{pipeline:s}/DM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-
-    n_m = df_M.shape[0]
-    n_hs = df_HS.shape[0]
-    n_mm = df_MM.shape[0]
-    n_dm = df_DM.shape[0]
-
-    df_stat = pd.DataFrame.from_records([
-        ('Meta', n_m),
-        ('HS', n_hs),
-        ('MM', n_mm),
-        ('DM', n_dm),
-    ], columns=['Species', 'Genes'])
-    print(df2md(df_stat, floatfmt='.4f'))
-    print('\n')
-
-    #
-    # All 3 Species Pooling FDRp05
-    #
-    pipeline = 'all3-pooling-DM-FDRp05'
-    print('# Pipeline: {pipeline:s}\n'.format(pipeline=pipeline))
-
-    df_M = pd.read_csv('results/{pipeline:s}/meta_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-    df_HS = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-    df_MM = pd.read_csv('results/{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-    df_DM = pd.read_csv('results/{pipeline:s}/DM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-
-    n_m = df_M.shape[0]
-    n_hs = df_HS.shape[0]
-    n_mm = df_MM.shape[0]
-    n_dm = df_DM.shape[0]
-
-    df_stat = pd.DataFrame.from_records([
-        ('Meta', n_m),
-        ('HS', n_hs),
-        ('MM', n_mm),
-        ('DM', n_dm),
-    ], columns=['Species', 'Genes'])
-    print(df2md(df_stat, floatfmt='.4f'))
-    print('\n')
-
-    #
-    # All 3 Species Pooling FDRp01
-    #
-    pipeline = 'all3-pooling-DM-FDRp01'
+    pipeline = 'all3-pooling-DM'
     print('# Pipeline: {pipeline:s}\n'.format(pipeline=pipeline))
 
     df_M = pd.read_csv('results/{pipeline:s}/meta_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
@@ -127,7 +77,7 @@ if __name__ == '__main__':
     #
     # Mamals Conserved FDRp05
     #
-    pipeline = 'mammals-conserved-FDRp05'
+    pipeline = 'mammals-conserved'
     print('# Pipeline: {pipeline:s}\n'.format(pipeline=pipeline))
 
     df_M = pd.read_csv('results/{pipeline:s}/meta_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)

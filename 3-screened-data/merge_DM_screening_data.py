@@ -14,23 +14,27 @@ from utils import ensurePathExists
 
 if __name__ == '__main__':
 
-    pipeline = 'all3-pooling-DM-FDRp01'  # 'all3-conserved-FDRp05' or 'all3-pooling-DM-FDRp01'
+    pipeline = 'all3-conserved'  # 'all3-conserved' or 'all3-pooling-DM'
 
     # This is the 'dfU' object from [3]
     rDMfile = '../2-core_genes/results/{pipeline:s}/DM_meiotic_genes.csv'.format(pipeline=pipeline)
     df = pd.read_csv(rDMfile, index_col=0)
-    
+    print(df.head())
+
     # Screened Data (From Experimental Analysis)
-    dfS = pd.read_csv('data/core_DM_screened_2019-10-03.csv', index_col=0)
+    dfSc = pd.read_csv('data/conserved_DM_screened_2019-11-22.csv', index_col=0)
+    dfSp = pd.read_csv('data/pooling_DM_screened_2019-11-22.csv', index_col=0)
+    dfS = pd.concat([dfSc, dfSp], axis='index', join='outer').drop_duplicates()
+    print(dfS.head())
 
     cols1 = [
-        'StockNumber', 'FlyBase Genotype'
+        'Stock Number', 'Transgene', 'status'
     ]
     cols2 = [
         'FT1 eggs', 'FT1 hatched', 'FT2 eggs', 'FT2 hatched', 'FT3 eggs', 'FT3 hatched', 'FT4 eggs', 'FT4 hatched',
     ]
     cols3 = [
-        'Phenotype or literature', 'Previously known to affect spermatogenesis', 'Function', 'Previous ref to RNAi working', 'Other species infertility phenotype?'
+        'Recorded cellular phenotype', 'Previously known to affect male fertility/sperm cells', 'Function', 'Previous ref to RNAi working', 'Other species infertility phenotype?'
     ]
     df[cols1] = dfS[cols1]
     df[cols2] = dfS[cols2]

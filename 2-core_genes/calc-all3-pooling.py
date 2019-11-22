@@ -3,7 +3,7 @@
 # Date: Jul 05, 2019
 #
 # Description: Indexes meta-genes to select core meiotic genes.
-#   Pipeline: All 3 species (HS, MM & MM) conserved genes that Up/Down Regulated.
+#   Pipeline: All 3 species (HS, MM & MM) genes that are present in both meiotic transitions.
 #
 #
 import math
@@ -16,9 +16,10 @@ from utils import ensurePathExists
 
 if __name__ == '__main__':
 
-    pipeline = 'all3-conserved-FDRp01'
-    maxFDR = 0.01
+    pipeline = 'all3-pooling-DM'
+    maxFDR = 0.05
     minLogFC = math.log2(2)
+    minLogCPM = math.log2(2)
 
     # Load Species Gene Files
     df_HS = pd.read_csv('results/HS-DE_genes.csv', index_col='id_gene')
@@ -38,8 +39,8 @@ if __name__ == '__main__':
         (df_MM['Tid_vs_Cyte'] == True) & (df_MM['FDR_TidCyte'] <= maxFDR) & (df_MM['logFC_TidCyte'].abs() >= minLogFC) & (df_MM['logFC_TidCyte'] <= 0)
     )
     maskrows_DM = (
-        (df_DM['Middle_vs_Apical'] == True) & (df_DM['FDR_MiddleApical'] <= maxFDR) & (df_DM['logFC_MiddleApical'].abs() >= minLogFC) & (df_DM['logFC_MiddleApical'] >= 0) |
-        (df_DM['Basal_vs_Middle'] == True) & (df_DM['FDR_BasalMiddle'] <= maxFDR) & (df_DM['logFC_BasalMiddle'].abs() >= minLogFC) & (df_DM['logFC_BasalMiddle'] <= 0)
+        (df_DM['Middle_vs_Apical'] == True) & (df_DM['logCPM_MiddleApical'] >= minLogCPM) |
+        (df_DM['Basal_vs_Middle'] == True) & (df_DM['logCPM_BasalMiddle'] >= minLogCPM)
     )
     df_HS = df_HS.loc[maskrows_HS, :]
     df_MM = df_MM.loc[maskrows_MM, :]
@@ -67,19 +68,6 @@ if __name__ == '__main__':
         """ Maps a list of id_string to a list of id_genes """
         return [mapdict[id_item] for id_item in id_list]
 
-    """
-    # Map information
-    print("> Mapping Additional Info")
-    for species in ['HS', 'MM', 'DM']:
-        # id_gene_HS, id_gene_MM, id_gene_DM
-        df['id_gene_' + species] = df['id_string_' + species].apply(map_id_list, args=(dfMap['id_gene'].to_dict(), ))
-        # gene_HS, gene_MM, gene_DM
-        df['gene_' + species] = df['id_string_' + species].apply(map_id_list, args=(dfMap['gene'].to_dict(), ))
-        # biotype_HS, biotype_MM, biotype_DM
-        df['biotype_' + species] = df['id_string_' + species].apply(map_id_list, args=(dfMap['biotype'].to_dict(), ))
-        # n_genes_HS, n_genes_MM, n_genes_DM
-        df['n_genes_' + species] = df['id_gene_' + species].apply(len)
-    """
     # List of core id_strings
     core_string_HS = frozenset(np.hstack(df['id_string_HS'].values).tolist())
     core_string_MM = frozenset(np.hstack(df['id_string_MM'].values).tolist())

@@ -6,7 +6,7 @@
 #
 # Instructions:
 #
-import numpy as np
+# import numpy as np
 import pandas as pd
 pd.set_option('display.max_rows', 100)
 pd.set_option('display.max_columns', 500)
@@ -21,63 +21,59 @@ import matplotlib.gridspec as gridspec
 if __name__ == '__main__':
 
     # Load genes
-    dfA = pd.read_csv('../2-core_genes/results/all3-conserved-FDRp05/DM_meiotic_genes.csv', index_col=0, usecols=['id_gene', 'gene'])
-    dfB = pd.read_csv('../2-core_genes/results/all3-pooling-DM-FDRp01/DM_meiotic_genes.csv', index_col=0, usecols=['id_gene', 'gene'])
-    
+    dfA = pd.read_csv('../2-core_genes/results/all3-conserved/DM_meiotic_genes.csv', index_col=0, usecols=['id_gene', 'gene'])
+    dfB = pd.read_csv('../2-core_genes/results/all3-pooling-DM/DM_meiotic_genes.csv', index_col=0, usecols=['id_gene', 'gene'])
+
     # Which genes are conserved/pooling
     df = pd.concat([dfA, dfB], axis='index', join='outer').drop_duplicates()
     df['conserved'] = df.index.isin(dfA.index)
     df['pooling'] = df.index.isin(dfB.index)
 
     # Load Screened data
-    dfS = pd.read_csv('data/core_DM_screened_2019-10-03.csv', index_col=0, na_values='PENDING')
-    dfC = pd.read_csv('data/core_DM_control.csv')
+    dfSc = pd.read_csv('data/conserved_DM_screened_2019-11-22.csv', index_col=0)
+    dfSp = pd.read_csv('data/pooling_DM_screened_2019-11-22.csv', index_col=0)
+    dfS = pd.concat([dfSc, dfSp], axis='index', join='outer').drop_duplicates()
 
-    print(dfS.head())
-    list_pending = dfS.loc[dfS['FlyBase Genotype'] == 'PENDING', []].index
-    dfSonly = dfS.loc[~dfS['FT1 eggs'].isnull(), :]
-    list_screened = dfSonly.index
+    dfC = pd.read_csv('data/screened_DM_controls.csv')
 
-    def map_status(x, list_pending, list_screened):
-        if x.name in list_pending:
-            return "SCHEDULED"
-        elif x.name in list_screened:
-            return "SCREENED"
-        else:
-            return "PENDING"
+    dfS_only = dfS.loc[~dfS['FT1 eggs'].isnull(), :]
 
-    df['status'] = df.apply(map_status, args=(list_pending, list_screened), axis='columns')
-    df['status'] = pd.Categorical(df['status'], categories=['SCREENED', 'SCHEDULED', 'PENDING'], ordered=True)
+    print(dfS['status'].value_counts())
+    status_cats = ['Screened', 'Crossed 21/11', 'Crossed 11/11', 'Order v27870', 'Ordered', 'Pending']
+    dfS['status'] = pd.Categorical(dfS['status'], categories=status_cats, ordered=True)
+    df['status'] = dfS['status']
 
     cols = ['FT1 eggs', 'FT1 hatched', 'FT2 eggs', 'FT2 hatched', 'FT3 eggs', 'FT3 hatched', 'FT4 eggs', 'FT4 hatched']
-    df[cols] = dfSonly[cols]
-    
+    df[cols] = dfS_only[cols]
+
     # Calculations
     df['total-eggs'] = 0
     df['total-hatched'] = 0
     for ft in range(1, 5):
-        
+
         col_eggs = 'FT{:d} eggs'.format(ft)
         col_hatched = 'FT{:d} hatched'.format(ft)
         col_fertate = 'FT{:d} fert-rate'.format(ft)
         df[col_fertate] = df[col_hatched] / df[col_eggs]
         df['total-eggs'] += df[col_eggs]
         df['total-hatched'] += df[col_hatched]
-    
+
     # Mean/SD
     df['mean fert-rate'] = df[['FT1 fert-rate', 'FT2 fert-rate', 'FT3 fert-rate', 'FT4 fert-rate']].mean(axis=1)
     df['std fert-rate'] = df[['FT1 fert-rate', 'FT2 fert-rate', 'FT3 fert-rate', 'FT4 fert-rate']].std(axis=1)
 
-    df = df.sort_values(['status', 'mean fert-rate'], ascending=[True,True]).reset_index()
+    df = df.sort_values(['status', 'mean fert-rate'], ascending=[True, True]).reset_index()
+    print(df.head())
+    print(df.tail())
 
     # Control
     dfc = dfC.groupby('control').apply(lambda x: x['hatched'] / x['eggs']).groupby('control').agg(['mean', 'std'])
     dfc = dfc.reset_index()
     print(dfc.head())
 
-    dfd = df # All Data
-    dft = df.iloc[:70, :] # Data for Top axis
-    dfb = df.iloc[70:, :] # Data for Bottom axis
+    dfd = df  # All Data
+    dft = df.iloc[:70, :]  # Data for Top axis
+    dfb = df.iloc[70:, :]  # Data for Bottom axis
 
     # Plot
     fig = plt.figure(figsize=(11, 7))
@@ -111,7 +107,7 @@ if __name__ == '__main__':
 
     axc.set_xlim(dfc.index.min() - 1, dfc.index.max() + 1)
     axd.set_xlim(dfd.index.min() - 1, dfd.index.max() + 1)
- 
+
     axc.set_ylim(-0.02,1.02)
     axd.set_ylim(-0.02,1.02)
 
@@ -122,9 +118,9 @@ if __name__ == '__main__':
     # Three axis, two at the top and one at the bottom.
     #
     gs = gridspec.GridSpec(2, 12)
-    axc = plt.subplot(gs[0, :1]) # Control
-    axt = plt.subplot(gs[0, 1:]) # First part on top
-    axb = plt.subplot(gs[1, :]) # Second part on bottom
+    axc = plt.subplot(gs[0, :1])  # Control
+    axt = plt.subplot(gs[0, 1:])  # First part on top
+    axb = plt.subplot(gs[1, :])  # Second part on bottom
 
     axc.errorbar(dfc.index, dfc['mean'], yerr=dfc['std'], color='#2ca02c', lw=0, elinewidth=1, capsize=3, marker='o', markersize=6)
     axt.errorbar(dft.index, dft['mean fert-rate'], yerr=dft['std fert-rate'], lw=0, elinewidth=1, capsize=3, marker='o', markersize=6)
@@ -139,13 +135,14 @@ if __name__ == '__main__':
 
     axc.set_xticks(dfc.index)
     axt.set_xticks(dft.index)
-    #axb.set_xticks(dfb.index)
+    # axb.set_xticks(dfb.index)
 
     axc.set_xticklabels(dfc['control'], rotation=90, va='top', ha='center', fontsize='medium')
-    axt.set_xticklabels(dft['gene'], rotation=90, va='top', ha='center', fontsize='medium')    
-    #axb.set_xticklabels(dfb['gene'], rotation=90, va='top', ha='center', fontsize='x-small')
-    
+    axt.set_xticklabels(dft['gene'], rotation=90, va='top', ha='center', fontsize='medium')
+    # axb.set_xticklabels(dfb['gene'], rotation=90, va='top', ha='center', fontsize='x-small')
+
     # Mark conserved in red
+    print(dft['conserved'].tolist())
     for conserved, tick in zip(dft['conserved'].tolist(), axt.get_xticklabels()):
         if conserved:
             tick.set_color('red')
@@ -153,18 +150,18 @@ if __name__ == '__main__':
 
     axc.set_ylabel('Mean +/- SD Fertility Rate')
     axb.set_ylabel('Mean +/- SD Fertility Rate')
-    #axt.set_xlabel('Gene')
+    # axt.set_xlabel('Gene')
     axb.set_xlabel('Gene')
 
     axc.set_xlim(dfc.index.min() - 1, dfc.index.max() + 1)
     axt.set_xlim(dft.index.min() - 1, dft.index.max() + 1)
     axb.set_xlim(dfb.index.min() - 1, dfb.index.max() + 1)
- 
-    axc.set_ylim(-0.02,1.02)
-    axt.set_ylim(-0.02,1.02)
-    axb.set_ylim(-0.02,1.02)
+
+    axc.set_ylim(-0.02, 1.02)
+    axt.set_ylim(-0.02, 1.02)
+    axb.set_ylim(-0.02, 1.02)
     #
-    #ax.set_yscale('log')
+    # ax.set_yscale('log')
     # ax.set_xscale('log')
     # ax.set_xlim(0.1,10e5)
     axc.grid()
