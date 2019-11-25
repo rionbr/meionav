@@ -14,18 +14,19 @@ from utils import ensurePathExists
 
 if __name__ == '__main__':
 
-    pipeline = 'all3-conserved'  # 'all3-conserved' or 'all3-pooling-DM'
-
-    # This is the 'dfU' object from [3]
-    rDMfile = '../2-core_genes/results/{pipeline:s}/DM_meiotic_genes.csv'.format(pipeline=pipeline)
-    df = pd.read_csv(rDMfile, index_col=0)
-    print(df.head())
+    # pipeline = 'all3-conserved'  # 'all3-conserved' or 'all3-pooling-DM'
 
     # Screened Data (From Experimental Analysis)
     dfSc = pd.read_csv('data/conserved_DM_screened_2019-11-22.csv', index_col=0)
     dfSp = pd.read_csv('data/pooling_DM_screened_2019-11-22.csv', index_col=0)
     dfS = pd.concat([dfSc, dfSp], axis='index', join='outer').drop_duplicates()
-    print(dfS.head())
+
+    # DGE Genes per pipeline
+    dfC = pd.read_csv('../2-core_genes/results/all3-conserved/DM_meiotic_genes.csv', index_col=0)
+    dfP = pd.read_csv('../2-core_genes/results/all3-pooling-DM/DM_meiotic_genes.csv', index_col=0)
+
+    # subset the pooling not to contain the conserved
+    dfP = dfP.loc[ (~dfP.index.isin(dfC.index)), :]
 
     cols1 = [
         'Stock Number', 'Transgene', 'status'
@@ -34,15 +35,21 @@ if __name__ == '__main__':
         'FT1 eggs', 'FT1 hatched', 'FT2 eggs', 'FT2 hatched', 'FT3 eggs', 'FT3 hatched', 'FT4 eggs', 'FT4 hatched',
     ]
     cols3 = [
-        'Recorded cellular phenotype', 'Previously known to affect male fertility/sperm cells', 'Function', 'Previous ref to RNAi working', 'Other species infertility phenotype?'
+        'Recorded cellular phenotype', 'Previously known to affect male fertility/sperm cells', 'Function', 'Previous ref to RNAi working', 'Other species infertility phenotype?', 'Flybase link'
     ]
-    df[cols1] = dfS[cols1]
-    df[cols2] = dfS[cols2]
-    df[cols3] = dfS[cols3]
+    for df in [dfC, dfP]:
+        df[cols1] = dfS[cols1]
+        df[cols2] = dfS[cols2]
+        df[cols3] = dfS[cols3]
 
-    # Export
-    wDMfile = 'results/{pipeline:s}/DM_meiotic_genes_screened.csv'.format(pipeline=pipeline)
-    ensurePathExists(wDMfile)
-    df.to_csv(wDMfile)
+    # Export Core
+    wdfCfile = 'results/all3-conserved/DM_meiotic_genes_screened.csv'
+    ensurePathExists(wdfCfile)
+    dfC.to_csv(wdfCfile)
+
+    # Export Pooling
+    wdfPfile = 'results/all3-pooling-DM/DM_meiotic_genes_screened.csv'
+    ensurePathExists(wdfPfile)
+    dfP.to_csv(wdfPfile)
 
     print('Done.')
