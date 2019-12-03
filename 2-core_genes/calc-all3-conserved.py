@@ -106,7 +106,7 @@ if __name__ == '__main__':
     wCSVFile = 'results/{pipeline:s}/meta_meiotic_genes.csv'.format(pipeline=pipeline)
     ensurePathExists(wCSVFile)
     df.to_csv(wCSVFile)
-    
+
     # HS
     wCSVFileHS = 'results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pipeline)
     ensurePathExists(wCSVFileHS)

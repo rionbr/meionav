@@ -30,11 +30,10 @@ if __name__ == '__main__':
     pipeline = 'conserved'
     minLogFC = math.log2(2)
 
-
     #
     # [H]omo [S]apiens (9606) - [A]liases
     #
-    
+
     print('Mapping HS')
     # Query bioMart for Gene Name/Description
     ds_HS = Dataset(name='hsapiens_gene_ensembl', host='http://www.ensembl.org')
@@ -50,7 +49,7 @@ if __name__ == '__main__':
     df_HS_CT.columns = [x + '_TidCyte' for x in df_HS_CT.columns]
     df_HS_CT.index.name = 'id_gene'
     df_HS_CT.index = df_HS_CT.index.map(lambda x: x.split('.')[0])
-    
+
     # Map: id_gene <-> id_string
     df_SA = open_undefined_last_column_files('../StringDB/9606/9606.protein.aliases.v11.0.txt.gz', skiprows=1, n_fixed_cols=2, names=["id_string", "alias", "source"])
     # Parse String Data - Note some genes have multiple id_string, others have no match
@@ -188,7 +187,7 @@ if __name__ == '__main__':
 
     # Map: id_gene <-> id_string
     df_SA = open_undefined_last_column_files('../StringDB/7227/7227.protein.aliases.v11.0.txt.gz', skiprows=1, n_fixed_cols=2, names=["id_string", "alias", "source"])
-    
+
     # Parse String Data - Note some genes have multiple id_string, others have no match
     df_SA = df_SA.loc[df_SA['alias'].isin(df_DM_MA.index.to_list() + df_DM_MB.index.to_list()), ["alias", "id_string"]].rename(columns={"alias": "id_gene"})
     df_SAg = df_SA.groupby('id_gene').agg({'id_string': lambda x: x if len(x) == 1 else list(x)})
@@ -212,8 +211,8 @@ if __name__ == '__main__':
         'logCPM_BasalMiddle', 'logFC_BasalMiddle', 'FDR_BasalMiddle',
         'biotype'
     ]
-    df_DM = df_DM.loc[:, maskcols] # For Drosophila, we actually need all genes because of pipeline 'pooling'
+    df_DM = df_DM.loc[:, maskcols]  # For Drosophila, we actually need all genes because of pipeline 'pooling'
     # To CSV
     df_DM.to_csv('results/DM-DE_genes.csv'.format(pipeline=pipeline))
-    
+
     print("Done.")

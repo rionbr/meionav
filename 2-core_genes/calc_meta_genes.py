@@ -61,13 +61,13 @@ if __name__ == '__main__':
 
     df = df_Egg.apply(select_by_species, args=(wanted_species,))
 
-    def select_by_at_lest_one_match(ilist, keeplist):
+    def select_by_at_least_one_match(ilist, keeplist):
         # Only keep genes that are found in any of our gene list (lower the search space)
         spermgenes = [i for i in ilist if i in keeplist]
         return spermgenes if len(spermgenes) >= 1 else None
 
     print("> Separating by At Least One Match")
-    df = df.apply(select_by_at_lest_one_match, args=(string_ALL, ))
+    df = df.apply(select_by_at_least_one_match, args=(string_ALL, ))
     df = df.dropna()
 
     def select_by_gene_and_separate_by_species(ilist, keeplist_HS, keeplist_MM, keeplist_DM):
