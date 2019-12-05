@@ -46,9 +46,6 @@ if __name__ == '__main__':
 
     dfM['id_gene_DM'] = dfM['id_gene_DM'].str.split(',')
     dfM = dfM.explode('id_gene_DM').set_index('id_gene_DM') # EXPLODE IS A SUPER COOL FUNCTION!
-
-
-
     ####
 
     # subset the pooling not to contain the conserved
