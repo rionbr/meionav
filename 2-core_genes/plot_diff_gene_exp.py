@@ -73,7 +73,6 @@ def plot_MA(df, core=[], pool=[], file='image.pdf', title="plotMA",
     dfNC = dfN.loc[(dfN.index.isin(core)), :]
     dfNP = dfN.loc[(dfN.index.isin(pool)) & ~(dfN.index.isin(core)), :]
     dfNN = dfN.loc[~dfN.index.isin(dfNC.index.tolist() + dfNP.index.tolist()), :]
-    
 
     # Sanity Check
     if not set(df.index.tolist()) == set(
@@ -102,14 +101,14 @@ def plot_MA(df, core=[], pool=[], file='image.pdf', title="plotMA",
     ax.scatter(dfNC['logCPM'], dfNC['logFC'], c=c_core, s=s * 2, lw=lw, alpha=alpha, marker=m_core, zorder=4)
     ax.scatter(dfNP['logCPM'], dfNP['logFC'], c=c_pool, s=s * 2, lw=lw, alpha=alpha, marker=m_pool, zorder=3)
     ax.scatter(dfNN['logCPM'], dfNN['logFC'], c=c_not, s=s / 3, lw=lw, alpha=alpha, marker=m_not, zorder=2)
-    
+
     # Draw a line at y=(-1,0,1)
     ax.axhline(y=-1, color='b', lw=1, linestyle='--')
     ax.axhline(y=0, color='gray', lw=1, linestyle='--')
     ax.axhline(y=+1, color='b', lw=1, linestyle='--')
 
-    ax.set_xlim(-1,18)
-    ax.set_ylim(-15,15)
+    ax.set_xlim(-1, 18)
+    ax.set_ylim(-15, 15)
 
     # Number of Selected Genes
     """
@@ -168,15 +167,15 @@ def plot_MA(df, core=[], pool=[], file='image.pdf', title="plotMA",
     # Layout
     plt.tight_layout()
     # Save
-    
+
     ensurePathExists(file)
     fig.savefig(file)
 
 
 if __name__ == '__main__':
 
-    core_pipeline = 'all3-conserved-FDRp05'
-    pool_pipeline = 'all3-pooling-DM-FDRp01'
+    core_pipeline = 'all3-conserved'
+    pool_pipeline = 'all3-pooling-DM'
     #
     # [H]omo [S]apiens
     #
@@ -188,11 +187,11 @@ if __name__ == '__main__':
     core = dfC.loc[(dfC['Cyte_vs_Gonia'] == True) & (dfC['logFC_CyteGonia'] >= 1) & (dfC['FDR_CyteGonia'] <= 0.05), :].index.tolist()
     dfP = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pool_pipeline), index_col=0)
     pool = dfP.loc[(dfP['Cyte_vs_Gonia'] == True) & (dfP['logFC_CyteGonia'] > 1) & (dfP['FDR_CyteGonia'] < 0.05), :].index.tolist()
-    
+
     plot_MA(df=df, core=core, pool=pool, file='images/HS-DGE_UpCyte_vs_Gonia.pdf', title="HS (Up)Cyte vs Gonia",
-        x_up=10, y_up=5, x_not=15, y_not=0, x_down=15, y_down=-7,
-        c_core='#d62728', c_pool='#9467bd', c_up='#ff9896', c_down='gray'
-    )
+            x_up=10, y_up=5, x_not=15, y_not=0, x_down=15, y_down=-7,
+            c_core='#d62728', c_pool='#9467bd', c_up='#ff9896', c_down='gray'
+            )
     #
     # Tid vs Cyte (interested in genes downregulated in Tid)
     #
@@ -202,11 +201,11 @@ if __name__ == '__main__':
     core = dfC.loc[(dfC['Tid_vs_Cyte'] == True) & (dfC['logFC_TidCyte'] <= -1) & (dfC['FDR_TidCyte'] <= 0.05), :].index.tolist()
     dfP = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pool_pipeline), index_col=0)
     pool = dfP.loc[(dfP['Tid_vs_Cyte'] == True) & (dfP['logFC_TidCyte'] <= -1) & (dfP['FDR_TidCyte'] <= 0.05), :].index.tolist()
-    
+
     plot_MA(df=df, core=core, pool=pool, file='images/HS-DGE_DownTid_vs_Cyte.pdf', title="HS (Down)Tid vs Cyte",
-        x_up=14, y_up=6, x_not=14, y_not=0, x_down=9, y_down=-13,
-        c_core='#1f77b4', c_pool='#9467bd', c_up='gray', c_down='#aec7e8'
-    )
+            x_up=14, y_up=6, x_not=14, y_not=0, x_down=9, y_down=-13,
+            c_core='#1f77b4', c_pool='#9467bd', c_up='gray', c_down='#aec7e8'
+            )
     #
     # MM
     #
@@ -216,12 +215,12 @@ if __name__ == '__main__':
     dfC = pd.read_csv('results/{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=core_pipeline), index_col=0)
     core = dfC.loc[(dfC['Cyte_vs_Gonia'] == True) & (dfC['logFC_CyteGonia'] >= 1) & (dfC['FDR_CyteGonia'] <= 0.05), :].index.tolist()
     dfP = pd.read_csv('results/{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=pool_pipeline), index_col=0)
-    pool = dfP.loc[(dfP['Cyte_vs_Gonia']== True) & (dfP['logFC_CyteGonia'] >= 1) & (dfP['FDR_CyteGonia'] <= 0.05), :].index.tolist()
+    pool = dfP.loc[(dfP['Cyte_vs_Gonia'] == True) & (dfP['logFC_CyteGonia'] >= 1) & (dfP['FDR_CyteGonia'] <= 0.05), :].index.tolist()
 
     plot_MA(df=df, core=core, pool=pool, file='images/MM-DGE_UpCyte_vs_Gonia.pdf', title="MM (Up)Cyte vs Gonia",
-        x_up=1, y_up=9, x_not=11, y_not=0, x_down=1, y_down=-9,
-        c_core='#d62728', c_pool='#9467bd', c_up='#ff9896', c_down='gray'
-    )
+            x_up=1, y_up=9, x_not=11, y_not=0, x_down=1, y_down=-9,
+            c_core='#d62728', c_pool='#9467bd', c_up='#ff9896', c_down='gray'
+            )
     #
     # Cytes vs Tids (interested in genes downregulated in Tid)
     #
@@ -232,10 +231,9 @@ if __name__ == '__main__':
     pool = dfP.loc[(dfP['Tid_vs_Cyte'] == True) & (dfP['logFC_TidCyte'] <= -1) & (dfP['FDR_TidCyte'] <= 0.05), :].index.tolist()
 
     plot_MA(df=df, core=core, pool=pool, file='images/MM-DGE_DownTid_vs_Cyte.pdf', title="MM (Down)Tid vs Cyte",
-        x_up=11, y_up=4, x_not=11, y_not=0, x_down=7, y_down=-6,
-        c_core='#1f77b4', c_pool='#9467bd', c_down='#aec7e8', c_up='gray'
-    )
-
+            x_up=11, y_up=4, x_not=11, y_not=0, x_down=7, y_down=-6,
+            c_core='#1f77b4', c_pool='#9467bd', c_down='#aec7e8', c_up='gray'
+            )
     #
     # DM
     #
@@ -248,10 +246,10 @@ if __name__ == '__main__':
     pool = dfP.loc[(dfP['Middle_vs_Apical'] == True) & (dfP['logCPM_MiddleApical'] >= 1), :].index.tolist()
 
     plot_MA(df=df, core=core, pool=pool, file='images/DM-DGE_UpMiddle_vs_Apical.pdf', title="DM (Up)Middle vs Apical",
-        x_up=8, y_up=4, x_not=12, y_not=-0.40, x_down=12, y_down=-5,
-        c_core='#d62728', c_pool='#9467bd',
-        c_up='#ff9896', c_down='gray'
-    )
+            x_up=8, y_up=4, x_not=12, y_not=-0.40, x_down=12, y_down=-5,
+            c_core='#d62728', c_pool='#9467bd',
+            c_up='#ff9896', c_down='gray'
+            )
     #
     # Basal vs Middle (interested in genes downregulated in Basal)
     #
@@ -262,7 +260,7 @@ if __name__ == '__main__':
     pool = dfP.loc[(dfP['Basal_vs_Middle'] == True) & (dfP['logCPM_BasalMiddle'] >= 1), :].index.tolist()
 
     plot_MA(df=df, core=core, pool=pool, file='images/DM-DGE_DownBasal_vs_Middle.pdf', title="DM (Down)Basal vs Middle",
-        x_up=12.5, y_up=4, x_not=12, y_not=0.375, x_down=9, y_down=-6,
-        c_core='#1f77b4', c_pool='#9467bd',
-        c_down='#aec7e8', c_up='gray'
-    )
+            x_up=12.5, y_up=4, x_not=12, y_not=0.375, x_down=9, y_down=-6,
+            c_core='#1f77b4', c_pool='#9467bd',
+            c_down='#aec7e8', c_up='gray'
+            )

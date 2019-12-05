@@ -87,7 +87,7 @@ if __name__ == '__main__':
     # Tid vs Cyte (interested in genes downregulated in Tid)
     #
     df = pd.read_csv('../1-diff-gene-exp/results/HS/HS-DGE_Tid_vs_Cyte.csv', index_col=0)
-    df.index = df.index.map(lambda x: x.split('.')[0])    
+    df.index = df.index.map(lambda x: x.split('.')[0])
     plot_MA(df=df, file='images/simpler/HS-DGE_Tid_vs_Cyte.pdf', title="HS (Down)Tid vs Cyte")
 
     #
