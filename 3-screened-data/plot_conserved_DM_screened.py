@@ -12,6 +12,7 @@ pd.set_option('display.max_rows', 100)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
 import matplotlib as mpl
+from matplotlib import colors
 mpl.rcParams['mathtext.fontset'] = 'cm'
 mpl.rcParams['mathtext.rm'] = 'serif'
 import matplotlib.pyplot as plt
@@ -57,74 +58,96 @@ if __name__ == '__main__':
     df['mean fert-rate'] = df[['FT1 fert-rate', 'FT2 fert-rate', 'FT3 fert-rate', 'FT4 fert-rate']].mean(axis=1)
     df['std fert-rate'] = df[['FT1 fert-rate', 'FT2 fert-rate', 'FT3 fert-rate', 'FT4 fert-rate']].std(axis=1)
 
+    # Previously known to affect infertility in DS?
+    df['prev'] = dfS['Previously known to affect male fertility/sperm cells'].apply(lambda x: 1 if 'Yes' in x else 0)
+
+    # FPKM
     df['FPKM1'] = dfFPKM1['FPKM']
     df['FPKM2'] = dfFPKM2['FPKM']
-    #df['FPKM1'] = df['FPKM1'].apply(np.log2)
-    #df['FPKM2'] = df['FPKM2'].apply(np.log2)
-    
+    df['FPKM'] = df[['FPKM1', 'FPKM2']].mean(axis='columns')
+    df['logFPKM'] = df['FPKM'].apply(lambda x: np.log2(x) if x > 0.0 else 1e-20)
+
     df = df.sort_values(['status', 'mean fert-rate'], ascending=[True, True]).reset_index()
 
-    maxfpkm, minfpkm = df[['FPKM1','FPKM2']].max().max(), df[['FPKM1','FPKM2']].min().min()
+    maxfpkm, minfpkm = df['logFPKM'].max(), df['logFPKM'].min()
 
     print(df.head())
     print(df.tail())
-    
+    print("logFPKM: {:.2f}/{:.2f}".format(minfpkm, maxfpkm))
     # Plot
     fig = plt.figure(figsize=(11, 3.5))
 
-    gs = gridspec.GridSpec(5, 1, wspace=0.0, hspace=0.05)
-    ax = plt.subplot(gs[:3, :])
+    gs = gridspec.GridSpec(5, 1, wspace=0.0, hspace=0.1)
+    axp = plt.subplot(gs[0])
+    ax = plt.subplot(gs[1:3, :])
     axh = plt.subplot(gs[3:, :])
 
+    axp.set_aspect(aspect='auto', anchor='S')
     ax.set_aspect('auto', adjustable='box', anchor='C')
-    #axh.set_aspect(aspect=1, adjustable='box', anchor='N')
-    axh.set_aspect(aspect=0.5, anchor='N')
+    axh.set_aspect(aspect='auto', anchor='N')
 
+    pcmap = colors.ListedColormap(['white','#2ca02c'])
+    pbounds = [0, 0.5, 1]
+    pnorm = colors.BoundaryNorm(pbounds, pcmap.N)
     hnorm = mpl.colors.Normalize(vmin=minfpkm, vmax=maxfpkm)
 
+    # Plot
     eb = ax.errorbar(range(0, len(df)), df['mean fert-rate'], yerr=df['std fert-rate'], lw=0,
         ecolor='#3182bd', elinewidth=1.0, capsize=3,
         marker='o', markersize=3.5,
         markeredgecolor='#3182bd', markeredgewidth=0.5, markerfacecolor='#6baed6', markerfacecoloralt=None)
-    imh = axh.imshow(df[['FPKM1', 'FPKM2']].T.values, cmap='Reds', norm=hnorm, aspect='equal')
-
+    imp = axp.imshow(df[['prev']].T.values, cmap=pcmap, norm=pnorm)
+    imh = axh.imshow(df[['logFPKM']].T.values, cmap='Reds', norm=hnorm, aspect='equal')
+    # Horizontal Line
     ax.axhline(0.75, color='#d62728', lw=1, zorder=6)
-    ax.set_title('Conserved Screened')
-    
+
+    # axp
+    axp.set_title('Conserved Screened')
+    axp.set_yticks([0])
+    axp.set_xticks([])
+    axp.set_yticklabels(['Prev. known'], fontsize='small')
+    axp.set_xticklabels([])
+    plt.setp(axp.get_xticklabels(), visible=False)
+    axp.set_ylim(-1.02, 1.02)
+    axp.set_xlim(-1, len(df))
+
+    # ax
+    ax.set_ylabel('Mean +/- SD\nFertility Rate')
     ax.set_xticks(range(0, len(df)))
     ax.set_yticks(np.linspace(0, 1, 5))
     ax.set_yticklabels(np.linspace(0, 1, 5))
-
-    
-    axh.set_yticks([0, 1])
-    axh.set_xticks(range(0, len(df)))
-    axh.set_yticklabels(['S1','S2'], fontsize='x-small')
-    axh.set_xticklabels(df['gene'], rotation=90, va='top', ha='center', fontsize='xx-small')    
-
     plt.setp(ax.get_xticklabels(), visible=False)
-
     ax.tick_params(axis='x', which='both', length=0)
-
-    ax.set_ylabel('Mean +/- SD\nFertility Rate')
-    axh.set_ylabel('FPKM\n')
-    #axh.set_xlabel('Gene')
-
-    ax.set_ylim(-0.02, 1.02)
+    ax.set_ylim(-0.04, 1.04)
     ax.set_xlim(-1, len(df))
-    
-    axh.set_ylim(-1.02, 2.02)
-    axh.set_xlim(-1, len(df))    
-    
-
     ax.grid()
+
+    # axh
+    axh.set_yticks([0])
+    axh.set_xticks(range(0, len(df)))
+    axh.set_yticklabels(['FPKM'], fontsize='small')
+    axh.set_xticklabels(df['gene'], rotation=90, va='top', ha='center', fontsize='xx-small')   
+    axh.set_ylim(-1.02, 1.02)
+    axh.set_xlim(-1, len(df))
 
     # Layout
     #plt.tight_layout()
-    plt.subplots_adjust(left=0.075, right=0.99, bottom=0.07, top=0.92, wspace=0, hspace=0.0)
+    plt.subplots_adjust(left=0.09, right=0.99, bottom=0.07, top=0.92, wspace=0, hspace=0.0)
 
-    # Colorbar
-    cbax = fig.add_axes([0.09, 0.07, 0.12, 0.02])  # x, y, width, height
-    cb = plt.colorbar(imh, cax=cbax, orientation='horizontal')
-    cbax.set_title('FPKM', rotation=0, fontsize='medium')
+    # Prev Colorbar
+    prev_cbax = fig.add_axes([0.09, 0.07, 0.06, 0.02])  # x, y, width, height
+    prev_cb = plt.colorbar(imp, cax=prev_cbax, ticks=[-1, -0.5, 0, 0.5, 1], orientation='horizontal')
+    prev_cbax.set_title(r'Prev. known', rotation=0, fontsize='medium')
+    #prev_cb.set_ticks([-0.5, 0, 1, 1.5])
+    prev_cb.set_ticklabels(['No', '' ,'Yes'])
+    cb_ticks = prev_cb.ax.get_xticklabels()
+    cb_ticks[0].set_horizontalalignment('left')
+    cb_ticks[-1].set_horizontalalignment('right')
+
+
+    # FPKM Colorbar
+    fpkm_cbax = fig.add_axes([0.17, 0.07, 0.12, 0.02])  # x, y, width, height
+    fpkm_cb = plt.colorbar(imh, cax=fpkm_cbax, orientation='horizontal')
+    fpkm_cbax.set_title(r'log$_2$(FPKM)', rotation=0, fontsize='medium')
 
     fig.savefig('images/img-conserved_DM_screened.pdf')
