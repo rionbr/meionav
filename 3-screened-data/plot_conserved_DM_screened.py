@@ -60,6 +60,7 @@ if __name__ == '__main__':
 
     # Previously known to affect infertility in DS?
     df['prev'] = dfS['Previously known to affect male fertility/sperm cells'].apply(lambda x: 1 if 'Yes' in x else 0)
+    df['RNAi'] = dfS['Previous ref to RNAi working'].apply(lambda x: 1 if 'Yes' in x else 0)
 
     # FPKM
     df['FPKM1'] = dfFPKM1['FPKM']
@@ -67,7 +68,7 @@ if __name__ == '__main__':
     df['FPKM'] = df[['FPKM1', 'FPKM2']].mean(axis='columns')
     df['logFPKM'] = df['FPKM'].apply(lambda x: np.log2(x + 1))
 
-    df = df.sort_values(['status', 'mean fert-rate'], ascending=[True, True]).reset_index()
+    df = df.sort_values(['status', 'mean fert-rate'], ascending=[False, False]).reset_index()
 
     maxfpkm, minfpkm = df['logFPKM'].max(), df['logFPKM'].min()
 
@@ -75,79 +76,111 @@ if __name__ == '__main__':
     print(df.tail())
     print("logFPKM: {:.2f}/{:.2f}".format(minfpkm, maxfpkm))
     # Plot
-    fig = plt.figure(figsize=(11, 3.5))
+    fig = plt.figure(figsize=(3.5, 11))
 
-    gs = gridspec.GridSpec(18, 1, wspace=0.0, hspace=0.2)
-    ax = plt.subplot(gs[0:10, :])
-    axp = plt.subplot(gs[10])
-    axh = plt.subplot(gs[11:, :])
+    gs = gridspec.GridSpec(nrows=1, ncols=15, wspace=0.5, hspace=0.0)
+    
+    axr = plt.subplot(gs[:, 0:5])
+    axp = plt.subplot(gs[:, 5])
+    axh = plt.subplot(gs[:, 6])
+    ax = plt.subplot(gs[:, 7:14])
 
-    ax.set_aspect(aspect='auto', adjustable='box', anchor='S')
-    axp.set_aspect(aspect='auto', anchor='N')
-    axh.set_aspect(aspect='auto', anchor='N')
-
-    pcmap = colors.ListedColormap(['white', '#2ca02c'])
+    axr.set_aspect(aspect='auto', anchor='E')
+    axp.set_aspect(aspect='auto', anchor='E')
+    axh.set_aspect(aspect='auto', anchor='E')
+    ax.set_aspect(aspect='auto', adjustable='box', anchor='W')
+    
+    hnorm = mpl.colors.Normalize(vmin=minfpkm, vmax=maxfpkm)
+    pcmap = colors.ListedColormap(['white', '#9467bd'])
     pbounds = [0, 0.5, 1]
     pnorm = colors.BoundaryNorm(pbounds, pcmap.N)
-    hnorm = mpl.colors.Normalize(vmin=minfpkm, vmax=maxfpkm)
+    rcmap = colors.ListedColormap(['white', '#17becf'])
+    rbounds = [0, 0.5, 1]
+    rnorm = colors.BoundaryNorm(rbounds, rcmap.N)
 
     # Plot
-    eb = ax.errorbar(range(0, len(df)), df['mean fert-rate'], yerr=df['std fert-rate'], lw=0,
+    eb = ax.errorbar(df['mean fert-rate'], range(0, len(df)), xerr=df['std fert-rate'], lw=0,
                      ecolor='#3182bd', elinewidth=1.0, capsize=3,
                      marker='o', markersize=3.5,
                      markeredgecolor='#3182bd', markeredgewidth=0.5,
                      markerfacecolor='#6baed6', markerfacecoloralt=None
                      )
-    imp = axp.imshow(df[['prev']].T.values, cmap=pcmap, norm=pnorm)
-    imh = axh.imshow(df[['logFPKM']].T.values, cmap='Reds', norm=hnorm, aspect='equal')
+
+    imr = axr.imshow(df[['RNAi']].values, cmap=rcmap, norm=rnorm, aspect='equal')
+    imp = axp.imshow(df[['prev']].values, cmap=pcmap, norm=pnorm)
+    imh = axh.imshow(df[['logFPKM']].values, cmap='Reds', norm=hnorm, aspect='equal')
 
     # Horizontal Line
-    ax.axhline(0.75, color='#d62728', lw=1, zorder=6)
+    ax.axvline(0.75, color='#d62728', lw=1, zorder=6)
 
-    # ax
-    ax.set_title('Conserved Screened')
-    ax.set_ylabel('Mean +/- SD\nFertility Rate')
-    ax.set_xticks(range(0, len(df)))
-    ax.set_yticks(np.linspace(0, 1, 5))
-    ax.set_yticklabels(np.linspace(0, 1, 5))
-    plt.setp(ax.get_xticklabels(), visible=False)
-    ax.tick_params(axis='x', which='both', length=0)
-    ax.set_ylim(-0.04, 1.04)
-    ax.set_xlim(-1, len(df))
-    ax.grid()
-
+    # axr
+    axr.set_xticks([0])
+    axr.set_yticks(range(0, len(df)))
+    axr.set_xticklabels(['RNAi efficiency'], fontsize='small', rotation=35, ha='right')
+    axr.set_yticklabels(df['gene'], rotation=0, va='center', ha='right', fontsize='xx-small')
+    axr.set_xlim(-1.02, 1.02)
+    axr.set_ylim(-1, len(df))
     # axp
-    axp.set_yticks([0])
-    axp.set_xticks([])
-    axp.set_yticklabels(['Prev. reported'], fontsize='small')
-    axp.set_xticklabels([])
-    plt.setp(axp.get_xticklabels(), visible=False)
-    axp.set_ylim(-1.02, 1.02)
-    axp.set_xlim(-1, len(df))
+    axp.set_xticks([0])
+    axp.set_yticks([])
+    axp.set_xticklabels(['Prev. reported'], fontsize='small', rotation=35, ha='right')
+    axp.set_yticklabels([])
+    plt.setp(axp.get_yticklabels(), visible=False)
+    axp.set_xlim(-1.02, 1.02)
+    axp.set_ylim(-1, len(df))
 
     # axh
-    axh.set_yticks([0])
-    axh.set_xticks(range(0, len(df)))
-    axh.set_yticklabels(['FPKM'], fontsize='small')
-    axh.set_xticklabels(df['gene'], rotation=90, va='top', ha='center', fontsize='xx-small')
-    axh.set_ylim(-1.02, 1.02)
-    axh.set_xlim(-1, len(df))
+    axh.set_xticks([0])
+    axh.set_yticks([])
+    axh.set_xticklabels(['FPKM'], fontsize='small', rotation=35, ha='right')
+    axp.set_yticklabels([])
+    plt.setp(axh.get_yticklabels(), visible=False)
+    axh.set_xlim(-1.02, 1.02)
+    axh.set_ylim(-1, len(df))
+
+    # ax
+    fig.suptitle('Core metazoan meiotic genes')
+    ax.set_xlabel('Fertility Rate (Mean +/- SD)', fontsize='small')
+    ax.set_yticks(range(0, len(df)))
+    ax.set_xticks(np.linspace(0, 1, 5))
+    ax.set_xticklabels(np.linspace(0, 1, 5), fontsize='small', rotation=0)
+    plt.setp(ax.get_yticklabels(), visible=False)
+    ax.tick_params(axis='y', which='both', length=0)
+    ax.set_xlim(-0.04, 1.04)
+    ax.set_ylim(-1, len(df))
+    ax.grid(linewidth=0.5)
 
     # Layout
-    plt.subplots_adjust(left=0.09, right=0.99, bottom=0.07, top=0.92, wspace=0, hspace=0.0)
+    plt.subplots_adjust(left=0.09, right=0.98, bottom=0.07, top=0.96, wspace=0, hspace=0.0)
+
+    # RNAi Colorbar
+    rnai_cbax = fig.add_axes([0.02, 0.07, 0.02, 0.06])  # x, y, width, height
+    rnai_cb = plt.colorbar(imr, cax=rnai_cbax, ticks=[-1, -0.5, 0, 0.5, 1], orientation='vertical')
+    rnai_cbax.set_title(r'RNAi efficiency', rotation=90, fontsize='small')
+    rnai_cbax.yaxis.set_label_position('left')
+    rnai_cb.set_ticklabels(['No', '', 'Yes'])
+    rnai_cb.ax.tick_params(labelsize='small')
+    cb_ticks = rnai_cb.ax.get_yticklabels()
+    print(cb_ticks)
+    cb_ticks[0].set_verticalalignment('bottom')
+    cb_ticks[-1].set_verticalalignment('top')
 
     # Prev Colorbar
-    prev_cbax = fig.add_axes([0.09, 0.07, 0.06, 0.02])  # x, y, width, height
-    prev_cb = plt.colorbar(imp, cax=prev_cbax, ticks=[-1, -0.5, 0, 0.5, 1], orientation='horizontal')
-    prev_cbax.set_title(r'Prev. known', rotation=0, fontsize='medium')
+    prev_cbax = fig.add_axes([0.02, 0.24, 0.02, 0.06])  # x, y, width, height
+    prev_cb = plt.colorbar(imp, cax=prev_cbax, ticks=[-1, -0.5, 0, 0.5, 1], orientation='vertical')
+    prev_cbax.set_title(r'Previously reported', rotation=90, fontsize='small')
+    prev_cbax.yaxis.set_label_position('left')
     prev_cb.set_ticklabels(['No', '', 'Yes'])
-    cb_ticks = prev_cb.ax.get_xticklabels()
-    cb_ticks[0].set_horizontalalignment('left')
-    cb_ticks[-1].set_horizontalalignment('right')
+    prev_cb.ax.tick_params(labelsize='small')
+    cb_ticks = prev_cb.ax.get_yticklabels()
+    cb_ticks[0].set_verticalalignment('bottom')
+    cb_ticks[-1].set_verticalalignment('top')
 
     # FPKM Colorbar
-    fpkm_cbax = fig.add_axes([0.17, 0.07, 0.12, 0.02])  # x, y, width, height
-    fpkm_cb = plt.colorbar(imh, cax=fpkm_cbax, orientation='horizontal')
-    fpkm_cbax.set_title(r'log$_2$(FPKM)', rotation=0, fontsize='medium')
+    fpkm_cbax = fig.add_axes([0.02, 0.44, 0.02, 0.12])  # x, y, width, height
+    fpkm_cb = plt.colorbar(imh, cax=fpkm_cbax, orientation='vertical')
+    fpkm_cbax.set_title(r'log$_2$(FPKM+1)', rotation=90, fontsize='small')
+    fpkm_cbax.yaxis.set_label_position('left')
+    fpkm_cb.ax.tick_params(labelsize='small')
 
     fig.savefig('images/img-conserved_DM_screened.pdf')
