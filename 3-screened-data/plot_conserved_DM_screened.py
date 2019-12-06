@@ -65,7 +65,7 @@ if __name__ == '__main__':
     df['FPKM1'] = dfFPKM1['FPKM']
     df['FPKM2'] = dfFPKM2['FPKM']
     df['FPKM'] = df[['FPKM1', 'FPKM2']].mean(axis='columns')
-    df['logFPKM'] = df['FPKM'].apply(lambda x: np.log2(x) if x > 0.0 else 1e-20)
+    df['logFPKM'] = df['FPKM'].apply(lambda x: np.log2(x + 1))
 
     df = df.sort_values(['status', 'mean fert-rate'], ascending=[True, True]).reset_index()
 
@@ -77,41 +77,35 @@ if __name__ == '__main__':
     # Plot
     fig = plt.figure(figsize=(11, 3.5))
 
-    gs = gridspec.GridSpec(5, 1, wspace=0.0, hspace=0.1)
-    axp = plt.subplot(gs[0])
-    ax = plt.subplot(gs[1:3, :])
-    axh = plt.subplot(gs[3:, :])
+    gs = gridspec.GridSpec(18, 1, wspace=0.0, hspace=0.2)
+    ax = plt.subplot(gs[0:10, :])
+    axp = plt.subplot(gs[10])
+    axh = plt.subplot(gs[11:, :])
 
-    axp.set_aspect(aspect='auto', anchor='S')
-    ax.set_aspect('auto', adjustable='box', anchor='C')
+    ax.set_aspect(aspect='auto', adjustable='box', anchor='S')
+    axp.set_aspect(aspect='auto', anchor='N')
     axh.set_aspect(aspect='auto', anchor='N')
 
-    pcmap = colors.ListedColormap(['white','#2ca02c'])
+    pcmap = colors.ListedColormap(['white', '#2ca02c'])
     pbounds = [0, 0.5, 1]
     pnorm = colors.BoundaryNorm(pbounds, pcmap.N)
     hnorm = mpl.colors.Normalize(vmin=minfpkm, vmax=maxfpkm)
 
     # Plot
     eb = ax.errorbar(range(0, len(df)), df['mean fert-rate'], yerr=df['std fert-rate'], lw=0,
-        ecolor='#3182bd', elinewidth=1.0, capsize=3,
-        marker='o', markersize=3.5,
-        markeredgecolor='#3182bd', markeredgewidth=0.5, markerfacecolor='#6baed6', markerfacecoloralt=None)
+                     ecolor='#3182bd', elinewidth=1.0, capsize=3,
+                     marker='o', markersize=3.5,
+                     markeredgecolor='#3182bd', markeredgewidth=0.5,
+                     markerfacecolor='#6baed6', markerfacecoloralt=None
+                     )
     imp = axp.imshow(df[['prev']].T.values, cmap=pcmap, norm=pnorm)
     imh = axh.imshow(df[['logFPKM']].T.values, cmap='Reds', norm=hnorm, aspect='equal')
+
     # Horizontal Line
     ax.axhline(0.75, color='#d62728', lw=1, zorder=6)
 
-    # axp
-    axp.set_title('Conserved Screened')
-    axp.set_yticks([0])
-    axp.set_xticks([])
-    axp.set_yticklabels(['Prev. known'], fontsize='small')
-    axp.set_xticklabels([])
-    plt.setp(axp.get_xticklabels(), visible=False)
-    axp.set_ylim(-1.02, 1.02)
-    axp.set_xlim(-1, len(df))
-
     # ax
+    ax.set_title('Conserved Screened')
     ax.set_ylabel('Mean +/- SD\nFertility Rate')
     ax.set_xticks(range(0, len(df)))
     ax.set_yticks(np.linspace(0, 1, 5))
@@ -122,28 +116,34 @@ if __name__ == '__main__':
     ax.set_xlim(-1, len(df))
     ax.grid()
 
+    # axp
+    axp.set_yticks([0])
+    axp.set_xticks([])
+    axp.set_yticklabels(['Prev. reported'], fontsize='small')
+    axp.set_xticklabels([])
+    plt.setp(axp.get_xticklabels(), visible=False)
+    axp.set_ylim(-1.02, 1.02)
+    axp.set_xlim(-1, len(df))
+
     # axh
     axh.set_yticks([0])
     axh.set_xticks(range(0, len(df)))
     axh.set_yticklabels(['FPKM'], fontsize='small')
-    axh.set_xticklabels(df['gene'], rotation=90, va='top', ha='center', fontsize='xx-small')   
+    axh.set_xticklabels(df['gene'], rotation=90, va='top', ha='center', fontsize='xx-small')
     axh.set_ylim(-1.02, 1.02)
     axh.set_xlim(-1, len(df))
 
     # Layout
-    #plt.tight_layout()
     plt.subplots_adjust(left=0.09, right=0.99, bottom=0.07, top=0.92, wspace=0, hspace=0.0)
 
     # Prev Colorbar
     prev_cbax = fig.add_axes([0.09, 0.07, 0.06, 0.02])  # x, y, width, height
     prev_cb = plt.colorbar(imp, cax=prev_cbax, ticks=[-1, -0.5, 0, 0.5, 1], orientation='horizontal')
     prev_cbax.set_title(r'Prev. known', rotation=0, fontsize='medium')
-    #prev_cb.set_ticks([-0.5, 0, 1, 1.5])
-    prev_cb.set_ticklabels(['No', '' ,'Yes'])
+    prev_cb.set_ticklabels(['No', '', 'Yes'])
     cb_ticks = prev_cb.ax.get_xticklabels()
     cb_ticks[0].set_horizontalalignment('left')
     cb_ticks[-1].set_horizontalalignment('right')
-
 
     # FPKM Colorbar
     fpkm_cbax = fig.add_axes([0.17, 0.07, 0.12, 0.02])  # x, y, width, height
