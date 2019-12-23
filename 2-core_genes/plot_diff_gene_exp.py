@@ -111,7 +111,7 @@ def plot_MA(df, core=[], pool=[], file='image.pdf', title="plotMA",
     ax.set_ylim(-15, 15)
 
     # Number of Selected Genes
-    """
+    
     # Up
     strings, colors = [], []
     n_up_total = 0
@@ -159,7 +159,7 @@ def plot_MA(df, core=[], pool=[], file='image.pdf', title="plotMA",
     strings.extend(['{:,d}'.format(n_not_rest), '=', '{:,d}'.format(n_not_total)])
     colors.extend([c_not, 'black', 'black'])
     rainbow_text(ax=ax, x=10, y=-3, strings=strings, colors=colors, ha='left', va='center', fontsize='large')
-    """
+    
     # Labels
     ax.set_title(title)
     ax.set_ylabel('logFC')
