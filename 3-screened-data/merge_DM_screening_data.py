@@ -76,12 +76,12 @@ if __name__ == '__main__':
         ####
 
     # Export Core
-    wdfCfile = 'results/all3-conserved/DM_meiotic_genes_screened.csv'
+    wdfCfile = 'results/all3-conserved/DM_conserved_screened.csv'
     ensurePathExists(wdfCfile)
     dfC.to_csv(wdfCfile)
 
     # Export Pooling
-    wdfPfile = 'results/all3-pooling-DM/DM_meiotic_genes_screened.csv'
+    wdfPfile = 'results/all3-pooling-DM/DM_pooling_screened.csv'
     ensurePathExists(wdfPfile)
     dfP.to_csv(wdfPfile)
 
