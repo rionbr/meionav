@@ -23,16 +23,39 @@ def df2md(df, y_index=False, *args, **kwargs):
 
 if __name__ == '__main__':
 
+
     #
-    # All 3 Species Conserved
+    # Mamals
     #
-    pipeline = 'all3-conserved'
+    pipeline = 'mammals'
     print('# Pipeline: {pipeline:s}\n'.format(pipeline=pipeline))
 
-    df_M = pd.read_csv('results/{pipeline:s}/meta_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-    df_HS = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-    df_MM = pd.read_csv('results/{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-    df_DM = pd.read_csv('results/{pipeline:s}/DM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
+    df_M = pd.read_csv('results/pipeline-{pipeline:s}/meta_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
+    df_HS = pd.read_csv('results/pipeline-{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
+    df_MM = pd.read_csv('results/pipeline-{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
+
+    n_m = df_M.shape[0]
+    n_hs = df_HS.shape[0]
+    n_mm = df_MM.shape[0]
+
+    df_stat = pd.DataFrame.from_records([
+        ('Meta', n_m),
+        ('HS', n_hs),
+        ('MM', n_mm),
+    ], columns=['Species', 'Genes'])
+    print(df2md(df_stat, floatfmt='.4f'))
+    print('\n')
+
+    #
+    # Core
+    #
+    pipeline = 'core'
+    print('# Pipeline: {pipeline:s}\n'.format(pipeline=pipeline))
+
+    df_M = pd.read_csv('results/pipeline-{pipeline:s}/meta_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
+    df_HS = pd.read_csv('results/pipeline-{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
+    df_MM = pd.read_csv('results/pipeline-{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
+    df_DM = pd.read_csv('results/pipeline-{pipeline:s}/DM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
 
     n_m = df_M.shape[0]
     n_hs = df_HS.shape[0]
@@ -44,76 +67,6 @@ if __name__ == '__main__':
         ('HS', n_hs),
         ('MM', n_mm),
         ('DM', n_dm),
-    ], columns=['Species', 'Genes'])
-    print(df2md(df_stat, floatfmt='.4f'))
-    print('\n')
-
-
-    #
-    # All 3 Species Pooling
-    #
-    pipeline = 'all3-pooling-DM'
-    print('# Pipeline: {pipeline:s}\n'.format(pipeline=pipeline))
-
-    df_M = pd.read_csv('results/{pipeline:s}/meta_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-    df_HS = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-    df_MM = pd.read_csv('results/{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-    df_DM = pd.read_csv('results/{pipeline:s}/DM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-
-    n_m = df_M.shape[0]
-    n_hs = df_HS.shape[0]
-    n_mm = df_MM.shape[0]
-    n_dm = df_DM.shape[0]
-
-    df_stat = pd.DataFrame.from_records([
-        ('Meta', n_m),
-        ('HS', n_hs),
-        ('MM', n_mm),
-        ('DM', n_dm),
-    ], columns=['Species', 'Genes'])
-    print(df2md(df_stat, floatfmt='.4f'))
-    print('\n')
-
-    #
-    # Mamals Conserved FDRp05
-    #
-    pipeline = 'mammals-conserved'
-    print('# Pipeline: {pipeline:s}\n'.format(pipeline=pipeline))
-
-    df_M = pd.read_csv('results/{pipeline:s}/meta_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-    df_HS = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-    df_MM = pd.read_csv('results/{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-
-    n_m = df_M.shape[0]
-    n_hs = df_HS.shape[0]
-    n_mm = df_MM.shape[0]
-
-    df_stat = pd.DataFrame.from_records([
-        ('Meta', n_m),
-        ('HS', n_hs),
-        ('MM', n_mm),
-    ], columns=['Species', 'Genes'])
-    print(df2md(df_stat, floatfmt='.4f'))
-    print('\n')
-
-    #
-    # Mammals Pooling
-    #
-    pipeline = 'mammals-pooling'
-    print('# Pipeline: {pipeline:s}\n'.format(pipeline=pipeline))
-
-    df_M = pd.read_csv('results/{pipeline:s}/meta_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-    df_HS = pd.read_csv('results/{pipeline:s}/HS_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-    df_MM = pd.read_csv('results/{pipeline:s}/MM_meiotic_genes.csv'.format(pipeline=pipeline), index_col=0)
-
-    n_m = df_M.shape[0]
-    n_hs = df_HS.shape[0]
-    n_MM = df_MM.shape[0]
-
-    df_stat = pd.DataFrame.from_records([
-        ('Meta', n_m),
-        ('HS', n_hs),
-        ('MM', n_mm),
     ], columns=['Species', 'Genes'])
     print(df2md(df_stat, floatfmt='.4f'))
     print('\n')

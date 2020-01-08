@@ -50,15 +50,14 @@ def plot_MA(df, core=[], pool=[], file='image.pdf', title="plotMA",
     ax.scatter(dfU['logCPM'], dfU['logFC'], c=c_up, s=s, lw=lw, marker='o', zorder=3)
     ax.scatter(dfD['logCPM'], dfD['logFC'], c=c_down, s=s, lw=lw, marker='o', zorder=3)
     ax.scatter(dfN['logCPM'], dfN['logFC'], c=c_not, s=s / 3, lw=lw, marker='o', zorder=2)
-    
+
     # Draw a line at y=(-1,0,1)
     ax.axhline(y=-1, color='b', lw=1, linestyle='--', zorder=5)
     ax.axhline(y=0, color='gray', lw=1, linestyle='--', zorder=5)
     ax.axhline(y=+1, color='b', lw=1, linestyle='--', zorder=5)
 
-    ax.set_xlim(-1,18)
-    ax.set_ylim(-15,15)
-
+    ax.set_xlim(-1, 18)
+    ax.set_ylim(-15, 15)
 
     # Labels
     ax.set_title(title)
@@ -67,7 +66,7 @@ def plot_MA(df, core=[], pool=[], file='image.pdf', title="plotMA",
     # Layout
     plt.tight_layout()
     # Save
-    
+
     ensurePathExists(file)
     fig.savefig(file)
 
@@ -81,14 +80,14 @@ if __name__ == '__main__':
     #
     df = pd.read_csv('../1-diff-gene-exp/results/HS/HS-DGE_Cyte_vs_Gonia.csv', index_col=0)
     df.index = df.index.map(lambda x: x.split('.')[0])
-    plot_MA(df=df, file='images/simpler/HS-DGE_Cyte_vs_Gonia.pdf', title="HS (Up)Cyte vs Gonia")
+    plot_MA(df=df, file='images/simpler/HS-DGE_Cyte_vs_Gonia-smp.pdf', title="HS (Up)Cyte vs Gonia")
 
     #
     # Tid vs Cyte (interested in genes downregulated in Tid)
     #
     df = pd.read_csv('../1-diff-gene-exp/results/HS/HS-DGE_Tid_vs_Cyte.csv', index_col=0)
     df.index = df.index.map(lambda x: x.split('.')[0])
-    plot_MA(df=df, file='images/simpler/HS-DGE_Tid_vs_Cyte.pdf', title="HS (Down)Tid vs Cyte")
+    plot_MA(df=df, file='images/simpler/HS-DGE_Tid_vs_Cyte-smp.pdf', title="HS (Down)Tid vs Cyte")
 
     #
     # MM
@@ -96,12 +95,12 @@ if __name__ == '__main__':
     # Cytes vs Gonia (interested in genes upregulated in Cytes)
     #
     df = pd.read_csv('../1-diff-gene-exp/results/MM/MM-DGE_Cyte_vs_Gonia.csv', index_col=0)
-    plot_MA(df=df, file='images/simpler/MM-DGE_Cyte_vs_Gonia.pdf', title="MM (Up)Cyte vs Gonia")
+    plot_MA(df=df, file='images/simpler/MM-DGE_Cyte_vs_Gonia-smp.pdf', title="MM (Up)Cyte vs Gonia")
     #
     # Cytes vs Tids (interested in genes downregulated in Tid)
     #
     df = pd.read_csv('../1-diff-gene-exp/results/MM/MM-DGE_Tid_vs_Cyte.csv', index_col=0)
-    plot_MA(df=df, file='images/simpler/MM-DGE_Tid_vs_Cyte.pdf', title="MM (Down)Tid vs Cyte")
+    plot_MA(df=df, file='images/simpler/MM-DGE_Tid_vs_Cyte-smp.pdf', title="MM (Down)Tid vs Cyte")
 
     #
     # DM
@@ -109,10 +108,10 @@ if __name__ == '__main__':
     # Middle vs Apical (interested in genes upregulated in Middle)
     #
     df = pd.read_csv('../1-diff-gene-exp/results/DM/DM-DGE_Middle_vs_Apical.csv', index_col=0)
-    plot_MA(df=df, file='images/simpler/DM-DGE_Middle_vs_Apical.pdf', title="DM (Up)Middle vs Apical")
+    plot_MA(df=df, file='images/simpler/DM-DGE_Middle_vs_Apical-smp.pdf', title="DM (Up)Middle vs Apical")
 
     #
     # Basal vs Middle (interested in genes downregulated in Basal)
     #
     df = pd.read_csv('../1-diff-gene-exp/results/DM/DM-DGE_Basal_vs_Middle.csv', index_col=0)
-    plot_MA(df=df, file='images/simpler/DM-DGE_Basal_vs_Middle.pdf', title="DM (Down)Basal vs Middle")
+    plot_MA(df=df, file='images/simpler/DM-DGE_Basal_vs_Middle-smp.pdf', title="DM (Down)Basal vs Middle")

@@ -1,14 +1,13 @@
-# Pipeline: all3-conserved
+# Pipeline: mammals
 
 |  Species   |   Genes |
 | :----------|--------:|
-|  Meta      |     117 |
-|  HS        |     151 |
-|  MM        |     163 |
-|  DM        |     147 |
+|  Meta      |    1246 |
+|  HS        |    1323 |
+|  MM        |    1396 |
 
 
-# Pipeline: all3-pooling-DM
+# Pipeline: core
 
 |  Species   |   Genes |
 | :----------|--------:|
@@ -18,22 +17,4 @@
 |  DM        |     920 |
 
 
-# Pipeline: mammals-conserved
-
-|  Species   |   Genes |
-| :----------|--------:|
-|  Meta      |    1246 |
-|  HS        |    1323 |
-|  MM        |    1396 |
-
-
-# Pipeline: mammals-pooling
-
-|  Species   |   Genes |
-| :----------|--------:|
-|  Meta      |    8495 |
-|  HS        |   10502 |
-|  MM        |    1396 |
-
-
-[Finished in 1.7s]
+[Finished in 1.8s]

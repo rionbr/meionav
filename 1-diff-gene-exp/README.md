@@ -12,8 +12,6 @@ Then, two pipelines can be chosen: `conserved` or `pooling`.
 
 2. Run `select_dge_genes-<pipeline>.py` to select only those genes that are Differentialy Expressed (DE) based on assumed parameters (ex.: FDR, logFC & CPM).
 
-Note two different FDR levels are used (FDR<=0.05 and FDR<=0.01) for pipeline `conserved`.
-
 
 Other files:
 - `calc_plot_HS_PCA.py` and `calc_plot_MM_PCA.py` calculate Principal Component Analysis (PCA) and plot the results.
@@ -47,6 +45,17 @@ loaded via a namespace (and not attached):
 [11] magrittr_1.5     scales_1.0.0     pillar_1.4.2     rlang_0.4.0      lazyeval_0.2.2  
 [16] rstudioapi_0.10  tools_3.6.1      glue_1.3.1       purrr_0.3.2      munsell_0.5.0   
 [21] compiler_3.6.1   pkgconfig_2.0.2  colorspace_1.4-1 tidyselect_0.2.5 tibble_2.1.3   
+```
+
+---
+
+# Calculates FPKM
+
+We also calculated FPKM values for Spermatocytes (middle). These are located in files `data/DM/DM_Spermatocytes_FPKM_sample1.csv` and `data/DM/DM_Spermatocytes_FPKM_sample2.csv`
+After read aligment with `Hisat2` the following command line was used to calculate values.
+
+```bash
+stringtie DM_aligned_reads.bam -G DM_annotation.gtf -e -B –A DM_Sample.txt –o Sample_rep.gtf
 ```
 
 ---

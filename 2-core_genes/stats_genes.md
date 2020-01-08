@@ -2,12 +2,15 @@
 
 |  Species      | Cell                   |   Genes |   Prot. Coding |      % |
 | :-------------|:-----------------------|--------:|---------------:|-------:|
+|  HS           | Both                   |   16527 |          13023 | 0.7880 |
 |  HS           | Cyte vs Gonia          |   16165 |          12925 | 0.7996 |
 |  HS           | Tid vs Cyte            |   13561 |          10817 | 0.7977 |
 |  HS (mitosis) | Mitosis vs Pre-Mitosis |   13417 |          11713 | 0.8730 |
 |  HS (mitosis) | Pos-Mitosis vs Mitosis |   13462 |          11713 | 0.8701 |
+|  MM           | Both                   |   14958 |          12451 | 0.8324 |
 |  MM           | Cyte vs Gonia          |   11806 |          11044 | 0.9355 |
 |  MM           | Tid vs Cyte            |   13995 |          11642 | 0.8319 |
+|  DM           | Both                   |   11349 |          10369 | 0.9136 |
 |  DM           | Middle vs Apical       |   11154 |          10197 | 0.9142 |
 |  DM           | Basal vs Middle        |   10707 |           9842 | 0.9192 |
 
@@ -50,4 +53,4 @@
 |  DM       | Basal vs Middle | Not    |  0.05 |    9550 | 0.8919 |           8735 |  0.9147 |
 |  DM       | Basal vs Middle | Down   |  0.05 |     445 | 0.0416 |            410 |  0.9213 |
 
-[Finished in 1.5s]
+[Finished in 2.6s]
