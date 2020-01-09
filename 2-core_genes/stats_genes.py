@@ -43,6 +43,8 @@ if __name__ == '__main__':
     df_HS_DE_UpCyteTid = df_HS_TidCyte.loc[((df_HS_TidCyte['FDR_TidCyte'] <= maxFDR) & (df_HS_TidCyte['logFC_TidCyte'].abs() >= minLogFC) & (df_HS_TidCyte['logFC_TidCyte'] >= 0)), :]
     df_HS_DE_DownCyteTid = df_HS_TidCyte.loc[((df_HS_TidCyte['FDR_TidCyte'] <= maxFDR) & (df_HS_TidCyte['logFC_TidCyte'].abs() >= minLogFC) & (df_HS_TidCyte['logFC_TidCyte'] <= 0)), :]
     df_HS_DE_NotCyteTid = df_HS_TidCyte.loc[~df_HS_TidCyte.index.isin(df_HS_DE_UpCyteTid.index.tolist() + df_HS_DE_DownCyteTid.index.tolist()), :]
+    # UpCyteGonia + DownCyteTid
+    df_HS_DE_UpCyteGoniaDownCyteTid = pd.concat([df_HS_DE_UpCyteGonia, df_HS_DE_DownCyteTid], axis='index').drop_duplicates()
 
     #
     # HS (Mitosis)
@@ -66,7 +68,8 @@ if __name__ == '__main__':
     df_MM_DE_UpCyteTid = df_MM_TidCyte.loc[((df_MM_TidCyte['FDR_TidCyte'] <= maxFDR) & (df_MM_TidCyte['logFC_TidCyte'].abs() >= minLogFC) & (df_MM_TidCyte['logFC_TidCyte'] >= 0)), :]
     df_MM_DE_DownCyteTid = df_MM_TidCyte.loc[((df_MM_TidCyte['FDR_TidCyte'] <= maxFDR) & (df_MM_TidCyte['logFC_TidCyte'].abs() >= minLogFC) & (df_MM_TidCyte['logFC_TidCyte'] <= 0)), :]
     df_MM_DE_NotCyteTid = df_MM_TidCyte.loc[~df_MM_TidCyte.index.isin(df_MM_DE_UpCyteTid.index.tolist() + df_MM_DE_DownCyteTid.index.tolist()), :]
-
+    # UpCyteGonia + DownCyteTid
+    df_MM_DE_UpCyteGoniaDownCyteTid = pd.concat([df_MM_DE_UpCyteGonia, df_MM_DE_DownCyteTid], axis='index').drop_duplicates()
     #
     # DM
     #
@@ -82,7 +85,8 @@ if __name__ == '__main__':
     df_DM_DE_UpMiddleBasal = df_DM_BasalMiddle.loc[((df_DM_BasalMiddle['FDR_BasalMiddle'] <= maxFDR) & (df_DM_BasalMiddle['logFC_BasalMiddle'].abs() >= minLogFC) & (df_DM_BasalMiddle['logFC_BasalMiddle'] >= 0)), :]
     df_DM_DE_DownMiddleBasal = df_DM_BasalMiddle.loc[((df_DM_BasalMiddle['FDR_BasalMiddle'] <= maxFDR) & (df_DM_BasalMiddle['logFC_BasalMiddle'].abs() >= minLogFC) & (df_DM_BasalMiddle['logFC_BasalMiddle'] <= 0)), :]
     df_DM_DE_NotMiddleBasal = df_DM_BasalMiddle.loc[~df_DM_BasalMiddle.index.isin(df_DM_DE_UpMiddleBasal.index.tolist() + df_DM_DE_DownMiddleBasal.index.tolist()), :]
-
+    # UpMiddleApical + DownMiddleBasal
+    df_DM_DE_UpMiddleApicalDownMiddleBasal = pd.concat([df_DM_DE_UpMiddleApical, df_DM_DE_DownMiddleBasal], axis='index').drop_duplicates()
     #
     # - number of genes
     #
@@ -91,10 +95,11 @@ if __name__ == '__main__':
     n_DM_g = df_DM.shape[0]
     n_HS_CyteGonia_g = df_HS_CyteGonia.shape[0]
     n_HS_TidCyte_g = df_HS_TidCyte.shape[0]
-    n_HS_MitPre = df_HS_MitPre.shape[0]
-    n_HS_PosMit = df_HS_PosMit.shape[0]
+    n_HS_MitPre_g = df_HS_MitPre.shape[0]
+    n_HS_PosMit_g = df_HS_PosMit.shape[0]
     n_MM_CyteGonia_g = df_MM_CyteGonia.shape[0]
     n_MM_TidCyte_g = df_MM_TidCyte.shape[0]
+
     n_DM_MiddleApical_g = df_DM_MiddleApical.shape[0]
     n_DM_BasalMiddle_g = df_DM_BasalMiddle.shape[0]
 
@@ -113,18 +118,18 @@ if __name__ == '__main__':
     print('# Number of genes\n')
 
     df_stat = pd.DataFrame.from_records([
-        ('HS', 'Both', n_HS_g, n_HS_pcg),
-        ('HS', 'Cyte vs Gonia', n_HS_CyteGonia_g, n_HS_CyteGonia_pcg),
-        ('HS', 'Tid vs Cyte', n_HS_TidCyte_g, n_HS_TidCyte_pcg),
-        ('HS (mitosis)', 'Mitosis vs Pre-Mitosis', n_HS_MitPre, n_HS_MitPre_pcg),
-        ('HS (mitosis)', 'Pos-Mitosis vs Mitosis', n_HS_PosMit, n_HS_PosMit_pcg),
-        ('MM', 'Both', n_MM_g, n_MM_pcg),
-        ('MM', 'Cyte vs Gonia', n_MM_CyteGonia_g, n_MM_CyteGonia_pcg),
-        ('MM', 'Tid vs Cyte', n_MM_TidCyte_g, n_MM_TidCyte_pcg),
-        ('DM', 'Both', n_DM_g, n_DM_pcg),
-        ('DM', 'Middle vs Apical', n_DM_MiddleApical_g, n_DM_MiddleApical_pcg),
-        ('DM', 'Basal vs Middle', n_DM_BasalMiddle_g, n_DM_BasalMiddle_pcg),
-    ], columns=['Species', 'Cell', 'Genes', 'Prot. Coding'])
+        ('HS', 'Meiosis', 'Cyte vs Gonia', n_HS_CyteGonia_g, n_HS_CyteGonia_pcg),
+        ('HS', 'Meiosis', 'Tid vs Cyte', n_HS_TidCyte_g, n_HS_TidCyte_pcg),
+        ('HS', 'Meiosis', '(Cyte vs Gonia)+(Tid vs Cyte)', n_HS_g, n_HS_pcg),
+        ('HS', '*Mitosis', 'Mitosis vs Pre-Mitosis', n_HS_MitPre_g, n_HS_MitPre_pcg),
+        ('HS', '*Mitosis', 'Pos-Mitosis vs Mitosis', n_HS_PosMit_g, n_HS_PosMit_pcg),
+        ('MM', 'Meiosis', 'Cyte vs Gonia', n_MM_CyteGonia_g, n_MM_CyteGonia_pcg),
+        ('MM', 'Meiosis', 'Tid vs Cyte', n_MM_TidCyte_g, n_MM_TidCyte_pcg),
+        ('MM', 'Meiosis', '(Cyte vs Gonia)+(Tid vs Cyte)', n_MM_g, n_MM_pcg),
+        ('DM', 'Meiosis', 'Middle vs Apical', n_DM_MiddleApical_g, n_DM_MiddleApical_pcg),
+        ('DM', 'Meiosis', 'Basal vs Middle', n_DM_BasalMiddle_g, n_DM_BasalMiddle_pcg),
+        ('DM', 'Meiosis', '(Middle vs Apical)+(Basal vs Middle)', n_DM_g, n_DM_pcg),
+    ], columns=['Species', 'Process', 'Cell', 'Genes', 'Prot. Coding'])
     df_stat['%'] = df_stat['Prot. Coding'] / df_stat['Genes']
     print(df2md(df_stat, floatfmt='.4f'))
     print('\n')
@@ -178,6 +183,14 @@ if __name__ == '__main__':
     n_DM_UpMiddleBasal_pcg = df_DM_DE_UpMiddleBasal['biotype'].value_counts()['protein_coding']
     n_DM_DownMiddleBasal_pcg = df_DM_DE_DownMiddleBasal['biotype'].value_counts()['protein_coding']
     n_DM_NotMiddleBasal_pcg = df_DM_DE_NotMiddleBasal['biotype'].value_counts()['protein_coding']
+
+    # Up+Down (HS,MM,DM)
+    n_HS_UpDown_g = df_HS_DE_UpCyteGoniaDownCyteTid.shape[0]
+    n_MM_UpDown_g = df_MM_DE_UpCyteGoniaDownCyteTid.shape[0]
+    n_DM_UpDown_g = df_DM_DE_UpMiddleApicalDownMiddleBasal.shape[0]
+    n_HS_UpDown_pcg = df_HS_DE_UpCyteGoniaDownCyteTid['biotype'].value_counts()['protein_coding']
+    n_MM_UpDown_pcg = df_MM_DE_UpCyteGoniaDownCyteTid['biotype'].value_counts()['protein_coding']
+    n_DM_UpDown_pcg = df_DM_DE_UpMiddleApicalDownMiddleBasal['biotype'].value_counts()['protein_coding']
 
     columns = ['Specie', 'Cell', 'Reg.', 'FDR', 'Genes']
 
@@ -241,6 +254,16 @@ if __name__ == '__main__':
     df_DM_BasalMiddle_stat['Prot. Coding'] = [n_DM_UpMiddleBasal_pcg, n_DM_NotMiddleBasal_pcg, n_DM_DownMiddleBasal_pcg]
     df_DM_BasalMiddle_stat['%(PC)'] = df_DM_BasalMiddle_stat['Prot. Coding'] / df_DM_BasalMiddle_stat['Genes']
 
+    # (HS, MM, DM) UpEntry+DownExit
+    df_UpDown_stat = pd.DataFrame.from_records([
+        ('HS', '(Up)Cyte vs Gonia + (Down)Tid vs Cyte', maxFDR, n_HS_UpDown_g),
+        ('MM', '(Up)Cyte vs Gonia + (Down)Tid vs Cyte', maxFDR, n_MM_UpDown_g),
+        ('DM', '(Up)Middle vs Apical + (Down)Basal vs Middle', maxFDR, n_DM_UpDown_g),
+    ], columns=['Species', 'Reg. Cell Combination', 'FDR', 'Genes'])
+    df_UpDown_stat['%(G)'] = df_UpDown_stat['Genes'] / [n_HS_g, n_MM_g, n_DM_g]
+    df_UpDown_stat['Prot. Coding'] = [n_HS_UpDown_pcg, n_MM_UpDown_pcg, n_DM_UpDown_pcg]
+    df_UpDown_stat['%(PC)'] = df_UpDown_stat['Prot. Coding'] / df_UpDown_stat['Genes']
+
     floatfmt = ['', '', '', '', '.2f', '', '.4f', '', '.4f']
     print(df2md(df_HS_CyteGonia_stat, floatfmt=floatfmt))
     print('')
@@ -255,4 +278,7 @@ if __name__ == '__main__':
     print(df2md(df_DM_MiddleApical_stat, floatfmt=floatfmt))
     print('')
     print(df2md(df_DM_BasalMiddle_stat, floatfmt=floatfmt))
+    print('')
+
+    print(df2md(df_UpDown_stat, floatfmt=['', '', '', '.2f', '', '.4f', '', '.4f']))
     print('')

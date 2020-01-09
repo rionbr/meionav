@@ -1,18 +1,18 @@
 # Number of genes
 
-|  Species      | Cell                   |   Genes |   Prot. Coding |      % |
-| :-------------|:-----------------------|--------:|---------------:|-------:|
-|  HS           | Both                   |   16527 |          13023 | 0.7880 |
-|  HS           | Cyte vs Gonia          |   16165 |          12925 | 0.7996 |
-|  HS           | Tid vs Cyte            |   13561 |          10817 | 0.7977 |
-|  HS (mitosis) | Mitosis vs Pre-Mitosis |   13417 |          11713 | 0.8730 |
-|  HS (mitosis) | Pos-Mitosis vs Mitosis |   13462 |          11713 | 0.8701 |
-|  MM           | Both                   |   14958 |          12451 | 0.8324 |
-|  MM           | Cyte vs Gonia          |   11806 |          11044 | 0.9355 |
-|  MM           | Tid vs Cyte            |   13995 |          11642 | 0.8319 |
-|  DM           | Both                   |   11349 |          10369 | 0.9136 |
-|  DM           | Middle vs Apical       |   11154 |          10197 | 0.9142 |
-|  DM           | Basal vs Middle        |   10707 |           9842 | 0.9192 |
+|  Species   | Process   | Cell                                 |   Genes |   Prot. Coding |      % |
+| :----------|:----------|:-------------------------------------|--------:|---------------:|-------:|
+|  HS        | Meiosis   | Cyte vs Gonia                        |   16165 |          12925 | 0.7996 |
+|  HS        | Meiosis   | Tid vs Cyte                          |   13561 |          10817 | 0.7977 |
+|  HS        | Meiosis   | (Cyte vs Gonia)+(Tid vs Cyte)        |   16527 |          13023 | 0.7880 |
+|  HS        | *Mitosis  | Mitosis vs Pre-Mitosis               |   13417 |          11713 | 0.8730 |
+|  HS        | *Mitosis  | Pos-Mitosis vs Mitosis               |   13462 |          11713 | 0.8701 |
+|  MM        | Meiosis   | Cyte vs Gonia                        |   11806 |          11044 | 0.9355 |
+|  MM        | Meiosis   | Tid vs Cyte                          |   13995 |          11642 | 0.8319 |
+|  MM        | Meiosis   | (Cyte vs Gonia)+(Tid vs Cyte)        |   14958 |          12451 | 0.8324 |
+|  DM        | Meiosis   | Middle vs Apical                     |   11154 |          10197 | 0.9142 |
+|  DM        | Meiosis   | Basal vs Middle                      |   10707 |           9842 | 0.9192 |
+|  DM        | Meiosis   | (Middle vs Apical)+(Basal vs Middle) |   11349 |          10369 | 0.9136 |
 
 
 # Number of genes differently expressed
@@ -53,4 +53,10 @@
 |  DM       | Basal vs Middle | Not    |  0.05 |    9550 | 0.8919 |           8735 |  0.9147 |
 |  DM       | Basal vs Middle | Down   |  0.05 |     445 | 0.0416 |            410 |  0.9213 |
 
-[Finished in 2.6s]
+|  Species   | Reg. Cell Combination                        |   FDR |   Genes |   %(G) |   Prot. Coding |   %(PC) |
+| :----------|:---------------------------------------------|------:|--------:|-------:|---------------:|--------:|
+|  HS        | (Up)Cyte vs Gonia + (Down)Tid vs Cyte        |  0.05 |    3785 | 0.2290 |           2747 |  0.7258 |
+|  MM        | (Up)Cyte vs Gonia + (Down)Tid vs Cyte        |  0.05 |    5698 | 0.3809 |           5139 |  0.9019 |
+|  DM        | (Up)Middle vs Apical + (Down)Basal vs Middle |  0.05 |    2506 | 0.2208 |           2097 |  0.8368 |
+
+[Finished in 1.7s]
