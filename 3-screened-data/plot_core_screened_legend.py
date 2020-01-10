@@ -32,7 +32,7 @@ if __name__ == '__main__':
     # RNAi
     #
     ax_rnai_cb = fig.add_axes([0.1, 0.6, 0.03, (0.05 * 2)])  # x, y, width, height
-    ax_rnai_cb.set_title('RNAi efficiency', fontsize='small', loc='left')
+    ax_rnai_cb.set_title('Validated RNAi', fontsize='small', loc='left')
     cmap_rnai = mpl.colors.ListedColormap(['white', '#17becf'])
     bounds_rnai = [0, 1, 2]
     ticks_rnai = [0.5, 1.5]
@@ -56,14 +56,14 @@ if __name__ == '__main__':
         'H': 'Non-germ cell autonomous'
     }
     code_color = {
-        'A': '#1f77b4',  # blue
-        'B': '#ff7f0e',
-        'C': '#2ca02c',
-        'D': '#d62728',
-        'E': '#9467bd',
-        'F': '#8c564b',
-        'G': '#e377c2',
-        'H': '#7f7f7f'  # gray
+        'A': '#d62728',
+        'B': '#ce6dbd',
+        'C': '#756bb1',
+        'D': '#c7e9c0',
+        'E': '#9edae5',
+        'F': '#fdd0a2',
+        'G': '#dadaeb',
+        'H': '#bdbdbd'
     }
 
     ax_code_cb = fig.add_axes([0.1, 0.05, 0.03, (0.05 * 8)])  # x, y, width, height

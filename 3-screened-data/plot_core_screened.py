@@ -24,6 +24,11 @@ def value_to_color(x, cmap, norm):
     return colors.rgb2hex(rgb)
 
 
+def calc_control_mean_std_fert_rate(x):
+    fertrate = x['hatched'] / x['eggs']
+    return pd.Series({'mean fert-rate': fertrate.mean(), 'std fert-rate': fertrate.std()})
+
+
 if __name__ == '__main__':
 
     # Load genes
@@ -31,6 +36,10 @@ if __name__ == '__main__':
 
     # Load Screened data
     dfs = pd.read_csv('data/core_DM_screened_2020-01-07.csv', index_col=0)
+
+    # Load Control data
+    dfc = pd.read_csv('data/screened_DM_controls.csv', index_col=0)
+    dfc = dfc.groupby(dfc.index).apply(calc_control_mean_std_fert_rate)
 
     # Load FPKM data
     dfFPKM1 = pd.read_csv('../1-diff-gene-exp/data/DM/DM_Spermatocytes_FPKM_sample1.csv', index_col=0, usecols=['Gene ID', 'FPKM'])
@@ -94,14 +103,14 @@ if __name__ == '__main__':
         'H': 'Non-germ cell autonomous'
     }
     code_color = {
-        'A': '#1f77b4',
-        'B': '#ff7f0e',
-        'C': '#2ca02c',
-        'D': '#d62728',
-        'E': '#9467bd',
-        'F': '#8c564b',
-        'G': '#e377c2',
-        'H': '#7f7f7f'
+        'A': '#d62728',
+        'B': '#ce6dbd',
+        'C': '#756bb1',
+        'D': '#c7e9c0',
+        'E': '#9edae5',
+        'F': '#fdd0a2',
+        'G': '#dadaeb',
+        'H': '#bdbdbd'
     }
 
     # print(df.head())
@@ -116,8 +125,16 @@ if __name__ == '__main__':
     dfg = df.groupby(np.arange(len(df)) // n_per_page)
     number_of_pages = len(dfg)
     for page, dft in dfg:
+        # Debug
+        # if page < 6:
+        #    continue
         dft = dft.sort_values(['Status', 'mean fert-rate', 'gene'], ascending=[False, False, False]).reset_index()
         n_this_page = len(dft)
+        if (page + 1) == number_of_pages:
+            last_page = True
+            n_this_page += 5  # add the 3 + 2 = 5 (3 for manual fix; 2 controls)
+        else:
+            last_page = False
         print("> Page: {:d} of {:d}".format(page + 1, number_of_pages))
         print("> Points in this page: {:d}".format(n_this_page))
 
@@ -125,13 +142,19 @@ if __name__ == '__main__':
         # fig.suptitle('Core metazoan meiotic genes'.format(page, number_of_pages))
 
         gs = gridspec.GridSpec(nrows=n_per_page, ncols=14)
-        ax_fert = plt.subplot(gs[:n_this_page, 0:8])
-        ax_fpkm = plt.subplot(gs[:n_this_page, 8])
-        ax_rnai = plt.subplot(gs[:n_this_page, 9])
-        ax_our_dm = plt.subplot(gs[:n_this_page, 10])
-        ax_ext_dm = plt.subplot(gs[:n_this_page, 11])
-        ax_ext_mm = plt.subplot(gs[:n_this_page, 12])
-        ax_ext_hs = plt.subplot(gs[:n_this_page, 13])
+        if not last_page:
+            n_for_grid_height = n_this_page
+        else:
+            n_for_grid_height = n_this_page - 4
+        ax_fert = plt.subplot(gs[:n_for_grid_height, 0:8])
+        ax_our_dm = plt.subplot(gs[:n_for_grid_height, 8])
+        ax_ext_dm = plt.subplot(gs[:n_for_grid_height, 9])
+        ax_ext_mm = plt.subplot(gs[:n_for_grid_height, 10])
+        ax_ext_hs = plt.subplot(gs[:n_for_grid_height, 11])
+        ax_fpkm = plt.subplot(gs[:n_for_grid_height, 12])
+        ax_rnai = plt.subplot(gs[:n_for_grid_height, 13])
+        if last_page:
+            ax_ctr = plt.subplot(gs[n_for_grid_height:n_for_grid_height + 4, 0:8])
 
         adjustable = 'datalim'
         aspect = 'auto'
@@ -167,6 +190,22 @@ if __name__ == '__main__':
         ax_fert.set_ylim(-1, len(dft))
         ax_fert.grid(linewidth=0.5)
 
+        if last_page:
+            eb = ax_ctr.errorbar(dfc['mean fert-rate'], range(0, len(dfc)), xerr=dfc['std fert-rate'], lw=0,
+                                 ecolor='#2ca02c', elinewidth=1.0, capsize=2,
+                                 marker=marker, markersize=3.5,
+                                 markeredgecolor='#2ca02c', markeredgewidth=0.5,
+                                 markerfacecolor='#98df8a', markerfacecoloralt=None, zorder=5)
+            ax_ctr.axvline(0.75, color='#d62728', lw=1, zorder=6)
+            ax_ctr.set_xlabel('Fertility Rate (Mean +/- SD)      ', fontsize='small', ha='center')
+            ax_ctr.set_xticks(np.linspace(0, 1, 5))
+            ax_ctr.set_xticklabels(np.linspace(0, 1, 5), fontsize='small', rotation=0)
+            ax_ctr.set_yticks(range(0, len(dfc)))
+            ax_ctr.set_yticklabels(dfc.index, rotation=0, va='center', ha='right', fontsize='xx-small')
+            ax_ctr.set_xlim(-0.04, 1.04)
+            ax_ctr.set_ylim(-1, len(dfc))
+            ax_ctr.grid(linewidth=0.5)
+
         #
         # Expression (FPKM)
         #
@@ -193,7 +232,7 @@ if __name__ == '__main__':
 
         sc_rnai = ax_rnai.scatter(x=x, y=y, s=s, c=c, marker=marker, zorder=5)
         ax_rnai.set_xticks([0])
-        ax_rnai.set_xticklabels(['RNAi efficiency'], fontsize='small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
+        ax_rnai.set_xticklabels(['Validated RNAi'], fontsize='small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
         ax_rnai.set_yticks(range(0, len(dft)))
         ax_rnai.tick_params(axis='y', which='major', length=1.5)
         ax_rnai.set_yticklabels([])
@@ -211,7 +250,7 @@ if __name__ == '__main__':
 
         sc_our_dm = ax_our_dm.scatter(x=x, y=y, s=s, c=c, marker=marker, zorder=5)
         ax_our_dm.set_xticks([0])
-        ax_our_dm.set_xticklabels(['*DM phenotype'], fontsize='small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
+        ax_our_dm.set_xticklabels(['DM new pheno.'], fontsize='small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
         ax_our_dm.set_yticks(range(0, len(dft)))
         ax_our_dm.tick_params(axis='y', which='major', length=1.5)
         ax_our_dm.set_yticklabels([])
@@ -229,7 +268,7 @@ if __name__ == '__main__':
 
         sc_ext_dm = ax_ext_dm.scatter(x=x, y=y, s=s, c=c, marker=marker, zorder=5)
         ax_ext_dm.set_xticks([0])
-        ax_ext_dm.set_xticklabels(['DM phenotype'], fontsize='small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
+        ax_ext_dm.set_xticklabels(['DM known pheno.'], fontsize='x-small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
         ax_ext_dm.set_yticks(range(0, len(dft)))
         ax_ext_dm.tick_params(axis='y', which='major', length=1.5)
         ax_ext_dm.set_yticklabels([])
@@ -258,7 +297,7 @@ if __name__ == '__main__':
             c = data_tmp['value'].map(code_color).values
             sc_ext_mm = ax_ext_mm.scatter(x=x, y=y, s=s, c=c, marker=marker, zorder=5)
         ax_ext_mm.set_xticks([0])
-        ax_ext_mm.set_xticklabels(['MM phenotype'], fontsize='small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
+        ax_ext_mm.set_xticklabels(['MM known pheno.'], fontsize='x-small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
         ax_ext_mm.set_yticks(range(0, len(dft)))
         ax_ext_mm.tick_params(axis='y', which='major', length=1.5)
         ax_ext_mm.set_yticklabels([])
@@ -276,14 +315,29 @@ if __name__ == '__main__':
 
         sc_ext_hs = ax_ext_dm.scatter(x=x, y=y, s=s, c=c, marker=marker, zorder=5)
         ax_ext_hs.set_xticks([0])
-        ax_ext_hs.set_xticklabels(['HS phenotype'], fontsize='small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
+        ax_ext_hs.set_xticklabels(['HS known pheno.'], fontsize='x-small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
         ax_ext_hs.set_yticks(range(0, len(dft)))
         ax_ext_hs.tick_params(axis='y', which='major', length=1.5)
         ax_ext_hs.set_yticklabels([])
         ax_ext_hs.set_xlim(-0.5, 0.5)
         ax_ext_hs.set_ylim(-1, len(dft))
-        # ax_ext_hs.grid(axis='y', linewidth=0.5)
+        # ax_ext_hs.grid(axis='x', linewidth=0.5)
 
-        plt.subplots_adjust(left=0.2, right=0.96, bottom=0.08, top=0.96, wspace=0.2, hspace=0.0)
+        if last_page:
+            # Remove "Fertility Rate" xlabel
+            ax_fert.set_xlabel('', fontsize='small', ha='center')
+            # Remove "Fertility Rate" xticks
+            plt.setp(ax_fert.get_xticklabels(), visible=False)
+            # Increase padding for "Additional axsi"
+            rotation = 75
+            ax_fert.tick_params(axis='x', which='major', length=1.5)
+            ax_fpkm.tick_params(axis='x', which='major', rotation=rotation)
+            ax_rnai.tick_params(axis='x', which='major', rotation=rotation)
+            ax_our_dm.tick_params(axis='x', which='major', rotation=rotation)
+            ax_ext_dm.tick_params(axis='x', which='major', rotation=rotation)
+            ax_ext_mm.tick_params(axis='x', which='major', rotation=rotation)
+            ax_ext_hs.tick_params(axis='x', which='major', rotation=rotation)
+
+        plt.subplots_adjust(left=0.2, right=0.96, bottom=0.085, top=0.96, wspace=0.2, hspace=1.4)
         file = 'images/img-core_DM_screened-{:d}.pdf'.format(page + 1)
         fig.savefig(file)
