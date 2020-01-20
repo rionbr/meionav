@@ -216,7 +216,7 @@ if __name__ == '__main__':
     # Pipeline = Core
     #
     pipeline = 'core'
-    c_highlight = '#e377c2'
+    c_highlight = '#2ca02c'
 
     #
     # [H]omo [S]apiens
@@ -233,6 +233,7 @@ if __name__ == '__main__':
     plot_MA(df=df, highlight=core, file='images/pipeline-core/clean/HS-DGE_UpCyte_vs_Gonia-cln.pdf', title="HS (Up)Cyte vs Gonia",
             c_highlight=c_highlight, c_up='#ff9896', c_down='gray', annotate_plot=False)
 
+
     #
     # Tid vs Cyte
     #
@@ -245,6 +246,7 @@ if __name__ == '__main__':
             c_highlight=c_highlight, c_up='gray', c_down='#aec7e8', annotate_plot=True)
     plot_MA(df=df, highlight=core, file='images/pipeline-core/clean/HS-DGE_DownTid_vs_Cyte-clean.pdf', title="HS (Down)Tid vs Cyte",
             c_highlight=c_highlight, c_up='gray', c_down='#aec7e8', annotate_plot=False)
+
 
     #
     # MM
