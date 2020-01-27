@@ -126,10 +126,10 @@ if __name__ == '__main__':
     print("Plotting")
 
     df = df.sort_values(['Status', 'mean fert-rate', 'gene'], ascending=[False, False, False]).reset_index()
-    fig = plt.figure(figsize=(4, 11))
+    fig = plt.figure(figsize=(2, 11))
     # fig.suptitle('Core metazoan meiotic genes'.format(page, number_of_pages))
 
-    gs = gridspec.GridSpec(nrows=1, ncols=14)
+    gs = gridspec.GridSpec(nrows=1, ncols=13)
     n_for_grid_height = 1
     ax_fert = plt.subplot(gs[:n_for_grid_height, 0:8])
     ax_our_dm = plt.subplot(gs[:n_for_grid_height, 8])
@@ -137,13 +137,13 @@ if __name__ == '__main__':
     ax_ext_mm = plt.subplot(gs[:n_for_grid_height, 10])
     ax_ext_hs = plt.subplot(gs[:n_for_grid_height, 11])
     ax_fpkm = plt.subplot(gs[:n_for_grid_height, 12])
-    ax_rnai = plt.subplot(gs[:n_for_grid_height, 13])
+    #ax_rnai = plt.subplot(gs[:n_for_grid_height, 13])
 
     adjustable = 'datalim'
     aspect = 'auto'
     ax_fert.set(adjustable=adjustable, aspect=aspect, anchor='NE')
     ax_fpkm.set(adjustable=adjustable, aspect=aspect, anchor='NE')
-    ax_rnai.set(adjustable=adjustable, aspect=aspect, anchor='NE')
+    #ax_rnai.set(adjustable=adjustable, aspect=aspect, anchor='NE')
     ax_our_dm.set(adjustable=adjustable, aspect=aspect, anchor='NE')
     ax_ext_dm.set(adjustable=adjustable, aspect=aspect, anchor='NE')
     ax_ext_mm.set(adjustable=adjustable, aspect=aspect, anchor='NE')
@@ -164,9 +164,9 @@ if __name__ == '__main__':
                           markeredgecolor='#3182bd', markeredgewidth=0.5,
                           markerfacecolor='#6baed6', markerfacecoloralt=None, zorder=5)
     ax_fert.axvline(0.75, color='#d62728', lw=1, zorder=6)
-    ax_fert.set_xlabel('Fertility Rate (Mean +/- SD)      ', fontsize='small', ha='center')
+    ax_fert.set_xlabel('')
     ax_fert.set_xticks(np.linspace(0, 1, 5))
-    ax_fert.set_xticklabels(np.linspace(0, 1, 5), fontsize='small', rotation=0)
+    ax_fert.set_xticklabels([], fontsize='small', rotation=0)
     ax_fert.set_yticks(range(0, len(df)))
     ax_fert.set_yticklabels([], rotation=0, va='center', ha='right', fontsize='xx-small')
     ax_fert.set_xlim(-0.04, 1.04)
@@ -182,7 +182,7 @@ if __name__ == '__main__':
 
     sc_fpkm = ax_fpkm.scatter(x=x, y=y, s=s, c=c, marker=marker, zorder=5)
     ax_fpkm.set_xticks([0])
-    ax_fpkm.set_xticklabels(['FPKM'], fontsize='small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
+    ax_fpkm.set_xticklabels([])
     ax_fpkm.set_yticks(range(0, len(df)))
     ax_fpkm.tick_params(axis='y', which='major', length=1.5)
     ax_fpkm.set_yticklabels([])
@@ -192,6 +192,7 @@ if __name__ == '__main__':
     #
     # RNAi
     #
+    """
     data_rnai = df.loc[df['RNAi'] == 'Yes', 'RNAi']
     y = data_rnai.index
     x = np.zeros(len(y))
@@ -199,14 +200,14 @@ if __name__ == '__main__':
 
     sc_rnai = ax_rnai.scatter(x=x, y=y, s=s, c=c, marker=marker, zorder=5)
     ax_rnai.set_xticks([0])
-    ax_rnai.set_xticklabels(['Validated RNAi'], fontsize='small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
+    #ax_rnai.set_xticklabels(['Validated RNAi'], fontsize='small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
     ax_rnai.set_yticks(range(0, len(df)))
     ax_rnai.tick_params(axis='y', which='major', length=1.5)
     ax_rnai.set_yticklabels([])
     ax_rnai.set_xlim(-0.2, 0.2)
     ax_rnai.set_ylim(-1, len(df))
     # ax_rnai.grid(axis='y', linewidth=0.5)
-
+    """
     #
     # Our DM Phenotype
     #
@@ -217,7 +218,7 @@ if __name__ == '__main__':
 
     sc_our_dm = ax_our_dm.scatter(x=x, y=y, s=s, c=c, marker=marker, zorder=5)
     ax_our_dm.set_xticks([0])
-    ax_our_dm.set_xticklabels(['DM new pheno.'], fontsize='small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
+    ax_our_dm.set_xticklabels([])
     ax_our_dm.set_yticks(range(0, len(df)))
     ax_our_dm.tick_params(axis='y', which='major', length=1.5)
     ax_our_dm.set_yticklabels([])
@@ -235,7 +236,7 @@ if __name__ == '__main__':
 
     sc_ext_dm = ax_ext_dm.scatter(x=x, y=y, s=s, c=c, marker=marker, zorder=5)
     ax_ext_dm.set_xticks([0])
-    ax_ext_dm.set_xticklabels(['DM known pheno.'], fontsize='x-small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
+    ax_ext_dm.set_xticklabels([])
     ax_ext_dm.set_yticks(range(0, len(df)))
     ax_ext_dm.tick_params(axis='y', which='major', length=1.5)
     ax_ext_dm.set_yticklabels([])
@@ -264,7 +265,7 @@ if __name__ == '__main__':
         c = data_tmp['value'].map(code_color).values
         sc_ext_mm = ax_ext_mm.scatter(x=x, y=y, s=s, c=c, marker=marker, zorder=5)
     ax_ext_mm.set_xticks([0])
-    ax_ext_mm.set_xticklabels(['MM known pheno.'], fontsize='x-small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
+    ax_ext_mm.set_xticklabels([])
     ax_ext_mm.set_yticks(range(0, len(df)))
     ax_ext_mm.tick_params(axis='y', which='major', length=1.5)
     ax_ext_mm.set_yticklabels([])
@@ -282,7 +283,7 @@ if __name__ == '__main__':
 
     sc_ext_hs = ax_ext_dm.scatter(x=x, y=y, s=s, c=c, marker=marker, zorder=5)
     ax_ext_hs.set_xticks([0])
-    ax_ext_hs.set_xticklabels(['HS known pheno.'], fontsize='x-small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
+    ax_ext_hs.set_xticklabels([])
     ax_ext_hs.set_yticks(range(0, len(df)))
     ax_ext_hs.tick_params(axis='y', which='major', length=1.5)
     ax_ext_hs.set_yticklabels([])
@@ -290,5 +291,5 @@ if __name__ == '__main__':
     ax_ext_hs.set_ylim(-1, len(df))
     # ax_ext_hs.grid(axis='x', linewidth=0.5)
 
-    plt.subplots_adjust(left=0.2, right=0.96, bottom=0.085, top=0.96, wspace=0.2, hspace=1.4)
+    plt.subplots_adjust(left=0.05, right=0.96, bottom=0.01, top=0.99, wspace=0.2, hspace=1.4)
     fig.savefig('images/img-core_DM_screened-combined.pdf')
