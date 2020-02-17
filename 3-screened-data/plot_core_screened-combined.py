@@ -35,15 +35,14 @@ if __name__ == '__main__':
     df = pd.read_csv('../2-core_genes/results/pipeline-core/DM_meiotic_genes.csv', index_col=0, usecols=['id_gene', 'gene'])
 
     # Load Screened data
-    dfs = pd.read_csv('data/core_DM_screened_2020-01-07.csv', index_col=0)
+    dfs = pd.read_csv('data/core_DM_screened_2020-02-14.csv', index_col=0)
 
     # Load Control data
     dfc = pd.read_csv('data/screened_DM_controls.csv', index_col=0)
     dfc = dfc.groupby(dfc.index).apply(calc_control_mean_std_fert_rate)
 
     # Load FPKM data
-    dfFPKM1 = pd.read_csv('../1-diff-gene-exp/data/DM/DM_Spermatocytes_FPKM_sample1.csv', index_col=0, usecols=['Gene ID', 'FPKM'])
-    dfFPKM2 = pd.read_csv('../1-diff-gene-exp/data/DM/DM_Spermatocytes_FPKM_sample2.csv', index_col=0, usecols=['Gene ID', 'FPKM'])
+    dfFPKM = pd.read_csv('../2-core_genes/results/DM-FPKM_genes.csv', index_col=0, usecols=['id_gene', 'FPKM'])
 
     dfs_only = dfs.loc[~dfs['FT1 eggs'].isnull(), :]
 
@@ -83,9 +82,7 @@ if __name__ == '__main__':
     print(df.head)
 
     # FPKM
-    df['FPKM1'] = dfFPKM1['FPKM']
-    df['FPKM2'] = dfFPKM2['FPKM']
-    df['FPKM'] = df[['FPKM1', 'FPKM2']].mean(axis='columns')
+    df['FPKM'] = dfFPKM['FPKM']
     df['logFPKM'] = df['FPKM'].apply(lambda x: np.log2(x + 1))
 
     df = df.sort_values(['Status', 'mean fert-rate', 'gene'], ascending=[True, True, True]).reset_index()
