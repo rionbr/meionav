@@ -3,6 +3,10 @@ backup/
 bkp-results
 1-diff-gene-exp/goldstandard/
 1-diff-gene-exp/data/fromPaulo
+1-diff-gene-exp/data/FPKM/HS/*.txt
+1-diff-gene-exp/data/FPKM/MM/*.txt
+1-diff-gene-exp/data/FPKM/DM/*.txt
+4-network/Infomap
 .Rhistory
 .pybiomart.sqlite
 .DS_Store
