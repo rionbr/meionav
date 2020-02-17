@@ -27,9 +27,6 @@ def combine_id_string_x_with_id_string_y(r):
 
 if __name__ == '__main__':
 
-    pipeline = 'conserved'
-    minLogFC = math.log2(2)
-
     #
     # [H]omo [S]apiens (9606) - [A]liases
     #
@@ -77,7 +74,7 @@ if __name__ == '__main__':
     ]
     df_HS = df_HS.loc[:, maskcols]
     # To CSV
-    df_HS.to_csv('results/HS-DE_genes.csv'.format(pipeline=pipeline))
+    df_HS.to_csv('results/HS-DE_genes.csv.gz')
 
     #
     # !!Mitosis!! [H]omo [S]apiens (9606) - [A]liases
@@ -118,7 +115,7 @@ if __name__ == '__main__':
     ]
     df_HSmit = df_HSmit.loc[:, maskcols]
     # To CSV
-    df_HSmit.to_csv('results/HS-E_mitotic_genes.csv'.format(pipeline=pipeline))
+    df_HSmit.to_csv('results/HS-E_mitotic_genes.csv.gz')
 
     #
     # [M]us [M]usculus (10090) - [A]liases
@@ -166,7 +163,7 @@ if __name__ == '__main__':
     ]
     df_MM = df_MM.loc[:, maskcols]
     # To CSV
-    df_MM.to_csv('results/MM-DE_genes.csv'.format(pipeline=pipeline))
+    df_MM.to_csv('results/MM-DE_genes.csv.gz')
 
     #
     # [D]rosophila [M]elanogaster (7227) - [A]liases
@@ -213,6 +210,6 @@ if __name__ == '__main__':
     ]
     df_DM = df_DM.loc[:, maskcols]  # For Drosophila, we actually need all genes because of pipeline 'pooling'
     # To CSV
-    df_DM.to_csv('results/DM-DE_genes.csv'.format(pipeline=pipeline))
+    df_DM.to_csv('results/DM-DE_genes.csv.gz')
 
     print("Done.")
