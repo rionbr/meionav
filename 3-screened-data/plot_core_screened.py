@@ -42,7 +42,7 @@ if __name__ == '__main__':
     dfc = dfc.groupby(dfc.index).apply(calc_control_mean_std_fert_rate)
 
     # Load FPKM data
-    dfFPKM = pd.read_csv('../2-core_genes/results/DM-FPKM_genes.csv', index_col=0, usecols=['id_gene', 'FPKM'])
+    dfFPKM = pd.read_csv('../2-core_genes/results/DM-FPKM_genes.csv.gz', index_col=0, usecols=['id_gene', 'FPKM'])
 
     dfs_only = dfs.loc[~dfs['FT1 eggs'].isnull(), :]
 
@@ -71,7 +71,7 @@ if __name__ == '__main__':
 
     print(dfs.head())
     print(dfs.loc[dfs['MM pheno code'].str.len() > 1, :])
-    df['RNAi'] = dfs['Previous ref to RNAi working?'].apply(lambda x: 'Yes' if 'Yes' in x else 'No')
+    df['RNAi'] = dfs['Previous ref to RNAi working?']
     df['our-DM-code'] = dfs['Our DM pheno code']
     df['ext-DM-code'] = dfs['Others DM pheno code']
     df['ext-MM-code'] = dfs['MM pheno code']

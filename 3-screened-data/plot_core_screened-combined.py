@@ -42,7 +42,7 @@ if __name__ == '__main__':
     dfc = dfc.groupby(dfc.index).apply(calc_control_mean_std_fert_rate)
 
     # Load FPKM data
-    dfFPKM = pd.read_csv('../2-core_genes/results/DM-FPKM_genes.csv', index_col=0, usecols=['id_gene', 'FPKM'])
+    dfFPKM = pd.read_csv('../2-core_genes/results/DM-FPKM_genes.csv.gz', index_col=0, usecols=['id_gene', 'FPKM'])
 
     dfs_only = dfs.loc[~dfs['FT1 eggs'].isnull(), :]
 
@@ -74,7 +74,9 @@ if __name__ == '__main__':
 
     print(dfs.head())
     print(dfs.loc[dfs['MM pheno code'].str.len() > 1, :])
-    df['RNAi'] = dfs['Previous ref to RNAi working?'].apply(lambda x: 'Yes' if 'Yes' in x else 'No')
+    print('---')
+    print(dfs['Previous ref to RNAi working?'].value_counts())
+    df['RNAi'] = dfs['Previous ref to RNAi working?']
     df['our-DM-code'] = dfs['Our DM pheno code']
     df['ext-DM-code'] = dfs['Others DM pheno code']
     df['ext-MM-code'] = dfs['MM pheno code']
@@ -126,7 +128,7 @@ if __name__ == '__main__':
     fig = plt.figure(figsize=(2, 11))
     # fig.suptitle('Core metazoan meiotic genes'.format(page, number_of_pages))
 
-    gs = gridspec.GridSpec(nrows=1, ncols=13)
+    gs = gridspec.GridSpec(nrows=1, ncols=14)
     n_for_grid_height = 1
     ax_fert = plt.subplot(gs[:n_for_grid_height, 0:8])
     ax_our_dm = plt.subplot(gs[:n_for_grid_height, 8])
@@ -134,13 +136,13 @@ if __name__ == '__main__':
     ax_ext_mm = plt.subplot(gs[:n_for_grid_height, 10])
     ax_ext_hs = plt.subplot(gs[:n_for_grid_height, 11])
     ax_fpkm = plt.subplot(gs[:n_for_grid_height, 12])
-    #ax_rnai = plt.subplot(gs[:n_for_grid_height, 13])
+    ax_rnai = plt.subplot(gs[:n_for_grid_height, 13])
 
     adjustable = 'datalim'
     aspect = 'auto'
     ax_fert.set(adjustable=adjustable, aspect=aspect, anchor='NE')
     ax_fpkm.set(adjustable=adjustable, aspect=aspect, anchor='NE')
-    #ax_rnai.set(adjustable=adjustable, aspect=aspect, anchor='NE')
+    ax_rnai.set(adjustable=adjustable, aspect=aspect, anchor='NE')
     ax_our_dm.set(adjustable=adjustable, aspect=aspect, anchor='NE')
     ax_ext_dm.set(adjustable=adjustable, aspect=aspect, anchor='NE')
     ax_ext_mm.set(adjustable=adjustable, aspect=aspect, anchor='NE')
@@ -189,7 +191,6 @@ if __name__ == '__main__':
     #
     # RNAi
     #
-    """
     data_rnai = df.loc[df['RNAi'] == 'Yes', 'RNAi']
     y = data_rnai.index
     x = np.zeros(len(y))
@@ -197,14 +198,14 @@ if __name__ == '__main__':
 
     sc_rnai = ax_rnai.scatter(x=x, y=y, s=s, c=c, marker=marker, zorder=5)
     ax_rnai.set_xticks([0])
-    #ax_rnai.set_xticklabels(['Validated RNAi'], fontsize='small', rotation=rotation, rotation_mode='anchor', va='top', ha='right')
+    ax_rnai.set_xticklabels([])
     ax_rnai.set_yticks(range(0, len(df)))
     ax_rnai.tick_params(axis='y', which='major', length=1.5)
     ax_rnai.set_yticklabels([])
     ax_rnai.set_xlim(-0.2, 0.2)
     ax_rnai.set_ylim(-1, len(df))
     # ax_rnai.grid(axis='y', linewidth=0.5)
-    """
+
     #
     # Our DM Phenotype
     #
