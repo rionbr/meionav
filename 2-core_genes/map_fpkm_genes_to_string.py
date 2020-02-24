@@ -56,7 +56,7 @@ if __name__ == '__main__':
     df_HS['Spermatocytes'] = True
     df_HS['biotype'] = df_HS_G['Gene type']
     # Index Rows/Cols
-    maskcols = ['id_string', 'gene', 'FPKM', 'TPM', 'biotype']
+    maskcols = ['id_string', 'gene', 'Spermatocytes', 'FPKM', 'TPM', 'biotype']
     df_HS = df_HS.loc[:, maskcols]
     # To CSV
     df_HS.to_csv('results/HS-FPKM_genes.csv.gz')
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     df_MM['Spermatocytes'] = True
     df_MM['biotype'] = df_MM_G['Gene type']
     # Index Rows/Cols
-    maskcols = ['id_string', 'gene', 'FPKM', 'TPM', 'biotype']
+    maskcols = ['id_string', 'gene', 'Spermatocytes', 'FPKM', 'TPM', 'biotype']
     df_MM = df_MM.loc[:, maskcols]
     # To CSV
     df_MM.to_csv('results/MM-FPKM_genes.csv.gz')
@@ -126,7 +126,7 @@ if __name__ == '__main__':
     df_DM['Middle'] = True
     df_DM['biotype'] = df_DM_G['Gene type']
     # Index Rows/Cols
-    maskcols = ['id_string', 'gene', 'FPKM', 'TPM', 'biotype']
+    maskcols = ['id_string', 'gene', 'Middle', 'FPKM', 'TPM', 'biotype']
     df_DM = df_DM.loc[:, maskcols]
     # To CSV
     df_DM.to_csv('results/DM-FPKM_genes.csv.gz')
