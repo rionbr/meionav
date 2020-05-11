@@ -48,7 +48,7 @@ if __name__ == '__main__':
     df_HS_CT.index = df_HS_CT.index.map(lambda x: x.split('.')[0])
 
     # Map: id_gene <-> id_string
-    df_SA = open_undefined_last_column_files('../StringDB/9606/9606.protein.aliases.v11.0.txt.gz', skiprows=1, n_fixed_cols=2, names=["id_string", "alias", "source"])
+    df_SA = open_undefined_last_column_files('../data/StringDB/9606/9606.protein.aliases.v11.0.txt.gz', skiprows=1, n_fixed_cols=2, names=["id_string", "alias", "source"])
     # Parse String Data - Note some genes have multiple id_string, others have no match
     df_SA = df_SA.loc[df_SA['alias'].isin(df_HS_CG.index.to_list() + df_HS_CT.index.to_list()), ["alias", "id_string"]].rename(columns={"alias": "id_gene"})
     df_SAg = df_SA.groupby('id_gene').agg({'id_string': lambda x: x if len(x) == 1 else list(x)})
@@ -91,7 +91,7 @@ if __name__ == '__main__':
     df_HS_PM.index = df_HS_PM.index.map(lambda x: x.split('.')[0])
 
     # Map: id_gene <-> id_string
-    df_SA = open_undefined_last_column_files('../StringDB/9606/9606.protein.aliases.v11.0.txt.gz', skiprows=1, n_fixed_cols=2, names=["id_string", "alias", "source"])
+    df_SA = open_undefined_last_column_files('../data/StringDB/9606/9606.protein.aliases.v11.0.txt.gz', skiprows=1, n_fixed_cols=2, names=["id_string", "alias", "source"])
     # Parse String Data - Note some genes have multiple id_string, others have no match
     df_SA = df_SA.loc[df_SA['alias'].isin(df_HS_MP.index.to_list() + df_HS_PM.index.to_list()), ["alias", "id_string"]].rename(columns={"alias": "id_gene"})
     df_SAg = df_SA.groupby('id_gene').agg({'id_string': lambda x: x if len(x) == 1 else list(x)})
@@ -137,7 +137,7 @@ if __name__ == '__main__':
     df_MM_CT.index = df_MM_CT.index.map(lambda x: x.split('.')[0])
 
     # Map: id_gene <-> id_string
-    df_SA = open_undefined_last_column_files('../StringDB/10090/10090.protein.aliases.v11.0.txt.gz', skiprows=1, n_fixed_cols=2, names=["id_string", "alias", "source"])
+    df_SA = open_undefined_last_column_files('../data/StringDB/10090/10090.protein.aliases.v11.0.txt.gz', skiprows=1, n_fixed_cols=2, names=["id_string", "alias", "source"])
     # Parse String Data - Note some genes have multiple id_string, others have no match
     df_SA = df_SA.loc[df_SA['alias'].isin(df_MM_CG.index.to_list() + df_MM_CT.index.to_list()), ["alias", "id_string"]].rename(columns={"alias": "id_gene"})
     df_SAg = df_SA.groupby('id_gene').agg({'id_string': lambda x: x if len(x) == 1 else list(x)})
@@ -183,7 +183,7 @@ if __name__ == '__main__':
     df_DM_MB.index.name = 'id_gene'
 
     # Map: id_gene <-> id_string
-    df_SA = open_undefined_last_column_files('../StringDB/7227/7227.protein.aliases.v11.0.txt.gz', skiprows=1, n_fixed_cols=2, names=["id_string", "alias", "source"])
+    df_SA = open_undefined_last_column_files('../data/StringDB/7227/7227.protein.aliases.v11.0.txt.gz', skiprows=1, n_fixed_cols=2, names=["id_string", "alias", "source"])
 
     # Parse String Data - Note some genes have multiple id_string, others have no match
     df_SA = df_SA.loc[df_SA['alias'].isin(df_DM_MA.index.to_list() + df_DM_MB.index.to_list()), ["alias", "id_string"]].rename(columns={"alias": "id_gene"})

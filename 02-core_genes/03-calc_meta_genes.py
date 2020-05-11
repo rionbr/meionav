@@ -34,7 +34,7 @@ if __name__ == '__main__':
 
     # Load EggNOG Annotation File
     df_A = pd.read_csv(
-        '../eggnog/33208_annotations.tsv',
+        '../data/EggNOG/33208_annotations.tsv',
         sep='\t',
         names=['species', 'id_eggnog', 'letter', 'annotation']).\
         set_index('id_eggnog')
@@ -43,7 +43,7 @@ if __name__ == '__main__':
     # Metazoa (33208) EggNOG - [M]embers
     #
     df_Egg = open_undefined_last_column_files(
-        "../eggnog/33208_members.tsv.gz",
+        "../data/EggNOG/33208_members.tsv.gz",
         n_fixed_cols=5,
         names=['family', 'id_eggnog', '_1', '_2', 'aliases', 'species'],
         nrows=None
