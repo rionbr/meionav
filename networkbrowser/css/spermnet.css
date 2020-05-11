@@ -1,0 +1,171 @@
+.menu-pattern {
+	/*background-image:url(<?php print(DOCUMENT_ROOT);?>img/patterns/congruent_pentagon.png); */
+	height:8px;
+}
+
+/*
+  DropDown SubMenus
+*/
+.dropdown-submenu {
+	position: relative;
+}
+
+.dropdown-submenu>.dropdown-menu {
+	top: 0;
+	left: 100%;
+	margin-top: -6px;
+	margin-left: -1px;
+	-webkit-border-radius: 0 6px 6px 6px;
+	-moz-border-radius: 0 6px 6px;
+	border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover>.dropdown-menu {
+	display: block;
+}
+
+.dropdown-submenu>a:after {
+	display: block;
+	content: " ";
+	float: right;
+	width: 0;
+	height: 0;
+	border-color: transparent;
+	border-style: solid;
+	border-width: 5px 0 5px 5px;
+	border-left-color: #ccc;
+	margin-top: 5px;
+	margin-right: -10px;
+}
+
+.dropdown-submenu:hover>a:after {
+	border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-left {
+	float: none;
+}
+
+.dropdown-submenu.pull-left>.dropdown-menu {
+	left: -100%;
+	margin-left: 10px;
+	-webkit-border-radius: 6px 0 6px 6px;
+	-moz-border-radius: 6px 0 6px 6px;
+	border-radius: 6px 0 6px 6px;
+}
+
+
+/*
+ CallOut boxes
+*/
+.bd-callout {
+	padding: 1.25rem;
+	/*margin-top: 1.25rem;*/
+	margin-bottom: 1.25rem;
+	border: 1px solid #dee2e6!important;
+	border-left-width: .25rem;
+	border-radius: .25rem
+}
+.bd-callout h4 {
+	margin-top: 0;
+	margin-bottom: .25rem
+}
+.bd-callout p:last-child {
+	margin-bottom: 0
+}
+.bd-callout code {
+	border-radius: .25rem
+}
+.bd-callout+.bd-callout {
+	margin-top: -.25rem
+}
+.bd-callout-info {
+	border-left-color: #5bc0de
+}
+.bd-callout-info h3 {
+	color: #5bc0de
+}
+.bd-callout-warning {
+	border-left-color: #f0ad4e
+}
+.bd-callout-warning h3 {
+	color: #f0ad4e
+}
+.bd-callout-danger {
+	border-left-color: #d9534f
+}
+.bd-callout-danger h3 {
+	color: #d9534f
+}
+.bd-callout-success {
+	border-left-color: #28a745
+}
+.bd-callout-success h3 {
+	color: #28a745
+}		
+
+/* */
+.bg-drug { background:red; }
+.text-drug { color:red; }
+
+.bg-allergen { background:gold; }
+.text-allergen { color:gold; }
+
+.bg-medical-term { background:darkblue; }
+.text-medical-term { color:darkblue; }
+
+.bg-natural-product { background:darkgreen; }
+.text-natural-product { color:darkgreen; }
+
+.bg-cannabis { background:olive; }
+.text-cannabis { color:olive; }
+
+/* */
+.bg-ddi { background:red; }
+.text-ddi { color:red; }
+
+.bg-adr { background:darkblue; }
+.text-adr { color:darkblue; }
+
+.bg-di { background:darkgreen; }
+.text-di { color:darkgreen; }
+
+.bg-unknown { background:gray; }
+.text-unknown { color:gray; }
+
+/*
+  Chroma Gradient
+*/
+.gradient {
+	width: 100%;
+	white-space: nowrap;
+	position: relative;
+	display: inline-block;
+	top: 4px;
+	padding-bottom: 15px;
+}
+.grad-step {
+	display: inline-block;
+	height: 20px;
+	width:1%;
+}
+.domain-min {
+	position: absolute;
+	left: 0;
+	font-size: 11px;
+	bottom: 3px;
+}
+.domain-med {
+	position: absolute;
+	right: 25%;
+	left: 25%;
+	text-align: center;
+	font-size: 11px;
+	bottom: 3px;
+}
+.domain-max {
+	position: absolute;
+	right: 0;
+	font-size: 11px;
+	bottom: 3px;
+}

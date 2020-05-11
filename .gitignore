@@ -12,6 +12,7 @@ bkp-results
 04-network/images/
 04-network/gephiloadandplot/debug/
 04-network/results/
+networkbrowser/json/
 *.jar
 *.graphml
 .Rhistory
