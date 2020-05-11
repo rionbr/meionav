@@ -6,6 +6,9 @@ bkp-results
 01-diff-gene-exp/data/FPKM/HS/*.txt
 01-diff-gene-exp/data/FPKM/MM/*.txt
 01-diff-gene-exp/data/FPKM/DM/*.txt
+03-screened-data/data/
+03-screened-data/images/
+03-screened-data/results/
 04-network/images/
 04-network/gephiloadandplot/debug/
 04-network/results/
