@@ -1,26 +1,27 @@
 # User Exceptions
 backup/
 bkp-results
-1-diff-gene-exp/goldstandard/
-1-diff-gene-exp/data/fromPaulo
-1-diff-gene-exp/data/FPKM/HS/*.txt
-1-diff-gene-exp/data/FPKM/MM/*.txt
-1-diff-gene-exp/data/FPKM/DM/*.txt
-4-network/Infomap
+01-diff-gene-exp/goldstandard/
+01-diff-gene-exp/data/fromPaulo
+01-diff-gene-exp/data/FPKM/HS/*.txt
+01-diff-gene-exp/data/FPKM/MM/*.txt
+01-diff-gene-exp/data/FPKM/DM/*.txt
 .Rhistory
 .pybiomart.sqlite
 .DS_Store
 *.xlsx
 
 ## String-DB
-StringDB/7227/
-StringDB/9606/
-StringDB/10090/
+data/StringDB/7227/
+data/StringDB/9606/
+data/StringDB/10090/
 
 ## EggNog
-eggnog/*.tsv
-eggnog/*.tsv.gz
+data/eggnog/*.tsv
+data/eggnog/*.tsv.gz
 
+## Gene Ontology
+data/GeneOntology/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
