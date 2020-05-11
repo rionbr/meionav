@@ -6,6 +6,11 @@ bkp-results
 01-diff-gene-exp/data/FPKM/HS/*.txt
 01-diff-gene-exp/data/FPKM/MM/*.txt
 01-diff-gene-exp/data/FPKM/DM/*.txt
+04-network/images/
+04-network/gephiloadandplot/debug/
+04-network/results/
+*.jar
+*.graphml
 .Rhistory
 .pybiomart.sqlite
 .DS_Store

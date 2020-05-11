@@ -2,6 +2,20 @@ import os
 import gzip
 from io import StringIO
 import pandas as pd
+import networkx as nx
+
+
+def get_network_layer(G, layer=''):
+    return G.subgraph([n for n, d in G.nodes(data=True) if (d.get('layer') == layer)]).copy()
+
+
+def get_network_by_attribute(G, attribute='', value=''):
+    return G.subgraph([n for n, d in G.nodes(data=True) if (d.get(attribute) == value)]).copy()
+
+
+def get_network_largest_connected_component(G):
+    largest_cc = max(nx.connected_components(G), key=len)
+    return G.subgraph(largest_cc).copy()
 
 
 def open_undefined_last_column_files(filepath, skiprows=0, n_fixed_cols=None, sep='\t', *args, **kwargs):
