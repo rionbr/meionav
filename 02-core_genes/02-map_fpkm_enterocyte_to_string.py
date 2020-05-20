@@ -24,7 +24,7 @@ if __name__ == '__main__':
     ds_HS = Dataset(name='hsapiens_gene_ensembl', host='http://www.ensembl.org')
     df_HS_G = ds_HS.query(attributes=['ensembl_gene_id', 'external_gene_name', 'gene_biotype', 'description']).set_index('Gene stable ID')
     # Load FPKM
-    tar_HS = tarfile.open('../1-diff-gene-exp/data/FPKM/HS/HS_Enterocyte.tar.gz', "r:gz")
+    tar_HS = tarfile.open('../01-diff-gene-exp/data/FPKM/HS/HS_Enterocyte.tar.gz', "r:gz")
     df_HS = pd.concat(
         [
             pd.read_csv(tar_HS.extractfile('HS_Enterocyte_Rep1.txt'), sep='\t', index_col='Gene ID', usecols=['Gene ID', 'FPKM', 'TPM']),
@@ -60,7 +60,7 @@ if __name__ == '__main__':
     ds_MM = Dataset(name='mmusculus_gene_ensembl', host='http://www.ensembl.org')
     df_MM_G = ds_MM.query(attributes=['ensembl_gene_id', 'external_gene_name', 'gene_biotype', 'description']).set_index('Gene stable ID')
     # Load FPKM
-    tar_MM = tarfile.open('../1-diff-gene-exp/data/FPKM/MM/MM_Enterocyte.tar.gz', "r:gz")
+    tar_MM = tarfile.open('../01-diff-gene-exp/data/FPKM/MM/MM_Enterocyte.tar.gz', "r:gz")
     df_MM = pd.concat(
         [
             pd.read_csv(tar_MM.extractfile('MM_Enterocyte_Rep1.txt'), sep='\t', index_col='Gene ID', usecols=['Gene ID', 'FPKM', 'TPM']),
@@ -96,7 +96,7 @@ if __name__ == '__main__':
     ds_DM = Dataset(name='dmelanogaster_gene_ensembl', host='http://www.ensembl.org')
     df_DM_G = ds_DM.query(attributes=['ensembl_gene_id', 'external_gene_name', 'gene_biotype']).set_index('Gene stable ID')
     # Load FPKM
-    tar_DM = tarfile.open('../1-diff-gene-exp/data/FPKM/DM/DM_Enterocyte.tar.gz', "r:gz")
+    tar_DM = tarfile.open('../01-diff-gene-exp/data/FPKM/DM/DM_Enterocyte.tar.gz', "r:gz")
     df_DM = pd.concat(
         [
             pd.read_csv(tar_DM.extractfile('DM_Enterocyte_Rep1.txt'), sep='\t', index_col='Gene ID', usecols=['Gene ID', 'FPKM', 'TPM']),

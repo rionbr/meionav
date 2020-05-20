@@ -36,8 +36,8 @@ if __name__ == '__main__':
     ds_HS = Dataset(name='hsapiens_gene_ensembl', host='http://www.ensembl.org')
     df_HS_G = ds_HS.query(attributes=['ensembl_gene_id', 'external_gene_name', 'gene_biotype', 'description']).set_index('Gene stable ID')
 
-    rCSVFileCG = "../1-diff-gene-exp/results/HS/HS-DGE_Cyte_vs_Gonia.csv"
-    rCSVFileCT = "../1-diff-gene-exp/results/HS/HS-DGE_Tid_vs_Cyte.csv"
+    rCSVFileCG = "../01-diff-gene-exp/results/HS/HS-DGE_Cyte_vs_Gonia.csv"
+    rCSVFileCT = "../01-diff-gene-exp/results/HS/HS-DGE_Tid_vs_Cyte.csv"
     df_HS_CG = pd.read_csv(rCSVFileCG, index_col=0).loc[:, ['logFC', 'logCPM', 'FDR']]
     df_HS_CG.index.name = 'id_gene'
     df_HS_CG.index = df_HS_CG.index.map(lambda x: x.split('.')[0])
@@ -79,8 +79,8 @@ if __name__ == '__main__':
     #
     # !!Mitosis!! [H]omo [S]apiens (9606) - [A]liases
     #
-    rCSVFileMP = "../1-diff-gene-exp/results/HS/HS-GE_Mitotic_vs_PreMitotic.csv"
-    rCSVFilePM = "../1-diff-gene-exp/results/HS/HS-GE_PostMitotic_vs_Mitotic.csv"
+    rCSVFileMP = "../01-diff-gene-exp/results/HS/HS-GE_Mitotic_vs_PreMitotic.csv"
+    rCSVFilePM = "../01-diff-gene-exp/results/HS/HS-GE_PostMitotic_vs_Mitotic.csv"
     df_HS_MP = pd.read_csv(rCSVFileMP, index_col=0).loc[:, []]
     df_HS_MP.index.name = 'id_gene'
     df_HS_MP.index = df_HS_MP.index.map(lambda x: x.split('.')[0])
@@ -125,8 +125,8 @@ if __name__ == '__main__':
     ds_MM = Dataset(name='mmusculus_gene_ensembl', host='http://www.ensembl.org')
     df_MM_G = ds_MM.query(attributes=['ensembl_gene_id', 'external_gene_name', 'gene_biotype', 'description']).set_index('Gene stable ID')
 
-    rCSVFileCG = "../1-diff-gene-exp/results/MM/MM-DGE_Cyte_vs_Gonia.csv"
-    rCSVFileCT = "../1-diff-gene-exp/results/MM/MM-DGE_Tid_vs_Cyte.csv"
+    rCSVFileCG = "../01-diff-gene-exp/results/MM/MM-DGE_Cyte_vs_Gonia.csv"
+    rCSVFileCT = "../01-diff-gene-exp/results/MM/MM-DGE_Tid_vs_Cyte.csv"
     df_MM_CG = pd.read_csv(rCSVFileCG, index_col=0).loc[:, ['logFC', 'logCPM', 'FDR']]
     df_MM_CG.index.name = 'id_gene'
     df_MM_CG.index = df_MM_CG.index.map(lambda x: x.split('.')[0])
@@ -173,8 +173,8 @@ if __name__ == '__main__':
     ds_DM = Dataset(name='dmelanogaster_gene_ensembl', host='http://www.ensembl.org')
     df_DM_G = ds_DM.query(attributes=['ensembl_gene_id', 'external_gene_name', 'gene_biotype']).set_index('Gene stable ID')
     #
-    rCSVFileMA = "../1-diff-gene-exp/results/DM/DM-DGE_Middle_vs_Apical.csv"
-    rCSVFileMB = "../1-diff-gene-exp/results/DM/DM-DGE_Basal_vs_Middle.csv"
+    rCSVFileMA = "../01-diff-gene-exp/results/DM/DM-DGE_Middle_vs_Apical.csv"
+    rCSVFileMB = "../01-diff-gene-exp/results/DM/DM-DGE_Basal_vs_Middle.csv"
     df_DM_MA = pd.read_csv(rCSVFileMA, index_col=0).loc[:, ['logFC', 'logCPM', 'FDR']]
     df_DM_MA.index.name = 'id_gene'
     df_DM_MA.columns = [x + '_MiddleApical' for x in df_DM_MA.columns]
