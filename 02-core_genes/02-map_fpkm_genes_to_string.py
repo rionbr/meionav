@@ -121,7 +121,7 @@ if __name__ == '__main__':
             print(dfg.head())
 
             # To CSV
-            wCSVfile = 'results/{specie:s}-FPKM-{celltype:s}.csv.gz'.format(specie=specie, celltype=celltype)
+            wCSVfile = 'results/FPKM/{species:s}/{specie:s}-FPKM-{celltype:s}.csv.gz'.format(specie=specie, celltype=celltype)
             dfg.to_csv(wCSVfile)
 
     print('Done.')

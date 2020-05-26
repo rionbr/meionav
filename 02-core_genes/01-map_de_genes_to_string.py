@@ -115,7 +115,7 @@ if __name__ == '__main__':
     ]
     df_HSmit = df_HSmit.loc[:, maskcols]
     # To CSV
-    df_HSmit.to_csv('results/HS-E_mitotic_genes.csv.gz')
+    df_HSmit.to_csv('results/DE/HS-E_mitotic_genes.csv.gz')
 
     #
     # [M]us [M]usculus (10090) - [A]liases
@@ -163,7 +163,7 @@ if __name__ == '__main__':
     ]
     df_MM = df_MM.loc[:, maskcols]
     # To CSV
-    df_MM.to_csv('results/MM-DE_genes.csv.gz')
+    df_MM.to_csv('results/DE/MM-DE_genes.csv.gz')
 
     #
     # [D]rosophila [M]elanogaster (7227) - [A]liases
@@ -210,6 +210,6 @@ if __name__ == '__main__':
     ]
     df_DM = df_DM.loc[:, maskcols]  # For Drosophila, we actually need all genes because of pipeline 'pooling'
     # To CSV
-    df_DM.to_csv('results/DM-DE_genes.csv.gz')
+    df_DM.to_csv('results/DE/DM-DE_genes.csv.gz')
 
     print("Done.")
