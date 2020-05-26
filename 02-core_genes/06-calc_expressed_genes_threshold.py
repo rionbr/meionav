@@ -10,7 +10,7 @@ import pandas as pd
 if __name__ == '__main__':
 
     species = ['HS', 'MM', 'DM']
-    celltypes = ['enterocyte', 'spermatocyte', 'neuron', 'muscle']
+    celltypes = ['spermatogonia', 'spermatocyte', 'spermatid', 'enterocyte', 'neuron', 'muscle']
     thresholds = [0.01, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10]
 
     r = []
@@ -24,6 +24,7 @@ if __name__ == '__main__':
 
             rFPKMfile = 'results/{specie:s}-FPKM-{celltype:s}.csv.gz'.format(specie=specie, celltype=celltype)
             df = pd.read_csv(rFPKMfile)
+            print(df.head())
 
             for threshold in thresholds:
 

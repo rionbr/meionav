@@ -61,7 +61,7 @@ do
 	mkdir -p $jpgpath
 
 	# Run GephiLoadAndPlot
-	java -cp gephi-toolkit-0.9.2-all.jar:. Main --input $input --coords $coords --output $pdf --rotate $rotate --highlight $highlight
+	java -cp gephi-toolkit-0.9.2-all.jar:. PlotNetSingleMod --input $input --coords $coords --output $pdf --rotate $rotate --highlight $highlight
 	
 	# Convert PDF to JPG
 	convert -density 300 -resize 3300x2550 $pdf $jpg
