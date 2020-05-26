@@ -33,7 +33,7 @@ if __name__ == '__main__':
     #
     #
     print('Reading Network')
-    rGfile_gpickle = 'results/net-{celltype:s}.gpickle'.format(celltype=celltype)
+    rGfile_gpickle = 'results/net_{celltype:s}.gpickle'.format(celltype=celltype)
     G = nx.read_gpickle(rGfile_gpickle)
 
     #

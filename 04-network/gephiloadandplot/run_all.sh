@@ -4,7 +4,7 @@ rm -f *.class
 
 # Build
 echo "-- Build Main.java --"
-javac -cp gephi-toolkit-0.9.2-all.jar PlotNetSingleMod.java
+javac -cp gephi-toolkit-0.9.2-all.jar Main.java
 
 # Run
 echo "-- Running all scripts --"

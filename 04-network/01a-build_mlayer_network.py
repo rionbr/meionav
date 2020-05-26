@@ -14,7 +14,28 @@ pd.set_option('display.width', 1000)
 import networkx as nx
 from itertools import chain, product
 from utils import ensurePathExists
+from collections import defaultdict, Counter
 import argparse
+
+
+def transpose_variable_across_layers(G, variable, combination='sum'):
+    """ Method to transpose results in one layer to another. Note duplicate results are either summed or set to majority."""
+    dict_i_values = {i: d[variable] for i, d in G.nodes(data=True) if d.get(variable, None) is not None}
+    dict_j_values = defaultdict(list)
+    for i, v in dict_i_values.items():
+        cross_edges = [j for _i, j, d in G.edges(i, data=True) if d.get('type', None) == 'cross']
+        for j in cross_edges:
+            dict_j_values[j].append(v)
+    # Combine multiple values
+    if combination == 'sum':
+        dict_j_values = {k: sum(l) for k, l in dict_j_values.items()}
+    elif combination == 'majority':
+        dict_j_values = {k: Counter(l).most_common()[0][0] for k, l in dict_j_values.items()}
+    else:
+        TypeError("Combination must be either 'sum', or 'majority'.")
+    # Set attributes to network
+    nx.set_node_attributes(G, values=dict_j_values, name=variable)
+    return G
 
 
 if __name__ == '__main__':
@@ -64,9 +85,9 @@ if __name__ == '__main__':
     df_HS['layer'] = 'HS'
 
     # Add tested results
-    # print('Adding laboratory results')
-    # df_HS_S = pd.read_csv('../3-screened-data/data/literature_HS_2020-01-07.csv', index_col='id_gene_HS')
-    # df_HS['known-HS-phenotype'] = df_HS_S['Others HS pheno code']
+    print('Adding laboratory results')
+    df_HS_S = pd.read_csv('../3-screened-data/data/literature_HS_2020-01-07.csv', index_col='id_gene_HS')
+    df_HS['known-HS-phenotype'] = df_HS_S['Others HS pheno code']
 
     # Debug
     # df_HS = df_HS.loc[(df_HS['core'] == True), :]
@@ -81,7 +102,7 @@ if __name__ == '__main__':
     # HS Links
     #
     print('Adding links')
-    df_HS_links = pd.read_csv("../data/StringDB/9606/9606.protein.links.full.v11.0.txt.gz", sep=' ', usecols=['protein1', 'protein2', 'textmining', 'database', 'coexpression', 'neighborhood', 'fusion', 'cooccurence', 'combined_score'])
+    df_HS_links = pd.read_csv("../data/StringDB/9606/9606.protein.links.full.v11.0.txt.gz", sep=' ', usecols=['protein1', 'protein2', 'experiments', 'combined_score'])
     # Rename id_string columns
     df_HS_links = df_HS_links.rename(columns={'protein1': 'id_string_i', 'protein2': 'id_string_j'})
     # Reduce Search Space
@@ -135,9 +156,9 @@ if __name__ == '__main__':
     df_MM['layer'] = 'MM'
 
     # Add tested results
-    # print('Adding laboratory results')
-    # df_MM_S = pd.read_csv('../3-screened-data/data/literature_MM_2020-01-07.csv', index_col='id_gene_MM')
-    # df_MM['known-MM-phenotype'] = df_MM_S['Others MM pheno code']
+    print('Adding laboratory results')
+    df_MM_S = pd.read_csv('../3-screened-data/data/literature_MM_2020-01-07.csv', index_col='id_gene_MM')
+    df_MM['known-MM-phenotype'] = df_MM_S['Others MM pheno code']
 
     # Debug
     # df_MM = df_MM.loc[(df_MM['core'] == True), :]
@@ -151,7 +172,7 @@ if __name__ == '__main__':
     # MM Links
     ##
     print('Adding links')
-    df_MM_links = pd.read_csv("../data/StringDB/10090/10090.protein.links.full.v11.0.txt.gz", sep=' ', usecols=['protein1', 'protein2', 'textmining', 'database', 'coexpression', 'neighborhood', 'fusion', 'cooccurence', 'combined_score'])
+    df_MM_links = pd.read_csv("../data/StringDB/10090/10090.protein.links.full.v11.0.txt.gz", sep=' ', usecols=['protein1', 'protein2', 'experiments', 'combined_score'])
     # Rename id_string columns
     df_MM_links = df_MM_links.rename(columns={'protein1': 'id_string_i', 'protein2': 'id_string_j'})
     # Reduce Search Space
@@ -202,7 +223,6 @@ if __name__ == '__main__':
     df_DM['layer'] = 'DM'
 
     # Add tested results
-    """
     print('Adding laboratory results')
     df_DM_S = pd.read_csv('../3-screened-data/data/core_DM_screened_2020-02-14.csv', index_col='id_gene')
     # Calculations
@@ -214,7 +234,6 @@ if __name__ == '__main__':
     df_DM['mean-fert-rate'] = df_DM_S[['FT1 fert-rate', 'FT2 fert-rate', 'FT3 fert-rate', 'FT4 fert-rate']].mean(axis=1)
     df_DM['std-fert-rate'] = df_DM_S[['FT1 fert-rate', 'FT2 fert-rate', 'FT3 fert-rate', 'FT4 fert-rate']].std(axis=1)
     df_DM[['status', 'recorded-phenotype', 'previously-reported', 'function', 'validated-rnai', 'new-DM-phenotype', 'known-DM-phenotype']] = df_DM_S[['Status', 'Recorded cellular phenotype', 'Previously reported in DM?', 'Function', 'Previous ref to RNAi working?', 'Our DM pheno code', 'Others DM pheno code']]
-    """
     # Debug
     # df_DM = df_DM.loc[(df_DM['core'] == True), :]
     # print(df_DM.head())
@@ -228,7 +247,7 @@ if __name__ == '__main__':
     # DS Links
     ##
     print('Adding links')
-    df_DM_links = pd.read_csv("../data/StringDB/7227/7227.protein.links.full.v11.0.txt.gz", sep=' ', usecols=['protein1', 'protein2', 'textmining', 'database', 'coexpression', 'neighborhood', 'fusion', 'cooccurence', 'combined_score'])
+    df_DM_links = pd.read_csv("../data/StringDB/7227/7227.protein.links.full.v11.0.txt.gz", sep=' ', usecols=['protein1', 'protein2', 'experiments', 'combined_score'])
     # Rename id_string columns
     df_DM_links = df_DM_links.rename(columns={'protein1': 'id_string_i', 'protein2': 'id_string_j'})
     # Reduce Search Space
@@ -284,14 +303,12 @@ if __name__ == '__main__':
     ##
     # Transposing DM Mean Fertility Rate to cross layers
     ##
-    """
     print('Tranposing variable across layers')
     G = transpose_variable_across_layers(G, 'mean-fert-rate', combination='sum')
     G = transpose_variable_across_layers(G, 'new-DM-phenotype', combination='majority')
     G = transpose_variable_across_layers(G, 'known-HS-phenotype', combination='majority')
     G = transpose_variable_across_layers(G, 'known-MM-phenotype', combination='majority')
     G = transpose_variable_across_layers(G, 'known-DM-phenotype', combination='majority')
-    """
 
     ##
     # Export

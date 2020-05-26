@@ -31,7 +31,7 @@ def plot_module_proximity(celltype='spermatocyte', network='thr', threshold=0.5)
     print(df)
 
     if celltype == 'spermatocyte':
-        df = df.loc[((df['id-i'] <= 9) & (df['id-j'] <= 9)), :]
+        df = df.loc[((df['id-i']<=9) & (df['id-j']<=9)), :]
 
     # Index
     dfi = df[['id-i', 'name-i']].drop_duplicates().rename(columns={'id-i': 'id', 'name-i': 'name'})
