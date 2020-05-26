@@ -4,7 +4,7 @@ rm -f *.class
 
 # Build
 echo "-- Build Main.java --"
-javac -cp gephi-toolkit-0.9.2-all.jar Main.java
+javac -cp gephi-toolkit-0.9.2-all.jar PlotNetSingleMod.java
 
 # Run
 echo "-- Running to define layout --"
@@ -41,7 +41,7 @@ for celltype in "enterocyte" "spermatocyte"; do
 		mkdir -p $jpgpath
 
 		# Run GephiLoadAndPlot
-		java -cp gephi-toolkit-0.9.2-all.jar:. Main --input $input --coords $coords --output $pdf --rotate 0 --highlight none
+		java -cp gephi-toolkit-0.9.2-all.jar:. PlotNetSingleMod --input $input --coords $coords --output $pdf --rotate 0 --highlight none
 	
 		# Convert PDF to JPG
 		convert -density 300 -resize 3300x2550 $pdf $jpg

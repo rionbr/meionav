@@ -6,11 +6,11 @@ rm -f images/debug.jpg
 
 # Build
 echo "-- Build Main.java --"
-javac -cp gephi-toolkit-0.9.2-all.jar Main.java
+javac -cp gephi-toolkit-0.9.2-all.jar PlotNetSingleMod.java
 
 # Run
 echo "-- Run Main.class --"
-java -cp gephi-toolkit-0.9.2-all.jar:. Main --input debug/net-debug.graphml --coords debug/net-debug-forceatlas2.txt --output images/debug.pdf --rotate 120 --highlight d9
+java -cp gephi-toolkit-0.9.2-all.jar:. PlotNetSingleMod --input debug/net-debug.graphml --coords debug/net-debug-forceatlas2.txt --output images/debug.pdf --rotate 120 --highlight d9
 
 # Pdf to Jpg
 echo "-- Converts pdf to jpg --"
