@@ -1,11 +1,10 @@
 # User Exceptions
 backup/
 bkp-results
+#
 01-diff-gene-exp/goldstandard/
-01-diff-gene-exp/data/fromPaulo
-01-diff-gene-exp/data/FPKM/HS/*.txt
-01-diff-gene-exp/data/FPKM/MM/*.txt
-01-diff-gene-exp/data/FPKM/DM/*.txt
+01-diff-gene-exp/data
+#
 03-screened-data/data/
 03-screened-data/images/
 03-screened-data/results/
