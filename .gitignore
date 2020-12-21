@@ -1,15 +1,21 @@
 # User Exceptions
 backup/
 bkp-results
-#
+
+# Folder 01
 01-diff-gene-exp/goldstandard/
 01-diff-gene-exp/data
-#
+
+# Folder 02
 02-core_genes/images
-#
+
+# Folder 03
 03-screened-data/data/
 03-screened-data/images/
+03-screened-data/images-joana/
 03-screened-data/results/
+
+#
 04-network/images/
 04-network/gephiloadandplot/debug/
 04-network/results/

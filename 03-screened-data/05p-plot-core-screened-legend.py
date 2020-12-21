@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
 
-    fig = plt.figure(figsize=(4, 4))
+    fig = plt.figure(figsize=(3, 3))
 
     #
     # FPKM
@@ -79,5 +79,5 @@ if __name__ == '__main__':
 
     # Save Figure
     plt.subplots_adjust(left=0.1, right=0.9, bottom=0.05, top=0.95, wspace=0.2, hspace=0.2)
-    file = 'images/img-core_DM-screened-legend.pdf'
+    file = 'images/img-core-DM-screened-legend.pdf'
     fig.savefig(file)

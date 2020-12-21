@@ -118,7 +118,7 @@ if __name__ == '__main__':
     # Plot Page 1
     #
     print("Plotting")
-    n_per_page = 150
+    n_per_page = 100
     dfg = df.groupby(np.arange(len(df)) // n_per_page)
     number_of_pages = len(dfg)
     for page, dft in dfg:
@@ -156,12 +156,13 @@ if __name__ == '__main__':
         adjustable = 'datalim'
         aspect = 'auto'
         ax_fert.set(adjustable=adjustable, aspect=aspect, anchor='NE')
-        ax_fpkm.set(adjustable=adjustable, aspect=aspect, anchor='NE')
-        ax_rnai.set(adjustable=adjustable, aspect=aspect, anchor='NE')
         ax_our_dm.set(adjustable=adjustable, aspect=aspect, anchor='NE')
         ax_ext_dm.set(adjustable=adjustable, aspect=aspect, anchor='NE')
         ax_ext_mm.set(adjustable=adjustable, aspect=aspect, anchor='NE')
         ax_ext_hs.set(adjustable=adjustable, aspect=aspect, anchor='NE')
+        ax_fpkm.set(adjustable=adjustable, aspect=aspect, anchor='NE')
+        ax_rnai.set(adjustable=adjustable, aspect=aspect, anchor='NE')
+
 
         norm_fpkm = mpl.colors.Normalize(vmin=minfpkm, vmax=maxfpkm)
         cmap_fpkm = mpl.cm.Reds
