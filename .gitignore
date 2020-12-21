@@ -27,6 +27,31 @@ bkp-results
 04-network/results/
 networkbrowser/json/
 
+## Folder 05
+05-data-analysis/descriptive-stats/images
+05-data-analysis/descriptive-stats/results
+05-data-analysis/distributions/images/
+05-data-analysis/entropy-based-modules/images/
+05-data-analysis/entropy-based-modules/results/
+05-data-analysis/expressed-gene-threshold/images/
+05-data-analysis/expressed-gene-threshold/results/
+05-data-analysis/gephi-plotting/images/
+05-data-analysis/gephi-plotting/results/
+05-data-analysis/gephi-plotting/gephiloadandplot/debug/
+05-data-analysis/gephi-plotting/gephiloadandplot/BKP/
+05-data-analysis/hierarchical-clustering/images/
+05-data-analysis/machine-learning/images/
+05-data-analysis/machine-learning/results/
+05-data-analysis/module-proximity/images/
+05-data-analysis/module-proximity/results/
+05-data-analysis/net-threshold-cores/images/
+05-data-analysis/network-patterns/images/
+05-data-analysis/network-patterns/results/
+05-data-analysis/network-proximity/images/
+05-data-analysis/network-proximity/results/
+05-data-analysis/synthetic-data-analysis/images/
+05-data-analysis/synthetic-data-analysis/results/
+
 ## String-DB
 data/StringDB/7227/
 data/StringDB/9606/
