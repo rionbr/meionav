@@ -29,7 +29,7 @@ if __name__ == '__main__':
         'spermatid': {
             'HS': 6,
             'MM': 3,
-            'DM': 1,
+            'DM': 2,
         },
         'enterocyte': {
             'HS': 3,
@@ -83,7 +83,7 @@ if __name__ == '__main__':
 
             # Load FPKM tar.gz file
             tfile = '../01-diff-gene-exp/data/FPKM/{specie:s}/{specie:s}_{celltype:s}.tar.gz'.format(specie=specie, celltype=celltypet.title())
-            tar_HS = tarfile.open(tfile, "r:gz")
+            tar = tarfile.open(tfile, "r:gz")
 
             # Replicates
             number_of_replicates = data_replicates[celltype][specie]
@@ -91,9 +91,9 @@ if __name__ == '__main__':
             # Extract and Load DataFrames
             ldf = []
             for replicate in range(1, number_of_replicates + 1):
-                file = '{specie:s}_{celltype:s}_rep{replicate:d}.txt'.format(specie=specie, celltype=celltypet.title(), replicate=replicate)
+                file = '{specie:s}_{celltype:s}_rep{replicate:d}.txt'.format(specie=specie, celltype=celltype.title(), replicate=replicate)
                 print(file)
-                tdf = pd.read_csv(tar_HS.extractfile(file), sep='\t', index_col='Gene ID', usecols=['Gene ID', 'FPKM', 'TPM'])
+                tdf = pd.read_csv(tar.extractfile(file), sep='\t', index_col='Gene ID', usecols=['Gene ID', 'FPKM', 'TPM'])
                 ldf.append(tdf)
             df = pd.concat(ldf, axis='index', sort=True)
 
@@ -121,7 +121,7 @@ if __name__ == '__main__':
             print(dfg.head())
 
             # To CSV
-            wCSVfile = 'results/FPKM/{species:s}/{specie:s}-FPKM-{celltype:s}.csv.gz'.format(specie=specie, celltype=celltype)
+            wCSVfile = 'results/FPKM/{specie:s}/{specie:s}-FPKM-{celltype:s}.csv.gz'.format(specie=specie, celltype=celltype)
             dfg.to_csv(wCSVfile)
 
     print('Done.')

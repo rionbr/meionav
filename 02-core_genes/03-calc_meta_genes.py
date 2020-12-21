@@ -7,20 +7,26 @@
 #    In practice it lowers the search space for next scripts.
 #
 #
-import math
 import numpy as np
 import pandas as pd
 pd.set_option('display.max_rows', 100)
 pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
 from utils import open_undefined_last_column_files, ensurePathExists
+import argparse
+
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    celltypes = ['spermatocyte', 'spermatogonia', 'spermatid', 'enterocyte', 'neuron', 'muscle']
+    parser.add_argument("--celltype", default='spermatocyte', type=str, choices=celltypes, help="Cell type. Defaults to spermatocyte")
+    args = parser.parse_args()
+    celltype = args.celltype
 
     # Load Species Files
-    df_HS = pd.read_csv('results/HS-DE_genes.csv', index_col='id_gene')
-    df_MM = pd.read_csv('results/MM-DE_genes.csv', index_col='id_gene')
-    df_DM = pd.read_csv('results/DM-DE_genes.csv', index_col='id_gene')
+    df_HS = pd.read_csv('results/FPKM/HS/HS-FPKM-{celltype:s}.csv.gz'.format(celltype=celltype), index_col='id_gene')
+    df_MM = pd.read_csv('results/FPKM/MM/MM-FPKM-{celltype:s}.csv.gz'.format(celltype=celltype), index_col='id_gene')
+    df_DM = pd.read_csv('results/FPKM/DM/DM-FPKM-{celltype:s}.csv.gz'.format(celltype=celltype), index_col='id_gene')
 
     string_HS = np.hstack(df_HS['id_string'].values).tolist()
     string_MM = np.hstack(df_MM['id_string'].values).tolist()
@@ -63,22 +69,22 @@ if __name__ == '__main__':
 
     def select_by_at_least_one_match(ilist, keeplist):
         # Only keep genes that are found in any of our gene list (lower the search space)
-        spermgenes = [i for i in ilist if i in keeplist]
-        return spermgenes if len(spermgenes) >= 1 else None
+        genes = [i for i in ilist if i in keeplist]
+        return genes if len(genes) >= 1 else None
 
     print("> Separating by At Least One Match")
     df = df.apply(select_by_at_least_one_match, args=(string_ALL, ))
     df = df.dropna()
 
     def select_by_gene_and_separate_by_species(ilist, keeplist_HS, keeplist_MM, keeplist_DM):
-        # Separate by species, keeping only the sperm genes we are interested in
-        spermgenes_HS = [i for i in ilist if i in keeplist_HS]
-        spermgenes_MM = [i for i in ilist if i in keeplist_MM]
-        spermgenes_DM = [i for i in ilist if i in keeplist_DM]
+        # Separate by species, keeping only the genes we are interested in
+        genes_HS = [i for i in ilist if i in keeplist_HS]
+        genes_MM = [i for i in ilist if i in keeplist_MM]
+        genes_DM = [i for i in ilist if i in keeplist_DM]
 
-        return pd.Series({'id_string_HS': spermgenes_HS, 'id_string_MM': spermgenes_MM, 'id_string_DM': spermgenes_DM})
+        return pd.Series({'id_string_HS': genes_HS, 'id_string_MM': genes_MM, 'id_string_DM': genes_DM})
 
-    print("> Selecting Sperm Genes")
+    print("> Selecting by species")
     df = df.apply(select_by_gene_and_separate_by_species, args=(string_HS, string_MM, string_DM))
 
     # Map Annotation
@@ -89,7 +95,7 @@ if __name__ == '__main__':
         df[column] = df[column].apply(lambda x: ",".join([str(y) for y in x]))
 
     print("> Exporting")
-    wCSVFile = 'results/meta_meiotic_genes.csv'
+    wCSVFile = 'results/meta-genes/meta-{celltype:s}-genes.csv.gz'.format(celltype=celltype)
     ensurePathExists(wCSVFile)
     df.to_csv(wCSVFile)
 

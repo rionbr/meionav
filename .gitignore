@@ -5,6 +5,8 @@ bkp-results
 01-diff-gene-exp/goldstandard/
 01-diff-gene-exp/data
 #
+02-core_genes/images
+#
 03-screened-data/data/
 03-screened-data/images/
 03-screened-data/results/
