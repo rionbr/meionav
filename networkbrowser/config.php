@@ -11,9 +11,9 @@ ini_set('display_errors', 1);
  * CONSTANT VARIABLES
  */
 if ($_SERVER['SERVER_NAME'] == 'localhost') {
-	define("DOMAIN", "http://localhost/~rionbr/spermnet/networkbrowser/");
+	define("PATH", "");
 } else{
-	define("DOMAIN", "https://homes.luddy.indiana.edu/rionbr/spermnet/");
+	define("PATH", "/meionav/");
 }
 
 ?>

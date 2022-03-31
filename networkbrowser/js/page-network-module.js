@@ -316,7 +316,7 @@ $(document).ready(function() {
 		network.on("stabilizationIterationsDone", function () {
 			network.setOptions( { physics: false } );
 			progressbar_stab.style.width = '100%';
-			setTimeout(function () { progressbars.style.display = 'none'; }, 500);			
+			setTimeout(function () { progressbars.style.display = 'none'; }, 500);
 			btn_simulation.innerHTML = 'Run';
 			btn_simulation.className = 'btn btn-success';
 		});
