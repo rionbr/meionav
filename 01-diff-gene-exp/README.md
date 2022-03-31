@@ -1,6 +1,6 @@
-# Differential gene expression analysis
+# Differential gene expressions and FPKM data
 
-Python and R code in this folder are used to define which genes are differentially expressed.
+`R` code in this folder are used to define which genes are differentially expressed. This folder also holds the FPKM data.
 
 
 ## R Session Info
