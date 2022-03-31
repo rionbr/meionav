@@ -39,8 +39,8 @@ if __name__ == '__main__':
     norm_rnai = mpl.colors.BoundaryNorm(bounds_rnai, cmap_rnai.N)
     cb_rnai = mpl.colorbar.ColorbarBase(ax=ax_rnai_cb, cmap=cmap_rnai, norm=norm_rnai, boundaries=bounds_rnai, extend='neither', ticks=ticks_rnai, spacing='uniform', orientation='vertical')
     cb_rnai.set_ticklabels(['No', 'Yes'])
-    cb_rnai.ax.set_xticklabels(['No', 'Yes'], rotation=90, fontsize='small')
-    cb_rnai.ax.tick_params(labelsize='small')
+    #cb_rnai.ax.set_xticklabels(['No', 'Yes'], rotation=90, fontsize='small')
+    #cb_rnai.ax.tick_params(labelsize='small')
 
     #
     # Code
@@ -74,8 +74,8 @@ if __name__ == '__main__':
     norm_code = mpl.colors.BoundaryNorm(bounds_code, cmap_code.N)
     cb_code = mpl.colorbar.ColorbarBase(ax=ax_code_cb, cmap=cmap_code, norm=norm_code, boundaries=bounds_code, extend='neither', ticks=ticks_code, spacing='uniform', orientation='vertical')
     cb_code.set_ticklabels(list(code_label.values())[::-1])
-    cb_code.ax.set_xticklabels(list(code_label.values()), rotation=90, fontsize='small')
-    cb_code.ax.tick_params(labelsize='small')
+    #cb_code.ax.set_xticklabels(list(code_label.values()), rotation=90, fontsize='small')
+    #cb_code.ax.tick_params(labelsize='small')
 
     # Save Figure
     plt.subplots_adjust(left=0.1, right=0.9, bottom=0.05, top=0.95, wspace=0.2, hspace=0.2)

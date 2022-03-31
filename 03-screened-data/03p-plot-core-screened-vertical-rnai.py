@@ -32,7 +32,7 @@ def calc_control_mean_std_fert_rate(x):
 
 if __name__ == '__main__':
 
-    rnai = 'Yes'  # None, 'Yes', 'No'
+    rnai = 'No'  # None, 'Yes', 'No'
     # Load genes
     df = pd.read_csv('../02-core_genes/results/pipeline-core/DM_meiotic_genes.csv', index_col=0, usecols=['id_gene', 'gene'])
 

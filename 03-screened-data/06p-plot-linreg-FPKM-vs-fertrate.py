@@ -17,6 +17,15 @@ import matplotlib.gridspec as gridspec
 from matplotlib import colors
 mpl.rcParams['font.family'] = 'Helvetica'
 mpl.rcParams['mathtext.fontset'] = 'cm'
+#
+mpl.rc('font', size=10)  # controls default text sizes
+mpl.rc('axes', titlesize=12)  # fontsize of the axes title
+mpl.rc('axes', labelsize=12)  # fontsize of the x and y labels
+mpl.rc('xtick', labelsize=10)  # fontsize of the tick labels
+mpl.rc('ytick', labelsize=10)  # fontsize of the tick labels
+mpl.rc('legend', fontsize=10)  # legend fontsize
+mpl.rc('figure', titlesize=12)  # fontsize of the figure title
+#
 import matplotlib.ticker as mtick
 import statsmodels.api as sm
 from statsmodels.graphics.regressionplots import abline_plot
@@ -33,7 +42,7 @@ if __name__ == '__main__':
     df = pd.read_csv('../02-core_genes/results/pipeline-core/DM_meiotic_genes.csv', index_col=0, usecols=['id_gene', 'gene'])
 
     # Load Screened data
-    dfs = pd.read_csv('data/core_DM_screened_2020-10-21.csv', index_col=0)
+    dfs = pd.read_csv('data/core_DM_screened_2021-06-07.csv', index_col=0)
 
     # Load Control data
     dfc = pd.read_csv('data/screened_DM_controls.csv', index_col=0)
@@ -80,14 +89,14 @@ if __name__ == '__main__':
     # Plot all data
     #
 
-    fig = plt.figure(figsize=(6, 3))
+    fig = plt.figure(figsize=(4.7, 4.7))
 
-    gs = gridspec.GridSpec(nrows=15, ncols=21)
-    ax = plt.subplot(gs[3:17, 0:18])
-    axt = plt.subplot(gs[0:2, 0:18])
-    axb = plt.subplot(gs[3:18, 19:21])
+    gs = gridspec.GridSpec(nrows=2, ncols=2, width_ratios=[5, 1], height_ratios=[1, 5])
+    ax = plt.subplot(gs[1, 0])
+    axt = plt.subplot(gs[0, 0])
+    axb = plt.subplot(gs[1, 1])
 
-    axt.set_title("Core genes expression level", fontsize='medium')
+    axt.set_title("Exp. level distribution")
 
     # Data
     x = df['logFPKM']
@@ -100,33 +109,35 @@ if __name__ == '__main__':
 
     # Main
     sc = ax.scatter(x=x, y=y, fc='#3182bdcc', ec='#3182bd', s=8, zorder=5)
-    ax.set_ylabel('Fertility rate')
-    ax.set_xlabel(r'Log$_2$(FPKM+1)')
-    ax.grid()
+    ax.set_ylabel('Freq. egg hatching')
+    ax.set_xlabel(r'Expression level')
+    #ax.grid()
 
     ax.text(x=9, y=0.5, s=r"$R^2={rsquared:.2f}$".format(rsquared=results.rsquared))
     abline_plot(model_results=results, color='#d62728', ax=ax, zorder=6) # regression line
 
     # Top
+    color = '#c7c7c7'
+    edgecolor = '#7f7f7f'
     xw = np.ones(shape=len(x)) / len(x)
-    axt.hist(x, bins=22, color='#ff9896', weights=xw, zorder=5)
+    axt.hist(x, bins=22, color=color, weights=xw, lw=1, edgecolor=edgecolor, zorder=5)
     #axt.axes.get_xaxis().set_visible(False)
     axt.set_xticklabels([])
     axt.yaxis.set_major_formatter(mtick.PercentFormatter(1, decimals=0))
     axt.set_ylabel('%')
-    axt.grid()
+    #axt.grid()
 
     # Bottom
     yw = np.ones(shape=len(y))/len(y)
-    axb.hist(y, bins=22, color='#aec7e8', weights=yw, orientation='horizontal', zorder=5)
+    axb.hist(y, bins=22, color=color, weights=yw, lw=1, edgecolor=edgecolor, orientation='horizontal', zorder=5)
     #axb.axes.get_yaxis().set_visible(False)
     axb.yaxis.set_label_position("right")
-    axb.set_ylabel('Silenced core genes phen.')
+    axb.set_ylabel('Fert. rate distribution')
     axb.set_yticklabels([])
     axb.xaxis.set_major_formatter(mtick.PercentFormatter(1, decimals=0))
     axb.set_xlabel('%')
     #axb.set_xlim(-0.02,0.2)
-    axb.grid()
+    #axb.grid()
 
-    plt.subplots_adjust(left=0.13, right=0.774, bottom=0.16, top=0.90, wspace=0.50, hspace=0.50)
+    plt.subplots_adjust(left=0.15, right=0.90, bottom=0.15, top=0.90, wspace=0.10, hspace=0.10)
     fig.savefig('images/img-linreg-FPKM-fertrate.pdf')

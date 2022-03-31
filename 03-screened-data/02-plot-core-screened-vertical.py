@@ -36,7 +36,7 @@ if __name__ == '__main__':
     df = pd.read_csv('../02-core_genes/results/pipeline-core/DM_meiotic_genes.csv', index_col=0, usecols=['id_gene', 'gene'])
 
     # Load Screened data
-    dfs = pd.read_csv('data/core_DM_screened_2020-10-21.csv', index_col=0)
+    dfs = pd.read_csv('data/core_DM_screened_2021-06-07.csv', index_col=0)
 
     # Load Control data
     dfc = pd.read_csv('data/screened_DM_controls.csv', index_col=0)
@@ -47,15 +47,15 @@ if __name__ == '__main__':
 
     dfs_only = dfs.loc[~dfs['FT1 eggs'].isnull(), :]
 
-    status_cats = ['Screened', 'To be crossed', 'Pending', 'Reorder']
-    dfs['Status'] = pd.Categorical(dfs['Status'], categories=status_cats, ordered=True)
-    df['Status'] = dfs['Status']
+    #status_cats = ['Screened', 'To be crossed', 'Pending', 'Reorder']
+    #dfs['Status'] = pd.Categorical(dfs['Status'], categories=status_cats, ordered=True)
+    #df['Status'] = dfs['Status']
 
     cols = ['FT1 eggs', 'FT1 hatched', 'FT2 eggs', 'FT2 hatched', 'FT3 eggs', 'FT3 hatched', 'FT4 eggs', 'FT4 hatched']
     df[cols] = dfs_only[cols]
 
     # Only plot screened genes
-    df = df.loc[df['Status'] == 'Screened', :]
+    #df = df.loc[df['Status'] == 'Screened', :]
 
     # Calculations
     df['total-eggs'] = 0
@@ -119,7 +119,8 @@ if __name__ == '__main__':
     #
     print("Plotting")
 
-    df = df.sort_values(['Status', 'mean fert-rate', 'gene'], ascending=[True, True, True]).reset_index()
+    df = df.sort_values(['mean fert-rate', 'gene'], ascending=[True, True]).reset_index()
+    print(df)
     fig = plt.figure(figsize=(2.5, 11))
     # fig.suptitle('Core metazoan meiotic genes'.format(page, number_of_pages))
 
