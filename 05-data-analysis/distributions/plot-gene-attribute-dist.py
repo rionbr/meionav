@@ -121,13 +121,13 @@ if __name__ == '__main__':
     # Legend
     ax.legend(
         handles=(phs, pmm, pdm),
-        labels=('Human', 'Mouse', 'Insect'),
+        labels=('Human', 'Mouse', 'Fruit fly'),
         loc='lower left'
     )
 
     # Kolmogorov-Sminov test
     text = 'KS test\n'
-    specie_name = {'HS': 'Human', 'MM': 'Mouse', 'DM': 'Insect'}
+    specie_name = {'HS': 'Human', 'MM': 'Mouse', 'DM': 'Fruit fly'}
     for (specie_i, vals_i), (specie_j, vals_j) in combinations([('HS', df_HS[attribute]), ('MM', df_MM[attribute]), ('DM', df_DM[attribute])], 2):
         stat, pvalue = ks_2samp(vals_i, vals_j, alternative='two-sided', mode='auto')
         text += '{i:s}-{j:}: {stat:.2f} ({pvalue:.2e})'.format(i=specie_name[specie_i], j=specie_name[specie_j], stat=stat, pvalue=pvalue) + '\n'

@@ -13,6 +13,15 @@ pd.set_option('display.max_columns', 500)
 pd.set_option('display.width', 1000)
 import networkx as nx
 import matplotlib as mpl
+#
+mpl.rc('font', size=16)  # controls default text sizes
+mpl.rc('axes', titlesize=20)  # fontsize of the axes title
+mpl.rc('axes', labelsize=16)  # fontsize of the x and y labels
+mpl.rc('xtick', labelsize=14)  # fontsize of the tick labels
+mpl.rc('ytick', labelsize=14)  # fontsize of the tick labels
+mpl.rc('legend', fontsize=16)  # legend fontsize
+mpl.rc('figure', titlesize=20)  # fontsize of the figure title
+#
 mpl.rcParams['font.family'] = 'Helvetica'
 mpl.rcParams['mathtext.fontset'] = 'cm'
 mpl.rcParams['mathtext.rm'] = 'serif'
@@ -75,21 +84,22 @@ if __name__ == '__main__':
             'edgecolor': '#c7c7c7',
         },
         'DM': {
-            'name': 'Insect',
+            'name': 'Fruit fly',
             'degree': degree_DM,
             'facecolor': '#ff7f0e',
             'edgecolor': '#ffbb78'
         }
     }
 
-    fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(8.5, 3))
-    #
-    for layer, ax in zip(['HS', 'MM', 'DM'], axes):
+    for layer in ['HS', 'MM', 'DM']:
+
+        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(4.1, 4.4))
+
         #
         name = layer_data[layer]['name']
         degree = layer_data[layer]['degree']
         facecolor = layer_data[layer]['facecolor']
-        edgecolor = name = layer_data[layer]['edgecolor']
+        edgecolor = layer_data[layer]['edgecolor']
         #
         print(layer)
         deg_mean = np.mean(degree)
@@ -109,21 +119,23 @@ if __name__ == '__main__':
         rv_x = np.arange(0, max_degree, 1)
         rv_pmf = stats.norm.pdf(rv_x, loc=deg_mean, scale=deg_std)
 
-        phs, = ax.plot(deg, prob, lw=0, marker='o', ms=4, color=facecolor, rasterized=False)
+        phs, = ax.plot(deg, prob, lw=0, marker='o', ms=4, label=name, color=facecolor, rasterized=False)
         #phs = ax.hist(degree, bins=25, weights=weights_HS)
         rvphs, = ax.plot(rv_x, rv_pmf, lw=2, color='#e377c2', rasterized=False)
 
-        ax.set_title('{layer:s} degree dist.'.format(layer=layer))
+        ax.set_title('Degree distribution')
         ax.set_ylabel('P(degree)')
-        ax.set_xlabel('degree')
+        ax.set_xlabel('Degree rank')
         ax.set_xscale('log')
         #ax.set_yscale('log')
 
-        ax.grid()
+        #ax.grid()
+        ax.legend(loc='upper right', handletextpad=0)
 
-    img_path = 'images/degree-dist/{celltype:s}/'.format(celltype=celltype)
-    file = img_path + 'img-net-{celltype:s}-{network:s}-degree-dist.pdf'.format(celltype=celltype, network=network)
-    plt.tight_layout()
-    ensurePathExists(file)
-    fig.savefig(file)
-    plt.close()
+        img_path = 'images/degree-dist/{celltype:s}/'.format(celltype=celltype)
+        file = img_path + 'img-net-{celltype:s}-{network:s}-degree-dist-{layer:s}.pdf'.format(celltype=celltype, network=network, layer=layer)
+        #plt.tight_layout()
+        plt.subplots_adjust(left=0.24, right=0.96, bottom=0.16, top=0.86, wspace=0.0)
+        ensurePathExists(file)
+        fig.savefig(file)
+        plt.close()

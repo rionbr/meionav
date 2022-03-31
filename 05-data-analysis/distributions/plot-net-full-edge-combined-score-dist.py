@@ -15,6 +15,15 @@ pd.set_option('display.width', 1000)
 import networkx as nx
 import matplotlib as mpl
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
+#
+mpl.rc('font', size=16)  # controls default text sizes
+mpl.rc('axes', titlesize=20)  # fontsize of the axes title
+mpl.rc('axes', labelsize=16)  # fontsize of the x and y labels
+mpl.rc('xtick', labelsize=14)  # fontsize of the tick labels
+mpl.rc('ytick', labelsize=14)  # fontsize of the tick labels
+mpl.rc('legend', fontsize=16)  # legend fontsize
+mpl.rc('figure', titlesize=20)  # fontsize of the figure title
+#
 mpl.rcParams['font.family'] = 'Helvetica'
 mpl.rcParams['mathtext.fontset'] = 'cm'
 mpl.rcParams['mathtext.rm'] = 'serif'
@@ -56,24 +65,24 @@ if __name__ == '__main__':
     hist_values_DM = np.ones_like(values_DM) / len(values_DM)
 
     print('Plot')
-    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(5, 4))
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(7.5, 6))
 
     # Title
     ax.set_title("{celltype:s} full net 'combined-score' dist.".format(celltype=celltype.title()))
 
     # Plots
-    phs, = ax.plot(np.arange(1, len(values_HS) + 1), values_HS, lw=0, marker='o', ms=4, color='#2ca02c', rasterized=True, zorder=5)
-    pmm, = ax.plot(np.arange(1, len(values_MM) + 1), values_MM, lw=0, marker='o', ms=4, color='#7f7f7f', rasterized=True, zorder=4)
-    pdm, = ax.plot(np.arange(1, len(values_DM) + 1), values_DM, lw=0, marker='o', ms=4, color='#ff7f0e', rasterized=True, zorder=3)
+    phs, = ax.plot(np.arange(1, len(values_HS) + 1), values_HS, lw=0, marker='o', ms=6, color='#2ca02c', rasterized=True, zorder=5)
+    pmm, = ax.plot(np.arange(1, len(values_MM) + 1), values_MM, lw=0, marker='o', ms=6, color='#7f7f7f', rasterized=True, zorder=4)
+    pdm, = ax.plot(np.arange(1, len(values_DM) + 1), values_DM, lw=0, marker='o', ms=6, color='#ff7f0e', rasterized=True, zorder=3)
 
     max_value = math.ceil(max(values_HS + values_MM + values_DM))
     bins = np.linspace(0, max_value, 23, endpoint=True)
 
     # Insert Distribution Plot
     axin = inset_axes(ax, width='50%', height='50%', loc='lower left', bbox_to_anchor=(.11, .325, .9, .8), bbox_transform=ax.transAxes)
-    axin.hist(values_HS, bins=bins, weights=hist_values_HS, edgecolor='#2ca02c', facecolor=(0, 0, 0, 0), lw=1, zorder=5)
-    axin.hist(values_MM, bins=bins, weights=hist_values_MM, edgecolor='#7f7f7f', facecolor=(0, 0, 0, 0), lw=1, zorder=4)
-    axin.hist(values_DM, bins=bins, weights=hist_values_DM, edgecolor='#ff7f0e', facecolor=(0, 0, 0, 0), lw=1, zorder=3)
+    axin.hist(values_HS, bins=bins, weights=hist_values_HS, edgecolor='#2ca02c', facecolor=(0, 0, 0, 0), lw=1.2, zorder=5)
+    axin.hist(values_MM, bins=bins, weights=hist_values_MM, edgecolor='#7f7f7f', facecolor=(0, 0, 0, 0), lw=1.2, zorder=4)
+    axin.hist(values_DM, bins=bins, weights=hist_values_DM, edgecolor='#ff7f0e', facecolor=(0, 0, 0, 0), lw=1.2, zorder=3)
 
     # Threshold horizontal line
     ax.axhline(y=threshold, color='red')
@@ -90,13 +99,13 @@ if __name__ == '__main__':
     # Legend
     ax.legend(
         handles=(phs, pmm, pdm),
-        labels=('Human', 'Mouse', 'Insect'),
+        labels=('Human', 'Mouse', 'Fruit fly'),
         loc='lower left'
     )
 
     # Grid
-    ax.grid(zorder=1)
-    axin.grid(zorder=1)
+    #ax.grid(zorder=1)
+    #axin.grid(zorder=1)
 
     plt.subplots_adjust(left=0.12, right=0.97, bottom=0.12, top=0.92, wspace=0, hspace=0)
     img_path = 'images/net-edge-attributes/{celltype:s}/'.format(celltype=celltype)
