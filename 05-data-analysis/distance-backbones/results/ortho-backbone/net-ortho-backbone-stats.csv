@@ -1,0 +1,4 @@
+,celltype,layer,n-edges-metric,n-edges-metric-ortho,counter
+0,spermatocyte,HS,39793,22558,"{'is_metric_ortho-MM': 13273, 'is_metric_ortho-DM': 3225, 'is_metric_ortho-MM-DM': 6060}"
+1,spermatocyte,MM,50334,22388,"{'is_metric_ortho-HS': 13924, 'is_metric_ortho-HS-DM': 6331, 'is_metric_ortho-DM': 2133}"
+2,spermatocyte,DM,29885,11643,"{'is_metric_ortho-MM': 2264, 'is_metric_ortho-HS-MM': 6030, 'is_metric_ortho-HS': 3349}"

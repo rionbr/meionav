@@ -1,0 +1,4 @@
+,layer,id-i,id-j,gene-i,gene-j,is_conserved-i,is_conserved-j,weight,is_metric,is_metric_ortho
+0,DM,FBgn0014342,FBgn0000617,mia,e(y)1,True,True,0.999,True,is_metric_ortho-HS-MM
+1,DM,FBgn0014342,FBgn0010280,mia,Taf4,True,True,0.999,True,is_metric_ortho-HS
+2,DM,FBgn0014342,FBgn0010355,mia,Taf1,True,True,0.999,True,is_metric_ortho-HS-MM

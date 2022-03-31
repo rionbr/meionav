@@ -1,0 +1,12 @@
+,layer,id-i,id-j,gene-i,gene-j,is_conserved-i,is_conserved-j,weight,is_metric,is_metric_ortho
+0,DM,FBgn0002673,FBgn0029121,twe,Sras,False,True,0.926,True,False
+1,DM,FBgn0002673,FBgn0260936,twe,scny,False,True,0.92,True,False
+2,DM,FBgn0002673,FBgn0052418,twe,vito,False,False,0.943,True,False
+3,DM,FBgn0002673,FBgn0004106,twe,Cdk1,False,True,0.996,True,False
+4,DM,FBgn0002673,FBgn0004907,twe,14-3-3zeta,False,True,0.973,True,False
+5,DM,FBgn0002673,FBgn0036689,twe,CG7730,False,False,0.572,True,False
+6,DM,FBgn0002673,FBgn0011737,twe,Wee1,False,True,0.996,True,False
+7,DM,FBgn0002673,FBgn0261278,twe,grp,False,True,0.993,True,False
+8,DM,FBgn0002673,FBgn0019686,twe,lok,False,False,0.987,True,False
+9,DM,FBgn0002673,FBgn0016070,twe,smg,False,True,0.882,True,False
+10,DM,FBgn0002673,FBgn0020238,twe,14-3-3epsilon,False,True,0.973,True,False

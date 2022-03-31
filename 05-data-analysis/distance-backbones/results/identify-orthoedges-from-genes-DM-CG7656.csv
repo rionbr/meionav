@@ -1,0 +1,13 @@
+,layer,id-i,id-j,gene-i,gene-j,is_conserved-i,is_conserved-j,weight,is_metric,is_metric_ortho
+0,DM,FBgn0036516,FBgn0003943,CG7656,Ubi-p63E,True,True,0.978,True,is_metric_ortho-HS-MM
+1,DM,FBgn0036516,FBgn0025638,CG7656,Roc1a,True,True,0.989,True,is_metric_ortho-HS-MM
+2,DM,FBgn0036516,FBgn0033783,CG7656,CG17019,True,True,0.9,True,is_metric_ortho-MM
+3,DM,FBgn0036516,FBgn0029856,CG7656,CG11700,True,True,0.982,True,is_metric_ortho-HS-MM
+4,DM,FBgn0036516,FBgn0030514,CG7656,CG9941,True,True,0.929,True,is_metric_ortho-HS-MM
+5,DM,FBgn0036516,FBgn0039013,CG7656,CG4813,True,True,0.909,True,False
+6,DM,FBgn0036516,FBgn0029006,CG7656,Smurf,True,True,0.963,True,is_metric_ortho-MM
+7,DM,FBgn0036516,FBgn0023143,CG7656,Uba1,True,True,0.992,True,is_metric_ortho-HS-MM
+8,DM,FBgn0036516,FBgn0003557,CG7656,Su(dx),True,True,0.963,True,False
+9,DM,FBgn0036516,FBgn0086558,CG7656,Ubi-p5E,True,True,0.978,True,is_metric_ortho-HS-MM
+10,DM,FBgn0036516,FBgn0036196,CG7656,CG11658,True,False,0.924,True,False
+11,DM,FBgn0036516,FBgn0259174,CG7656,Nedd4,True,True,0.97,True,False
