@@ -17,6 +17,7 @@ Folders identify different portions of the project, each containing additional d
 - `04-network`: Network Science analysis, including orthoBackbone computation.
 - `05-data-analysis`: Data analysis, simulations, machine learning experiments, and general plotting.
 - `data`: placeholders for downloaded third-party data.
+- `images`: inhouse designed images used in the project.
 - `networkbrowser`: Frontend of the [Meiotic Navigator](https://pages.igc.pt/meionav/) (PHP, HTML+CSS coding).
 
 Credits:
