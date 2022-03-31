@@ -15,6 +15,15 @@ pd.set_option('display.width', 1000)
 import matplotlib as mpl
 mpl.rcParams['font.family'] = 'Helvetica'
 mpl.rcParams['mathtext.fontset'] = 'cm'
+#
+mpl.rc('font', size=10)  # controls default text sizes
+mpl.rc('axes', titlesize=12)  # fontsize of the axes title
+mpl.rc('axes', labelsize=12)  # fontsize of the x and y labels
+mpl.rc('xtick', labelsize=10)  # fontsize of the tick labels
+mpl.rc('ytick', labelsize=10)  # fontsize of the tick labels
+mpl.rc('legend', fontsize=10)  # legend fontsize
+mpl.rc('figure', titlesize=12)  # fontsize of the figure title
+#
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 from matplotlib.colors import Normalize
@@ -50,7 +59,7 @@ def load_species_de_df(species='DM'):
     df_entry['rank'] = df_entry[col_logFC_entry].rank(method='dense', ascending=False)
     df_entry.sort_values('rank', ascending=True, inplace=True)
 
-    # 
+    #
     # Exit
     #
     if species == 'DM':
@@ -62,7 +71,7 @@ def load_species_de_df(species='DM'):
 
     col_logFC_exit = 'logFC_{col:s}'.format(col=col_var_exit)
     col_FDR_exit = 'FDR_{col:s}'.format(col=col_var_exit)
-    
+
     # Only DGE (up or down) genes
     df_exit = df.loc[
         (df[col_exit] == True) &
@@ -259,20 +268,22 @@ if __name__ == '__main__':
     # print('df_hs_mm_exit:',df_hs_mm_exit.shape)
     # print('df_mm_dm_entry:',df_mm_dm_entry.shape)
     # print('df_mm_dm_exit:',df_mm_dm_exit.shape)
-
+    aspect = 1/900
     #
     # Plot Entry
     #
-    fig = plt.figure(figsize=(6.0, 6.0))
+    fig = plt.figure(figsize=(3.7, 2.9))
     #
     gs = GridSpec(nrows=100, ncols=3)
-    ax_hs = plt.subplot(gs[0:46, 0])
-    ax_mm = plt.subplot(gs[0:, 1])
-    ax_dm = plt.subplot(gs[0:61, 2])
+    ax_hs = plt.subplot(gs[0:46, 0], anchor='N')
+    ax_mm = plt.subplot(gs[0:, 1], anchor='N')
+    ax_dm = plt.subplot(gs[0:61, 2], anchor='N')
+    #
     axes = [ax_hs, ax_mm, ax_dm]
     #
-    caxu = plt.axes([0.15, 0.08, 0.020, 0.18])
-    caxd = plt.axes([0.15 + 0.020, 0.08, 0.020, 0.18])
+    #caxu = plt.axes([0.09, (0.12), 0.18, 0.018])
+    #caxd = plt.axes([0.09, (0.12 - 0.020), 0.18, 0.018])
+    #caxl = plt.axes([0.73, (0.12), 0.18, 0.018])
 
     species_label = {'HS': 'Human', 'MM': 'Mouse', 'DM': 'Insect'}
     # red = '#d62728'
@@ -285,54 +296,65 @@ if __name__ == '__main__':
 
     dfs = [df_fpkm_hs_entry, df_fpkm_mm_entry, df_fpkm_dm_entry]
     species = ['HS', 'MM', 'DM']
+    
     for ax, df, species in zip(axes, dfs, species):
         values = df[['spermatogonia', 'spermatocyte']].values
-        im = ax.imshow(values, cmap=cmap, norm=norm, aspect='auto', interpolation='nearest')
+        im = ax.imshow(values, cmap=cmap, norm=norm, aspect=aspect, interpolation='nearest')
 
         yticks = np.arange(0, len(df), 1000)
 
         ax.set_title(species_label[species])
         ax.set_xticks([0, 1])
         ax.set_yticks(yticks)
-        ax.set_xticklabels(['Pre-\nmeiotic', 'Meiotic'])
+        ax.get_yaxis().set_major_formatter(lambda x, p: format(int(x), ','))
+        ax.set_xticklabels(['Sg.', 'Sc.'])
 
     for i, row in df_hs_mm_entry.iterrows():
         y_hs = row['y-HS']
         y_mm = row['y-MM']
-        con = ConnectionPatch((1.5, y_hs), (-0.5, y_mm), coordsA='data', coordsB='data', axesA=ax_hs, axesB=ax_mm, color='#2ca02c', alpha=.3)
+        con = ConnectionPatch((1.5, y_hs), (-0.5, y_mm), coordsA='data', coordsB='data', axesA=ax_hs, axesB=ax_mm, color='#2ca02c', alpha=.3, zorder=-1)
         fig.add_artist(con)
 
     for i, row in df_mm_dm_entry.iterrows():
         y_mm = row['y-MM']
         y_dm = row['y-DM']
-        con = ConnectionPatch((1.5, y_mm), (-0.5, y_dm), coordsA='data', coordsB='data', axesA=ax_mm, axesB=ax_dm, color='#2ca02c', alpha=.3)
+        con = ConnectionPatch((1.5, y_mm), (-0.5, y_dm), coordsA='data', coordsB='data', axesA=ax_mm, axesB=ax_dm, color='#2ca02c', alpha=.3, zorder=-1)
         fig.add_artist(con)
-
-    ax_dm.yaxis.tick_right()
-
-    cbu = plt.colorbar(mpl.cm.ScalarMappable(norm=Normalize(vmin=0, vmax=1), cmap='Reds'), ticks=[], cax=caxu)
-    cbd = plt.colorbar(mpl.cm.ScalarMappable(norm=Normalize(vmin=0, vmax=1), cmap='Blues'), ticks=[0.0, 0.5, 1.0], cax=caxd)
-    caxd.set_ylabel('norm[log(FPKM+1)]')
-
-    plt.subplots_adjust(left=0.10, right=0.90, bottom=0.10, top=0.94, wspace=1.0)
+    
+    """
+    cbu = plt.colorbar(mpl.cm.ScalarMappable(norm=Normalize(vmin=0, vmax=1), cmap='Reds'), ticks=[], orientation='horizontal', cax=caxu)
+    cbd = plt.colorbar(mpl.cm.ScalarMappable(norm=Normalize(vmin=0, vmax=1), cmap='Blues'), ticks=[0.0, 0.5, 1.0], orientation='horizontal', cax=caxd)
+    #caxu.yaxis.tick_left()
+    caxu.set_title('norm[log(FPKM+1)]', fontsize=10)
+    #
+    caxl.plot((0, 1), (0, 0), color='#2ca02c')
+    caxl.set_title('Orthologs', fontsize=10)
+    #caxl.xaxis.set_label_position("right")
+    #caxl.yaxis.tick_right()
+    caxl.tick_params(axis='both', which='both', bottom=False, left=False, right=False, labelleft=False, labelbottom=False, labelright=False)
+    """
+    plt.subplots_adjust(left=0.14, right=0.96, bottom=0.10, top=0.92, wspace=1.2)
 
     wIMGfile = 'images/deg-flow/img-deg-flow-entry.pdf'
     ensurePathExists(wIMGfile)
     plt.savefig(wIMGfile, dpi=300)
+    plt.close()
 
     #
     # Plot Exit
     #
-    fig = plt.figure(figsize=(6.0, 6.0))
+    fig = plt.figure(figsize=(3.7, 2.9))
     #
     gs = GridSpec(nrows=100, ncols=3)
-    ax_hs = plt.subplot(gs[0:88, 0])
-    ax_mm = plt.subplot(gs[0:, 1])
-    ax_dm = plt.subplot(gs[0:19, 2])
+    ax_hs = plt.subplot(gs[0:88, 0], anchor='N')
+    ax_mm = plt.subplot(gs[0:, 1], anchor='N')
+    ax_dm = plt.subplot(gs[0:19, 2], anchor='N')
+    #
     axes = [ax_hs, ax_mm, ax_dm]
     #
-    caxu = plt.axes([0.80, 0.08, 0.020, 0.18])
-    caxd = plt.axes([0.80 + 0.020, 0.08, 0.020, 0.18])
+    caxl = plt.axes([0.75, (0.27), 0.18, 0.018])
+    caxu = plt.axes([0.75, (0.27 - 0.13), 0.18, 0.018])
+    caxd = plt.axes([0.75, (0.27 - 0.13 - 0.020), 0.18, 0.018])
 
     species_label = {'HS': 'Human', 'MM': 'Mouse', 'DM': 'Insect'}
     # red = '#d62728'
@@ -347,35 +369,42 @@ if __name__ == '__main__':
     species = ['HS', 'MM', 'DM']
     for ax, df, species in zip(axes, dfs, species):
         values = df[['spermatocyte', 'spermatid']].values
-        im = ax.imshow(values, cmap=cmap, norm=norm, aspect='auto', interpolation='nearest')
+        im = ax.imshow(values, cmap=cmap, norm=norm, aspect=aspect, interpolation='nearest')
 
         yticks = np.arange(0, len(df), 1000)
 
         ax.set_title(species_label[species])
         ax.set_xticks([0, 1])
         ax.set_yticks(yticks)
-        ax.set_xticklabels(['Meiotic', 'Post-\nmeiotic'])
+        ax.get_yaxis().set_major_formatter(lambda x, p: format(int(x), ','))
+        ax.set_xticklabels(['Sc.', 'St.'])
 
     for i, row in df_hs_mm_exit.iterrows():
         y_hs = row['y-HS']
         y_mm = row['y-MM']
-        con = ConnectionPatch((1.5, y_hs), (-0.5, y_mm), coordsA='data', coordsB='data', axesA=ax_hs, axesB=ax_mm, color='#2ca02c', alpha=.3)
+        con = ConnectionPatch((1.5, y_hs), (-0.5, y_mm), coordsA='data', coordsB='data', axesA=ax_hs, axesB=ax_mm, color='#2ca02c', alpha=.3, zorder=-1)
         fig.add_artist(con)
 
     for i, row in df_mm_dm_exit.iterrows():
         y_mm = row['y-MM']
         y_dm = row['y-DM']
-        con = ConnectionPatch((1.5, y_mm), (-0.5, y_dm), coordsA='data', coordsB='data', axesA=ax_mm, axesB=ax_dm, color='#2ca02c', alpha=.3)
+        con = ConnectionPatch((1.5, y_mm), (-0.5, y_dm), coordsA='data', coordsB='data', axesA=ax_mm, axesB=ax_dm, color='#2ca02c', alpha=.3, zorder=-1)
         fig.add_artist(con)
 
-    ax_dm.yaxis.tick_right()
+    #ax_dm.yaxis.tick_right()
+    cbu = plt.colorbar(mpl.cm.ScalarMappable(norm=Normalize(vmin=0, vmax=1), cmap='Reds'), ticks=[], orientation='horizontal', cax=caxu)
+    cbd = plt.colorbar(mpl.cm.ScalarMappable(norm=Normalize(vmin=0, vmax=1), cmap='Blues'), ticks=[0.0, 0.5, 1.0], orientation='horizontal', cax=caxd)
+    #caxu.yaxis.tick_left()
+    caxu.set_title('Exp. level', fontsize=10)
+    #
+    caxl.axhline(y=0.5, color='#2ca02c', lw=1.5)
+    caxl.axis('off')
+    caxl.set_title('Orthologs', fontsize=10, pad=4)
+    caxl.tick_params(axis='both', which='both', bottom=False, left=False, right=False, labelleft=False, labelbottom=False, labelright=False)
 
-    cbu = plt.colorbar(mpl.cm.ScalarMappable(norm=Normalize(vmin=0, vmax=1), cmap='Reds'), ticks=[], cax=caxu)
-    cbd = plt.colorbar(mpl.cm.ScalarMappable(norm=Normalize(vmin=0, vmax=1), cmap='Blues'), ticks=[0.0, 0.5, 1.0], cax=caxd)
-    caxd.set_ylabel('norm[log(FPKM+1)]')
-
-    plt.subplots_adjust(left=0.10, right=0.90, bottom=0.10, top=0.94, wspace=1.0)
+    plt.subplots_adjust(left=0.14, right=0.96, bottom=0.10, top=0.92, wspace=1.2)
 
     wIMGfile = 'images/deg-flow/img-deg-flow-exit.pdf'
     ensurePathExists(wIMGfile)
     plt.savefig(wIMGfile, dpi=300)
+    plt.close()
