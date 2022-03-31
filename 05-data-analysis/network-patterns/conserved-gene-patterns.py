@@ -17,6 +17,16 @@ import matplotlib as mpl
 mpl.rcParams['font.family'] = 'Helvetica'
 mpl.rcParams['mathtext.fontset'] = 'cm'
 mpl.rcParams['mathtext.rm'] = 'serif'
+#
+mpl.rc('font', size=10)  # controls default text sizes
+mpl.rc('axes', titlesize=16)  # fontsize of the axes title
+mpl.rc('axes', labelsize=12)  # fontsize of the x and y labels
+mpl.rc('xtick', labelsize=10)  # fontsize of the tick labels
+mpl.rc('ytick', labelsize=10)  # fontsize of the tick labels
+mpl.rc('legend', fontsize=10)  # legend fontsize
+mpl.rc('figure', titlesize=16)  # fontsize of the figure title
+#
+mpl.rc('figure.subplot', left=0.15, right=0.9, bottom=0.11, top=0.88)
 import matplotlib.pyplot as plt
 
 
@@ -88,48 +98,31 @@ if __name__ == '__main__':
     }
 
     #
-    df = pd.DataFrame(index=Gt.nodes())
+    ldf = []
+    for layer in layers:
+        print("> Computing layer: {layer:s}".format(layer=layer))
+        Gl = get_network_layer(Gt, layer=layer)
 
-    # Layer
-    df['layer'] = [v for k, v in nx.get_node_attributes(Gt, name='layer').items()]
-    # Conserved nodes
-    df['conserved'] = df.index.map({k: True for k in Gc.nodes()})
-    # Degree Centrality
-    df['degree-centrality'] = df.index.map(nx.degree_centrality(Gt))
-    # Page Rank
-    df['page-rank'] = df.index.map(nx.pagerank(Gt, weight='weight'))
+        dft = pd.DataFrame(index=Gl.nodes())
+
+        # Layer
+        dft['layer'] = layer
+        # Conserved nodes
+        dft['conserved'] = dft.index.map(nx.get_node_attributes(Gl, name='conserved'))
+        dft['conserved'].fillna(False, inplace=True)
+        # Degree Centrality
+        dft['degree-centrality'] = dft.index.map(nx.degree_centrality(Gl))
+        # Page Rank
+        dft['page-rank'] = dft.index.map(nx.pagerank(Gl, weight='weight'))
+        # append
+        ldf.append(dft)
+
+    df = pd.concat(ldf)
 
     # Separate Conserved / NonConserved
-    dfc = df.loc[df['conserved'] == True, :]
-    dfn = df.loc[df['conserved'] != True, :]
+    dfc = df.loc[df['conserved'] == True, :].copy()
+    dfn = df.loc[df['conserved'] == False, :].copy()
 
-    n_con_dm, n_con_hs, n_con_mm = dfc.groupby('layer').agg({'conserved': 'count'}).squeeze().to_list()
-
-    # Group
-    dfcr = dfc.groupby('layer').agg({
-        'degree-centrality': ['mean', 'std'],
-        'page-rank': ['mean', 'std']
-    })
-
-    # Sample
-    ldfts = []
-    for layer, n_conserved in [('HS', n_con_hs), ('MM', n_con_mm), ('DM', n_con_dm)]:
-
-        dft = dfn.loc[dfn['layer'] == layer]
-
-        for i in range(1):
-            print('Iter: {i:d}'.format(i=i))
-            """
-            dftg = dft.sample(n_conserved).groupby('layer').agg({
-                'degree-weight': ['mean', 'std'],
-                'degree-centrality': ['mean', 'std'],
-                'page-rank': ['mean', 'std']
-            })
-            """
-            dft.sample(n_conserved, replace=True).copy()
-            dft['iter'] = i
-            ldfts.append(dft)
-    dfs = pd.concat(ldfts, axis='index')
 
     flierprops = dict(marker='o', markersize=2, markeredgecolor='black', markeredgewidth=.5, rasterized=False)
     medianprops = dict(color='black')
@@ -142,7 +135,7 @@ if __name__ == '__main__':
         print("Plotting {measure:s}".format(measure=measure))
 
         # Plot
-        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(4.8, 3.6))
+        fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(4.1, 3.7))
 
         sc_hs = dfc.loc[(dfc['layer'] == 'HS'), measure]
         sc_mm = dfc.loc[(dfc['layer'] == 'MM'), measure]
@@ -176,7 +169,7 @@ if __name__ == '__main__':
         ax.set_xticks([1.5, 4.5, 7.5])
         ax.set_xticklabels(['Human', 'Mouse', 'Insect'])
         #
-        ax.grid(axis='y')
+        #ax.grid(axis='y')
         #
         y_hs = max(max(cap.get_ydata()) for cap in bp_hs['caps'])
         y_mm = max(max(cap.get_ydata()) for cap in bp_mm['caps'])
@@ -193,19 +186,22 @@ if __name__ == '__main__':
         #  print("KS test: stat={stat:.3f}, p-value={pvalue:.2e}".format(stat=stat, pvalue=pvalue))
         y = y_hs + y_hs_start
         y_text = y + text_padding
-        label_diff(ax=ax, x0=1, x1=2, y=y, cap_size=cap_size, y_text=y_text, text=r'${pvalue:s}$'.format(pvalue=as_si(pvalue)))
+        text = '****' if pvalue <= 0.001 else pvalue  # r'${pvalue:s}$'.format(pvalue=as_si(pvalue))
+        label_diff(ax=ax, x0=1, x1=2, y=y, cap_size=cap_size, y_text=y_text, text=text)
         #
         stat, pvalue = ks_2samp(sc_mm, sn_mm, alternative='two-sided', mode='asymp')
         #  print("KS test: stat={stat:.3f}, p-value={pvalue:.2e}".format(stat=stat, pvalue=pvalue))
         y = y_mm + y_mm_start
         y_text = y + text_padding
-        label_diff(ax=ax, x0=4, x1=5, y=y, cap_size=cap_size, y_text=y_text, text=r'${pvalue:s}$'.format(pvalue=as_si(pvalue)))
+        text = '****' if pvalue <= 0.001 else pvalue  # r'${pvalue:s}$'.format(pvalue=as_si(pvalue))
+        label_diff(ax=ax, x0=4, x1=5, y=y, cap_size=cap_size, y_text=y_text, text=text)
 
         stat, pvalue = ks_2samp(sc_dm, sn_dm, alternative='two-sided', mode='asymp')
         #  print("KS test: stat={stat:.4f}, p-value={pvalue:.2e}".format(stat=stat, pvalue=pvalue))
         y = y_dm + y_dm_start
         y_text = y + text_padding
-        label_diff(ax=ax, x0=7, x1=8, y=y, cap_size=cap_size, y_text=y_text, text=r'${pvalue:s}$'.format(pvalue=as_si(pvalue)))
+        text = '****' if pvalue <= 0.001 else pvalue  # r'${pvalue:s}$'.format(pvalue=as_si(pvalue))
+        label_diff(ax=ax, x0=7, x1=8, y=y, cap_size=cap_size, y_text=y_text, text=text)
 
         for bp, (color_con, color_notcon) in zip([bp_hs, bp_mm, bp_dm], colors):
             for patch, color in zip(bp['boxes'], [color_con, color_notcon]):
@@ -214,15 +210,15 @@ if __name__ == '__main__':
         ax.ticklabel_format(axis='y', style='sci', scilimits=(0, 0), useMathText=True)
 
         xlim_min, xlim_max = ax.get_ylim()
-        xlim_max = 1.18 * xlim_max
+        xlim_max = 1.04 * xlim_max
         ax.set_ylim((xlim_min, xlim_max))
         ax.set_xlim(0.0, 9)
         #
         psc = mpl.patches.Patch(facecolor='#d62728', edgecolor='k')
         psn = mpl.patches.Patch(facecolor='#1f77b4', edgecolor='k')
-        ax.legend((psc, psn), ('Conserved', 'Non-conserved'),
-            loc='upper right',
-            ncol=2, handletextpad=0.5, handlelength=1.25, columnspacing=1.25)
+        #ax.legend((psc, psn), ('Conserved', 'Non-conserved'),
+        #    loc='upper right',
+        #    ncol=2, handletextpad=0.5, handlelength=1.25, columnspacing=1.25)
         #
 
         wIMGfile = 'images/network-{network:s}-{measure:s}.pdf'.format(network='thr-conserved', measure=measure)

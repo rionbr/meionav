@@ -115,7 +115,7 @@ if __name__ == '__main__':
     annotate_heatmap(data['DM']['df'])
     #
     #
-    ax.grid(axis='y')
+    #ax.grid(axis='y')
 
     wIMGfile = 'images/network-{network:s}-assort.pdf'.format(network='thr-conserved')
     ensurePathExists(wIMGfile)

@@ -239,7 +239,7 @@ if __name__ == '__main__':
 
         bax.ticklabel_format(axis='y', style='sci', scilimits=(0, 0), useMathText=True)
 
-        bax.grid(axis='y')
+        #bax.grid(axis='y')
 
         # Make big_ax the same limits
         bax.big_ax.set_xlim(bax.axs[0].get_xlim())
