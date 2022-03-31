@@ -38,7 +38,7 @@ import java.util.*;
 import com.itextpdf.text.PageSize;
 
 
-public class PlotNetSingleMod {
+public class PlotNetCategoricalMod {
 
     private static Map<String, Arg> argsMap = new LinkedHashMap<>();
 
@@ -88,7 +88,10 @@ public class PlotNetSingleMod {
         addArg("edge-thickness", "Thickness of edges.", true);
         addArg("edge-opacity", "Opacity of edges.", true);
         addArg("node-highlight", "Which attribute to highlight.", true);
-        addArg("node-highlight-color", "Which color to use to highlight.", true);
+        addArg("node-highlight-v1-value", "Value 1 of the attribute to match and assign color.", true);
+        addArg("node-highlight-v1-color", "Color of th Value 1.", true);
+        addArg("node-highlight-v2-value", "Value 1 of the attribute to match and assign color.", true);
+        addArg("node-highlight-v2-color", "Color of th Value 1.", true);
         addArg("node-highlight-alt-color", "Which color to use to non-highlight nodes.", true);
 
         for (int i = 0; i < args.length; i++) {
@@ -150,14 +153,32 @@ public class PlotNetSingleMod {
             node_highlight = getArg("node-highlight");
         }
 
-        // Node Highlight Color attribute
-        String node_highlight_color = "#d62728"; //red
-        if (getArg("node-highlight-color") != null) {
-            node_highlight_color = getArg("node-highlight-color");
+        // Node Highlight v1 value
+        String node_highlight_v1_value = "A";
+        if (getArg("node-highlight-v1-value") != null) {
+            node_highlight_v1_value = getArg("node-highlight-v1-value");
+        }
+
+        // Node Highlight v1 color
+        String node_highlight_v1_color = "#d62728"; // red
+        if (getArg("node-highlight-v1-color") != null) {
+            node_highlight_v1_color = getArg("node-highlight-v1-color");
+        }
+
+        // Node Highlight v2 value
+        String node_highlight_v2_value = "B";
+        if (getArg("node-highlight-v2-value") != null) {
+            node_highlight_v2_value = getArg("node-highlight-v2-value");
+        }
+
+        // Node Highlight v2 color
+        String node_highlight_v2_color = "#1f77b4"; // blue
+        if (getArg("node-highlight-v2-color") != null) {
+            node_highlight_v2_color = getArg("node-highlight-v2-color");
         }
 
         // No Alternative Color attribute
-        String node_highlight_alt_color = "#c7c7c7"; //red
+        String node_highlight_alt_color = "#c7c7c7"; //gray
         if (getArg("node-highlight-alt-color") != null) {
             node_highlight_alt_color = getArg("node-highlight-alt-color");
         }
@@ -185,9 +206,6 @@ public class PlotNetSingleMod {
         //See if graph is well imported
         //System.out.println("Nodes: " + g.getNodeCount());
         //System.out.println("Edges: " + g.getEdgeCount());
-
-        // AttributeModel
-        AttributeModel attributeModel = Lookup.getDefault().lookup(AttributeController.class).getModel();
 
         //Append imported data to GraphAPI
         importController.process(container, new DefaultProcessor(), workspace);
@@ -263,8 +281,16 @@ public class PlotNetSingleMod {
 
             // Highlight node based on column
             if (!"none".equals(node_highlight)) {
-                if (node.getAttribute(node_highlight) == Boolean.TRUE) {
-                    node.setColor(Color.decode(node_highlight_color));
+                // if value not null
+                if (node.getAttribute(node_highlight) != null) {
+                    // v1
+                    if (node.getAttribute(node_highlight).equals(node_highlight_v1_value)) {
+                        node.setColor(Color.decode(node_highlight_v1_color));
+                    // v2
+                    } else if (node.getAttribute(node_highlight).equals(node_highlight_v2_value)) {
+                        node.setColor(Color.decode(node_highlight_v2_color));
+                    // alternative color
+                    }
                 } else {
                     node.setColor(Color.decode(node_highlight_alt_color));
                 }

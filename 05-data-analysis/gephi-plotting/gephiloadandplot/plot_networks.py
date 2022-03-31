@@ -3,7 +3,8 @@
 # Date: Oct 09, 2020
 #
 # Description: Loads gephi files and request java to plot the networks
-#
+# COMPILE: javac -cp gephi-toolkit-0.9.2-all.jar PlotNetSingleMod.java
+# COMPILE: javac -cp gephi-toolkit-0.9.2-all.jar PlotNetCategoricalMod.java
 #
 import os
 import subprocess
@@ -20,7 +21,8 @@ if __name__ == '__main__':
 
     celltypes = ['spermatocyte', 'enterocyte']
     layers = ['HS', 'MM', 'DM']
-    network = 'thr'
+    #network = 'thr'
+    network = 'backbone'
     threshold = 0.5
     threshold_str = str(threshold).replace('.', 'p')
 
@@ -82,6 +84,7 @@ if __name__ == '__main__':
             xml = ET.parse(rGraphmlFile)
             root = xml.getroot()
 
+            # [(i, key.attrib.get('attr.name')) for i, key in enumerate(keys)]
             # Extract module identification
             keys = root.findall("ns:key[@for='node']", ns)
             for key in keys:
@@ -131,8 +134,8 @@ if __name__ == '__main__':
                     pdfp = '{op:s}/{celltype:s}/{layer:s}/pdf'.format(op=op, celltype=celltype, layer=layer)
                     jpgp = '{op:s}/{celltype:s}/{layer:s}/jpg'.format(op=op, celltype=celltype, layer=layer)
                     #
-                    pdf = '{pdfp:s}/net-{celltype:s}-{network:s}-{threshold:s}-{layer:s}-conserved.pdf'.format(pdfp=pdfp, celltype=celltype, network=network, threshold=threshold_str, layer=layer, mid=mid)
-                    jpg = '{jpgp:s}/net-{celltype:s}-{network:s}-{threshold:s}-{layer:s}-conserved.jpg'.format(jpgp=jpgp, celltype=celltype, network=network, threshold=threshold_str, layer=layer, mid=mid)
+                    pdf = '{pdfp:s}/net-{celltype:s}-{network:s}-{threshold:s}-{layer:s}-conserved.pdf'.format(pdfp=pdfp, celltype=celltype, network=network, threshold=threshold_str, layer=layer)
+                    jpg = '{jpgp:s}/net-{celltype:s}-{network:s}-{threshold:s}-{layer:s}-conserved.jpg'.format(jpgp=jpgp, celltype=celltype, network=network, threshold=threshold_str, layer=layer)
                     #
                     rotate = data[celltype][layer]['rotate']
                     node_highlight_color = '#d62728'
@@ -178,6 +181,70 @@ if __name__ == '__main__':
                     cmd = "convert -density 150 -resize 1754x1240 -quality 80 {pdf:s} {jpg:s}".format(pdf=pdf, jpg=jpg)
                     subprocess.run(cmd, shell=True)
 
+                if 'mdlc_dge' in key.attrib.get('attr.name'):
+
+                    gid = key.attrib.get('id')
+
+                    print("Plotting mdlc-DGE genes ({gid:s})".format(gid=gid))
+
+                    input = '{gp:s}/{celltype:s}/net-{celltype:s}-{network:s}-{threshold:s}-{layer:s}.graphml'.format(gp=gp, celltype=celltype, network=network, threshold=threshold_str, layer=layer)
+                    coords = '{cp:s}/{celltype:s}/net-{celltype:s}-{network:s}-{threshold:s}-{layer:s}-forceatlas2.txt'.format(cp=cp, celltype=celltype, network=network, threshold=threshold_str, layer=layer)
+                    #
+                    pdfp = '{op:s}/{celltype:s}/{layer:s}/pdf'.format(op=op, celltype=celltype, layer=layer)
+                    jpgp = '{op:s}/{celltype:s}/{layer:s}/jpg'.format(op=op, celltype=celltype, layer=layer)
+                    #
+                    pdf = '{pdfp:s}/net-{celltype:s}-{network:s}-{threshold:s}-{layer:s}-mdlc-dge.pdf'.format(pdfp=pdfp, celltype=celltype, network=network, threshold=threshold_str, layer=layer)
+                    jpg = '{jpgp:s}/net-{celltype:s}-{network:s}-{threshold:s}-{layer:s}-mdlc-dge.jpg'.format(jpgp=jpgp, celltype=celltype, network=network, threshold=threshold_str, layer=layer)
+                    #
+                    rotate = data[celltype][layer]['rotate']
+                    #
+                    node_highlight_v1_value = 'up'
+                    node_highlight_v1_color = '#d62728'
+                    #
+                    node_highlight_v2_value = 'down'
+                    node_highlight_v2_color = '#1f77b4'
+                    #
+                    node_highlight_alt_color = '#c7c7c7'
+
+                    ensurePathExists(pdf)
+                    ensurePathExists(jpg)
+                    # Trigger PDF subprocess
+                    cmd = "java -cp gephi-toolkit-0.9.2-all.jar:. PlotNetCategoricalMod --input {input:s} --coords {coords:s} --output {pdf:s} --rotate {rotate:d} --node-size 20 --edge-thickness 0.4 --edge-opacity 10.0 --node-highlight {node_highlight:s} --node-highlight-v1-value '{node_highlight_v1_value:s}' --node-highlight-v1-color '{node_highlight_v1_color:s}' --node-highlight-v2-value '{node_highlight_v2_value:s}' --node-highlight-v2-color '{node_highlight_v2_color:s}' --node-highlight-alt-color '{node_highlight_alt_color:s}'".format(input=input, coords=coords, pdf=pdf, rotate=rotate, node_highlight=gid, node_highlight_v1_value=node_highlight_v1_value, node_highlight_v1_color=node_highlight_v1_color, node_highlight_v2_value=node_highlight_v2_value, node_highlight_v2_color=node_highlight_v2_color, node_highlight_alt_color=node_highlight_alt_color)
+                    subprocess.run(cmd, shell=True)
+
+                    # Trigger JPG subprocess (150dpi = 1754x1240 ; 300dpi = 3508x2480)
+                    cmd = "convert -density 150 -resize 1754x1240 -quality 80 {pdf:s} {jpg:s}".format(pdf=pdf, jpg=jpg)
+                    subprocess.run(cmd, shell=True)
+
+                if 'mdlc_intron' in key.attrib.get('attr.name'):
+
+                    gid = key.attrib.get('id')
+
+                    print("Plotting mdlc-Introns genes ({gid:s})".format(gid=gid))
+
+                    input = '{gp:s}/{celltype:s}/net-{celltype:s}-{network:s}-{threshold:s}-{layer:s}.graphml'.format(gp=gp, celltype=celltype, network=network, threshold=threshold_str, layer=layer)
+                    coords = '{cp:s}/{celltype:s}/net-{celltype:s}-{network:s}-{threshold:s}-{layer:s}-forceatlas2.txt'.format(cp=cp, celltype=celltype, network=network, threshold=threshold_str, layer=layer)
+                    #
+                    pdfp = '{op:s}/{celltype:s}/{layer:s}/pdf'.format(op=op, celltype=celltype, layer=layer)
+                    jpgp = '{op:s}/{celltype:s}/{layer:s}/jpg'.format(op=op, celltype=celltype, layer=layer)
+                    #
+                    pdf = '{pdfp:s}/net-{celltype:s}-{network:s}-{threshold:s}-{layer:s}-mdlc-intron.pdf'.format(pdfp=pdfp, celltype=celltype, network=network, threshold=threshold_str, layer=layer)
+                    jpg = '{jpgp:s}/net-{celltype:s}-{network:s}-{threshold:s}-{layer:s}-mdlc-intron.jpg'.format(jpgp=jpgp, celltype=celltype, network=network, threshold=threshold_str, layer=layer)
+                    #
+                    rotate = data[celltype][layer]['rotate']
+                    node_highlight_color = '#d62728'
+                    node_highlight_alt_color = '#c7c7c7'
+
+                    ensurePathExists(pdf)
+                    ensurePathExists(jpg)
+                    # Trigger PDF subprocess
+                    cmd = "java -cp gephi-toolkit-0.9.2-all.jar:. PlotNetSingleMod --input {input:s} --coords {coords:s} --output {pdf:s} --rotate {rotate:d} --node-size 20 --edge-thickness 0.4 --edge-opacity 10.0 --node-highlight {node_highlight:s} --node-highlight-color '{node_highlight_color:s}' --node-highlight-alt-color '{node_highlight_alt_color:s}'".format(input=input, coords=coords, pdf=pdf, rotate=rotate, node_highlight=gid, node_highlight_color=node_highlight_color, node_highlight_alt_color=node_highlight_alt_color)
+                    subprocess.run(cmd, shell=True)
+
+                    # Trigger JPG subprocess (150dpi = 1754x1240 ; 300dpi = 3508x2480)
+                    cmd = "convert -density 150 -resize 1754x1240 -quality 80 {pdf:s} {jpg:s}".format(pdf=pdf, jpg=jpg)
+                    subprocess.run(cmd, shell=True)
+
             # Plot an all gray network
             print("Plotting all-gray network")
             input = '{gp:s}/{celltype:s}/net-{celltype:s}-{network:s}-{threshold:s}-{layer:s}.graphml'.format(gp=gp, celltype=celltype, network=network, threshold=threshold_str, layer=layer)
@@ -197,7 +264,7 @@ if __name__ == '__main__':
             ensurePathExists(pdf)
             ensurePathExists(jpg)
             # Trigger PDF subprocess
-            cmd = "java -cp gephi-toolkit-0.9.2-all.jar:. PlotNetSingleMod --input {input:s} --coords {coords:s} --output {pdf:s} --rotate {rotate:d} --node-size 20 --edge-thickness 0.4 --edge-opacity 70.0 --node-highlight {node_highlight:s} --node-highlight-color '{node_highlight_color:s}' --node-highlight-alt-color '{node_highlight_alt_color:s}'".format(input=input, coords=coords, pdf=pdf, rotate=rotate, node_highlight=gid, node_highlight_color=node_highlight_color, node_highlight_alt_color=node_highlight_alt_color)
+            cmd = "java -cp gephi-toolkit-0.9.2-all.jar:. PlotNetSingleMod --input {input:s} --coords {coords:s} --output {pdf:s} --rotate {rotate:d} --node-size 20 --edge-thickness 0.4 --edge-opacity 10.0 --node-highlight {node_highlight:s} --node-highlight-color '{node_highlight_color:s}' --node-highlight-alt-color '{node_highlight_alt_color:s}'".format(input=input, coords=coords, pdf=pdf, rotate=rotate, node_highlight=gid, node_highlight_color=node_highlight_color, node_highlight_alt_color=node_highlight_alt_color)
             subprocess.run(cmd, shell=True)
 
             # Trigger JPG subprocess (150dpi = 1754x1240 ; 300dpi = 3508x2480)
